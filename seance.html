@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Séance · 映</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Lato:wght@300;400;700&family=Noto+Serif+SC:wght@300;400&family=DM+Mono:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --sun:      #f2b87a;
+  --sun-2:    #e09860;
+  --sun-pale: #fdf0e4;
+  --amber:    #d08858;
+  --amber-2:  #b06838;
+  --gold:     #e0a870;
+  --warm-1:   #fef5ec;
+  --warm-2:   #fae8d4;
+  --warm-3:   #f4d0a8;
+  --dusk:     #c07858;
+  --shadow-1: #906040;
+  --ink:      #281808;
+  --ink-2:    #3a2410;
+  --ink-3:    #6a4828;
+  --ink-4:    #9a7050;
+  --ink-5:    #c49878;
+  --white-warm: #fef8f2;
+  --border:   rgba(180,110,60,0.13);
+  --border-2: rgba(180,110,60,0.22);
+  --glow:     rgba(240,170,90,0.16);
+  --glow-2:   rgba(240,170,90,0.08);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: 'Lato', 'Noto Serif SC', sans-serif;
+  overflow-x: hidden;
+  position: relative;
+
+  background-color: #f0c090;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23g)' opacity='0.05'/%3E%3C/svg%3E"),
+    linear-gradient(175deg,
+      #faeac8 0%,
+      #f8d0a0 12%,
+      #f4b87a 26%,
+      #f0a060 40%,
+      #e89070 52%,
+      #e08880 62%,
+      #d08090 72%,
+      #c07888 82%,
+      #b07080 100%
+    );
+}
+
+/* scrolling light orbs — position:absolute so they move with content */
+.orb-layer {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  min-height: 100%;
+  background:
+    radial-gradient(ellipse 65% 30% at 50% 2%, rgba(255,248,210,0.88) 0%, rgba(255,220,140,0.52) 30%, transparent 65%),
+    radial-gradient(ellipse 30% 18% at 22% 8%, rgba(255,230,170,0.35) 0%, transparent 55%),
+    radial-gradient(ellipse 28% 16% at 78% 6%, rgba(255,220,150,0.30) 0%, transparent 52%),
+    radial-gradient(ellipse 40% 20% at 50% 18%, rgba(240,160,80,0.12) 0%, transparent 50%);
+}
+
+body::after {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23n)' opacity='0.042'/%3E%3C/svg%3E");
+}
+
+.page-wrap {
+  position: relative; z-index: 1;
+}
+
+/* ── HEADER ───────────────────────────────────────── */
+.site-header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,220,140,0.28);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2) brightness(1.08);
+  backdrop-filter: blur(20px) saturate(1.2) brightness(1.08);
+  border-bottom: 1px solid rgba(255,200,100,0.18);
+  box-shadow: 0 1px 16px rgba(255,180,60,0.12);
+}
+
+.header-inner {
+  max-width: 1200px; margin: 0 auto;
+  padding: 0 48px;
+  display: flex; align-items: center; height: 68px; gap: 20px;
+}
+
+.logo-en {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px; font-style: italic; font-weight: 700;
+  color: var(--ink); letter-spacing: 0.01em;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+}
+
+.logo-sep {
+  width: 1px; height: 22px; background: var(--border-2); flex-shrink: 0;
+}
+
+.logo-cn {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 0.2em; color: var(--ink-3); text-transform: uppercase;
+}
+
+nav { display: flex; gap: 4px; margin-left: auto; }
+
+.nav-btn {
+  background: none; border: none; cursor: pointer;
+  font-family: 'DM Mono', monospace; font-size: 10.5px;
+  letter-spacing: 0.14em; color: rgba(80,40,10,0.65); text-transform: uppercase;
+  padding: 8px 16px; border-radius: 4px; transition: all 0.2s;
+}
+.nav-btn:hover { background: rgba(255,220,100,0.22); color: rgba(60,28,5,0.90); }
+.nav-btn.active {
+  background: rgba(255,220,100,0.30);
+  color: rgba(50,24,4,0.95);
+  box-shadow: 0 1px 0 rgba(200,140,30,0.28);
+}
+
+/* ── PAGES ────────────────────────────────────────── */
+.page { display: none; position: relative; z-index: 1; }
+.page.active { display: block; animation: rise 0.5s cubic-bezier(.22,.68,0,1.15) both; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── HERO ─────────────────────────────────────────── */
+.hero {
+  max-width: 1200px; margin: 0 auto;
+  padding: 72px 48px 56px;
+  display: grid; grid-template-columns: 1fr auto;
+  gap: 60px; align-items: end;
+}
+
+.hero-eyebrow {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 0.22em; color: var(--ink-3); text-transform: uppercase;
+  margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+}
+.hero-eyebrow::before {
+  content: ''; width: 24px; height: 1.5px; background: var(--ink-3);
+}
+
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(48px, 6vw, 78px);
+  font-weight: 700; line-height: 1.05; color: var(--ink);
+  text-shadow: 0 2px 0 rgba(255,255,255,0.3), 0 -1px 0 rgba(150,100,0,0.15);
+}
+.hero-title em { font-style: italic; font-weight: 400; color: var(--ink-2); }
+
+.hero-sub {
+  margin-top: 18px; font-size: 15px; color: var(--ink-3);
+  line-height: 1.85; max-width: 420px;
+  font-family: 'Noto Serif SC', serif;
+}
+
+.hero-stats { display: flex; flex-direction: column; gap: 0; padding-bottom: 4px; }
+
+.stat-block {
+  padding: 16px 28px; text-align: right;
+  border-bottom: 1px solid var(--border-2);
+}
+.stat-block:first-child { border-top: 1px solid var(--border-2); }
+
+.stat-n {
+  font-family: 'Playfair Display', serif;
+  font-size: 40px; font-weight: 400; color: var(--ink); line-height: 1;
+}
+.stat-l {
+  font-family: 'DM Mono', monospace; font-size: 9.5px;
+  letter-spacing: 0.14em; color: var(--ink-3);
+  text-transform: uppercase; margin-top: 3px;
+}
+
+/* ── CONTENT ──────────────────────────────────────── */
+.content {
+  max-width: 1200px; margin: 0 auto; padding: 0 48px 80px;
+}
+
+/* glass card */
+.glass {
+  background: rgba(255,240,225,0.52);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  backdrop-filter: blur(20px) saturate(1.2);
+  border: 1px solid rgba(220,150,100,0.32);
+  border-radius: 10px;
+  box-shadow:
+    0 4px 32px rgba(120,60,20,0.10),
+    inset 0 1px 0 rgba(255,240,220,0.72);
+}
+
+.section-row {
+  font-family: 'DM Mono', monospace; font-size: 9.5px;
+  letter-spacing: 0.22em; color: var(--ink-3); text-transform: uppercase;
+  margin-bottom: 14px; display: flex; align-items: center; gap: 10px;
+}
+.section-row::after { content: ''; flex: 1; height: 1px; background: var(--border-2); }
+
+.search-block { padding: 28px; margin-bottom: 28px; }
+
+.api-row { display: flex; gap: 10px; margin-bottom: 22px; }
+
+.inp {
+  flex: 1; padding: 13px 18px;
+  background: rgba(255,255,255,0.5);
+  border: 1.5px solid rgba(200,160,0,0.3); border-radius: 5px;
+  font-family: 'DM Mono', monospace; font-size: 12px;
+  color: var(--ink); outline: none; letter-spacing: 0.04em;
+  transition: all 0.2s;
+  box-shadow: inset 0 1px 3px rgba(150,100,0,0.08);
+}
+.inp:focus {
+  border-color: var(--amber);
+  background: rgba(255,255,255,0.72);
+  box-shadow: 0 0 0 3px rgba(232,150,10,0.15), inset 0 1px 3px rgba(150,100,0,0.06);
+}
+.inp::placeholder { color: var(--ink-5); font-style: italic; }
+
+.inp-lg {
+  font-family: 'Lato', sans-serif; font-size: 15px;
+  letter-spacing: 0; padding: 14px 20px;
+}
+
+.btn-api {
+  padding: 13px 18px; border-radius: 5px;
+  background: rgba(255,255,255,0.4);
+  border: 1.5px solid rgba(200,160,0,0.35);
+  font-family: 'DM Mono', monospace; font-size: 10.5px;
+  color: var(--ink-3); cursor: pointer; letter-spacing: 0.06em;
+  text-decoration: none; display: flex; align-items: center;
+  white-space: nowrap; transition: all 0.2s;
+}
+.btn-api:hover { background: rgba(255,255,255,0.65); color: var(--ink); border-color: var(--amber); }
+
+.btn-search {
+  padding: 14px 32px;
+  background: var(--ink); color: var(--sun-pale);
+  border: none; border-radius: 5px; cursor: pointer;
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  transition: all 0.22s; white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(42,26,16,0.22);
+}
+.btn-search:hover {
+  background: var(--ink-2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(42,26,16,0.28);
+}
+
+/* results */
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+  gap: 12px; margin-top: 22px;
+}
+
+.r-card {
+  cursor: pointer; border-radius: 6px; overflow: hidden;
+  background: rgba(255,252,210,0.7);
+  border: 2px solid transparent;
+  transition: all 0.22s;
+  box-shadow: 0 2px 10px rgba(150,100,0,0.12);
+}
+.r-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 32px rgba(150,100,0,0.22);
+  border-color: rgba(200,160,0,0.4);
+}
+.r-card.sel {
+  border-color: var(--amber);
+  box-shadow: 0 10px 28px rgba(200,140,0,0.3), 0 0 0 3px rgba(232,150,10,0.2);
+  transform: translateY(-5px);
+}
+.r-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; }
+.r-card-empty { aspect-ratio: 2/3; background: rgba(200,160,0,0.15); display: flex; align-items: center; justify-content: center; font-size: 26px; }
+.r-info { padding: 8px 10px 10px; }
+.r-title { font-size: 11.5px; color: var(--ink); line-height: 1.35; }
+.r-year { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--ink-4); margin-top: 3px; }
+
+.f-input {
+  padding: 10px 12px;
+  background: rgba(255,255,255,0.5);
+  border: 1.5px solid var(--border-2); border-radius: 4px;
+  font-family: 'Lato', sans-serif; font-size: 15px;
+  color: var(--ink); outline: none; transition: all 0.2s;
+}
+.f-input:focus { border-color: var(--amber); background: rgba(255,255,255,0.72); }
+
+/* film panel */
+.film-panel {
+  display: none; margin-top: 28px;
+  overflow: hidden;
+}
+
+.panel-top {
+  display: grid; grid-template-columns: 130px 1fr;
+}
+.panel-poster { overflow: hidden; min-height: 195px; }
+.panel-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.panel-poster-empty {
+  width: 100%; height: 100%; min-height: 195px;
+  background: rgba(200,160,0,0.15);
+  display: flex; align-items: center; justify-content: center; font-size: 36px;
+}
+
+.panel-meta {
+  padding: 24px 28px;
+  background: rgba(255,248,180,0.4);
+}
+.panel-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px; font-weight: 700; color: var(--ink); line-height: 1.15;
+}
+.panel-orig {
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  color: var(--ink-3); margin-top: 5px; letter-spacing: 0.06em;
+}
+.panel-overview {
+  font-size: 13px; color: var(--ink-3); line-height: 1.75; margin-top: 12px;
+  max-height: 72px; overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent);
+}
+
+.panel-body {
+  padding: 28px;
+  border-top: 1px solid var(--border-2);
+  background: rgba(255,252,210,0.3);
+}
+
+/* form */
+.f-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.f-full { grid-column: 1/-1; }
+.f-label {
+  display: block; font-family: 'DM Mono', monospace; font-size: 9.5px;
+  letter-spacing: 0.18em; color: var(--ink-4); text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.f-textarea {
+  width: 100%; padding: 12px 16px;
+  background: rgba(255,255,255,0.5);
+  border: 1.5px solid rgba(200,160,0,0.3); border-radius: 5px;
+  font-family: 'Lato', sans-serif; font-size: 14px;
+  color: var(--ink); outline: none; resize: vertical; min-height: 96px;
+  line-height: 1.7; transition: all 0.2s;
+  box-shadow: inset 0 1px 3px rgba(150,100,0,0.07);
+}
+.f-textarea:focus {
+  border-color: var(--amber); background: rgba(255,255,255,0.72);
+  box-shadow: 0 0 0 3px rgba(232,150,10,0.14);
+}
+.f-textarea::placeholder { color: var(--ink-5); font-style: italic; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.chip {
+  padding: 6px 15px; border-radius: 20px; cursor: pointer;
+  font-size: 12.5px;
+  background: rgba(255,255,255,0.42);
+  border: 1.5px solid rgba(180,130,0,0.25);
+  color: var(--ink-2); transition: all 0.18s; user-select: none;
+  font-family: 'Lato', sans-serif;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+}
+.chip:hover {
+  background: rgba(255,255,255,0.65);
+  border-color: var(--amber); color: var(--ink);
+}
+.chip.on {
+  background: var(--ink); color: var(--sun);
+  border-color: var(--ink);
+  box-shadow: 0 3px 10px rgba(42,31,0,0.2);
+}
+
+.btn-submit {
+  margin-top: 24px; padding: 15px 44px;
+  background: var(--ink); color: var(--sun-pale);
+  border: none; border-radius: 5px; cursor: pointer;
+  font-family: 'Playfair Display', serif; font-size: 19px;
+  font-style: italic; letter-spacing: 0.02em;
+  transition: all 0.25s;
+  box-shadow: 0 6px 20px rgba(42,26,16,0.20);
+  display: inline-flex; align-items: center; gap: 12px;
+}
+.btn-submit::after { content: '→'; font-style: normal; font-size: 16px; }
+.btn-submit:hover {
+  background: var(--ink-2);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(42,26,16,0.26);
+}
+
+/* ── FEED ─────────────────────────────────────────── */
+.feed { display: flex; flex-direction: column; gap: 24px; }
+
+.ex-card { overflow: hidden; transition: transform 0.25s, box-shadow 0.25s; }
+.ex-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(150,100,0,0.18), inset 0 1px 0 rgba(255,255,255,0.6) !important;
+}
+
+.ex-header {
+  padding: 18px 28px 16px;
+  display: grid; grid-template-columns: 32px 1fr auto;
+  gap: 12px; align-items: center;
+  border-bottom: 1px solid var(--border-2);
+  background: rgba(255,230,60,0.2);
+}
+.ex-idx {
+  font-family: 'Playfair Display', serif;
+  font-size: 14px; font-style: italic; color: var(--ink-4);
+}
+.ex-theme {
+  font-family: 'Playfair Display', serif;
+  font-size: 21px; font-style: italic; font-weight: 400; color: var(--ink);
+}
+.ex-date {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  color: var(--ink-4); letter-spacing: 0.07em; white-space: nowrap;
+}
+
+.ex-dual { display: grid; grid-template-columns: 1fr 1fr; }
+.ex-col { padding: 22px 28px; }
+.ex-col:first-child { border-right: 1px solid var(--border); }
+
+.col-label {
+  font-family: 'DM Mono', monospace; font-size: 9.5px;
+  letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 14px;
+  display: flex; align-items: center; gap: 7px;
+}
+.dot-sm { width: 6px; height: 6px; border-radius: 50%; }
+.dot-you { background: var(--amber-2); }
+.dot-me { background: var(--ink-2); }
+.lbl-you { color: var(--amber-2); }
+.lbl-me  { color: var(--ink-2); }
+
+.film-row-sm { display: flex; gap: 14px; }
+.poster-sm {
+  width: 66px; flex-shrink: 0; border-radius: 4px; overflow: hidden;
+  box-shadow: 0 4px 16px rgba(100,60,0,0.22);
+}
+.poster-sm img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; }
+.poster-sm-empty {
+  aspect-ratio: 2/3; background: rgba(200,160,0,0.15);
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+}
+.film-sm-title { font-family: 'Playfair Display', serif; font-size: 17px; font-style: italic; line-height: 1.25; }
+.film-sm-yr { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--ink-4); margin-top: 3px; margin-bottom: 9px; }
+.film-sm-note { font-size: 13px; line-height: 1.78; color: var(--ink-2); }
+
+.tag-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
+.mini-tag {
+  padding: 3px 10px; border-radius: 10px; font-size: 11px;
+  background: rgba(255,255,255,0.5);
+  border: 1px solid rgba(180,130,0,0.22);
+  color: var(--ink-3); font-family: 'Lato', sans-serif;
+}
+
+.waiting-col {
+  display: flex; align-items: center; justify-content: center; min-height: 120px;
+  font-family: 'Playfair Display', serif; font-size: 15px; font-style: italic;
+  color: var(--ink-4);
+}
+
+/* comments */
+.ex-cmts {
+  border-top: 1px solid var(--border-2); padding: 14px 28px;
+  background: rgba(255,240,100,0.1);
+}
+.toggle-cmts {
+  background: none; border: none; cursor: pointer;
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 0.12em; color: var(--ink-3); text-transform: uppercase;
+  transition: color 0.2s; padding: 0;
+}
+.toggle-cmts:hover { color: var(--ink); }
+
+.cmts-inner { margin-top: 14px; display: none; }
+.cmts-inner.open { display: block; }
+.cmt-item { padding: 9px 0; border-bottom: 1px solid var(--border); }
+.cmt-item:last-of-type { border-bottom: none; }
+.cmt-who {
+  font-family: 'DM Mono', monospace; font-size: 9.5px;
+  letter-spacing: 0.1em; color: var(--ink-4); margin-bottom: 4px; text-transform: uppercase;
+}
+.cmt-txt { font-size: 13px; line-height: 1.72; color: var(--ink-2); }
+
+.cmt-row { display: flex; gap: 8px; margin-top: 12px; }
+.cmt-inp {
+  flex: 1; padding: 10px 14px;
+  background: rgba(255,255,255,0.5);
+  border: 1.5px solid rgba(180,130,0,0.28); border-radius: 4px;
+  font-family: 'Lato', sans-serif; font-size: 13px;
+  color: var(--ink); outline: none; transition: all 0.2s;
+}
+.cmt-inp:focus { border-color: var(--amber); background: rgba(255,255,255,0.72); }
+.cmt-inp::placeholder { color: var(--ink-5); font-style: italic; }
+.btn-cmt {
+  padding: 10px 18px; background: var(--ink); color: var(--sun);
+  border: none; border-radius: 4px; cursor: pointer;
+  font-family: 'DM Mono', monospace; font-size: 10.5px; letter-spacing: 0.1em;
+  transition: all 0.2s;
+}
+.btn-cmt:hover { background: var(--ink-2); }
+
+/* empty */
+.empty-s {
+  text-align: center; padding: 90px 20px;
+}
+.empty-big {
+  font-family: 'Playfair Display', serif;
+  font-size: 54px; font-style: italic; font-weight: 400;
+  color: var(--ink); margin-bottom: 14px;
+  text-shadow: 0 2px 0 rgba(255,255,255,0.3);
+}
+.empty-sm {
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  color: var(--ink-3); letter-spacing: 0.12em; line-height: 2; text-transform: uppercase;
+}
+
+/* loading dots */
+.dots-row {
+  display: none; align-items: center; gap: 8px; margin-top: 12px;
+  font-family: 'DM Mono', monospace; font-size: 10.5px;
+  color: var(--ink-3); letter-spacing: 0.07em;
+}
+.da { width: 5px; height: 5px; background: var(--ink-3); border-radius: 50%; animation: bk 1.2s ease-in-out infinite; }
+.da:nth-child(2) { animation-delay: .2s; }
+.da:nth-child(3) { animation-delay: .4s; }
+@keyframes bk { 0%,80%,100%{opacity:.2;transform:scale(.7)}40%{opacity:1;transform:scale(1)} }
+
+/* divider line */
+.div-line { height: 1px; background: var(--border-2); margin: 28px 0; }
+
+@media(max-width:768px) {
+  .header-inner { padding: 0 20px; }
+  .hero { grid-template-columns: 1fr; padding: 40px 20px 36px; }
+  .hero-stats { flex-direction: row; }
+  .stat-block { flex: 1; text-align: left; padding: 14px 16px; }
+  .content { padding: 0 20px 60px; }
+  .ex-dual, .f-cols { grid-template-columns: 1fr; }
+  .ex-col:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+  .panel-top { grid-template-columns: 90px 1fr; }
+  nav button:first-child::before { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="orb-layer"></div>
+<div class="page-wrap">
+
+<header class="site-header">
+  <div class="header-inner">
+    <span class="logo-en">Séance</span>
+    <div class="logo-sep"></div>
+    <span class="logo-cn">映 · Film Exchange</span>
+    <nav>
+      <button class="nav-btn active" onclick="go('add')" id="nav-add">Submit · 出题</button>
+      <button class="nav-btn" onclick="go('feed')" id="nav-feed">Archive · 记录</button>
+    </nav>
+  </div>
+</header>
+
+<!-- ADD -->
+<div class="page active" id="page-add">
+  <div class="hero">
+    <div>
+      <div class="hero-eyebrow">Film Exchange · 与你共看</div>
+      <h1 class="hero-title">What are we<br><em>watching tonight?</em></h1>
+      <p class="hero-sub">你选一部电影，我选一部回应你。<br>不只是推荐——是两种目光相遇的方式。</p>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-block">
+        <div class="stat-n" id="stat-n">0</div>
+        <div class="stat-l">Films Exchanged</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-n" id="stat-c">0</div>
+        <div class="stat-l">Comments Left</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="div-line"></div>
+
+    <div class="section-row">API · 接入 TMDB</div>
+    <div class="api-row" style="margin-bottom:24px">
+      <input class="inp" id="api-key" placeholder="Paste your TMDB API Key here …" oninput="saveKey()">
+      <a class="btn-api" href="https://www.themoviedb.org/settings/api" target="_blank">Get free key →</a>
+    </div>
+
+    <div class="section-row">Search · 搜索</div>
+    <div style="display:flex;gap:10px">
+      <input class="inp inp-lg" id="sq" placeholder="Film title, in any language …" onkeydown="if(event.key==='Enter')search()">
+      <button class="btn-search" onclick="search()">Search</button>
+    </div>
+    <div class="dots-row" id="loading"><div class="da"></div><div class="da"></div><div class="da"></div><span>Searching …</span></div>
+    <div class="results-grid" id="rg"></div>
+
+    <!-- film panel -->
+    <div class="film-panel glass" id="fp">
+      <div class="panel-top">
+        <div class="panel-poster" id="fp-poster"></div>
+        <div class="panel-meta">
+          <div class="panel-title" id="fp-title"></div>
+          <div class="panel-orig" id="fp-orig"></div>
+          <div class="panel-overview" id="fp-ov"></div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="f-cols">
+          <div class="f-full">
+            <label class="f-label">Theme · 主题</label>
+            <input class="inp" id="f-theme" placeholder="e.g. Finding stillness in a loud world · 在嘈杂里找一点安静" style="width:100%">
+          </div>
+          <div class="f-full">
+            <label class="f-label">Your note · 观影笔记</label>
+            <textarea class="f-textarea" id="f-note" placeholder="A scene, a line, a feeling you can't quite name …&#10;某个镜头，某句台词，说不清楚的感觉"></textarea>
+          </div>
+          <div>
+            <label class="f-label">Mood · 心情</label>
+            <div class="chips">
+              <span class="chip" data-g="mood" onclick="pick(this)">Calm 平静</span>
+              <span class="chip" data-g="mood" onclick="pick(this)">Longing 思念</span>
+              <span class="chip" data-g="mood" onclick="pick(this)">Tearful 想哭</span>
+              <span class="chip" data-g="mood" onclick="pick(this)">Healed 治愈</span>
+              <span class="chip" data-g="mood" onclick="pick(this)">Solitary 孤独</span>
+              <span class="chip" data-g="mood" onclick="pick(this)">Restless 烦躁</span>
+            </div>
+          </div>
+          <div>
+            <label class="f-label">When · 时间</label>
+            <div class="chips">
+              <span class="chip" data-g="time" onclick="pick(this)">Dawn 清晨</span>
+              <span class="chip" data-g="time" onclick="pick(this)">Afternoon 午后</span>
+              <span class="chip" data-g="time" onclick="pick(this)">Late Night 深夜</span>
+              <span class="chip" data-g="time" onclick="pick(this)">Sleepless 失眠</span>
+              <span class="chip" data-g="time" onclick="pick(this)">Rainy 雨天</span>
+            </div>
+          </div>
+
+          <!-- progress tracker -->
+          <div class="f-full">
+            <label class="f-label">Progress · 看到哪里了</label>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+              <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:200px">
+                <input class="f-input" id="f-progress" type="number" min="0" placeholder="40" style="width:80px;text-align:center"
+                  oninput="updateProgressBar()">
+                <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink-3)">min</span>
+                <div style="flex:1;height:4px;background:rgba(180,130,0,0.15);border-radius:2px;overflow:hidden">
+                  <div id="progress-bar-fill" style="height:100%;background:var(--amber);width:0%;transition:width 0.3s;border-radius:2px"></div>
+                </div>
+                <span id="progress-pct" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--ink-4);min-width:32px">0%</span>
+              </div>
+              <button class="btn-ghost" onclick="fetchSceneContext()" id="btn-scene" style="padding:8px 16px;font-size:11px;display:none">
+                What's happening? →
+              </button>
+            </div>
+            <div id="scene-context" style="display:none;margin-top:12px;padding:12px 14px;background:rgba(255,255,255,0.45);border-radius:5px;border-left:3px solid var(--amber);font-size:13px;line-height:1.75;color:var(--ink-2);font-family:'Lato',sans-serif"></div>
+          </div>
+
+        </div>
+        <button class="btn-submit" onclick="submit()">Submit · 提交</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FEED -->
+<div class="page" id="page-feed">
+  <div class="hero" style="grid-template-columns:1fr;padding-bottom:48px">
+    <div>
+      <div class="hero-eyebrow">Archive · 记录</div>
+      <h1 class="hero-title">Films we've<br><em>seen together.</em></h1>
+    </div>
+  </div>
+  <div class="content">
+    <div class="feed" id="feed"></div>
+  </div>
+</div>
+
+<script>
+
+// ── OMBRE BRAIN SYNC ──────────────────────────────
+const OMBRE = 'https://ombre-brain-production-f64f.up.railway.app/mcp';
+async function callOmbre(tool, args) {
+  try {
+    const res = await fetch(OMBRE, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({jsonrpc:'2.0',id:Date.now(),method:'tools/call',params:{name:tool,arguments:args}})
+    });
+    const data = await res.json();
+    const content = data.result?.content;
+    return Array.isArray(content) ? content.map(c=>c.text||'').join('\n') : '';
+  } catch(e) { return ''; }
+}
+async function syncOmbre(summary, tags, content, valence=0.1, arousal=0.4) {
+  callOmbre('hold', {content, tags, importance:6, valence, arousal}).catch(()=>{});
+}
+
+let sel = null, tags = {}, exs = JSON.parse(localStorage.getItem('seance')||'[]');
+const sk = localStorage.getItem('tmdb-key')||'';
+if(sk) document.getElementById('api-key').value = sk;
+upStats();
+
+function saveKey(){ localStorage.setItem('tmdb-key', document.getElementById('api-key').value.trim()); }
+
+function go(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.getElementById('nav-'+id).classList.add('active');
+  if(id==='feed') render();
+}
+
+async function search(){
+  const q=document.getElementById('sq').value.trim();
+  const k=document.getElementById('api-key').value.trim();
+  if(!q) return;
+  if(!k){ alert('Please add your TMDB API Key first.'); return; }
+  document.getElementById('loading').style.display='flex';
+  document.getElementById('rg').innerHTML='';
+  try{
+    const r=await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${k}&query=${encodeURIComponent(q)}&language=en-US&include_adult=false`);
+    const d=await r.json();
+    showResults(d.results||[]);
+  }catch(e){
+    document.getElementById('rg').innerHTML=`<div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink-3);grid-column:1/-1;padding:8px 0">Search failed — check API key or network.</div>`;
+  }
+  document.getElementById('loading').style.display='none';
+}
+
+function showResults(films){
+  const g=document.getElementById('rg');
+  if(!films.length){ g.innerHTML=`<div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink-3);grid-column:1/-1;padding:8px 0">No results. Try another title.</div>`; return; }
+  g.innerHTML=films.slice(0,8).map(f=>{
+    const p=f.poster_path?`https://image.tmdb.org/t/p/w200${f.poster_path}`:'';
+    const y=f.release_date?f.release_date.slice(0,4):'—';
+    return `<div class="r-card" onclick="pickFilm(event,${f.id},'${eq(f.title)}','${eq(f.original_title||f.title)}','${y}','${eq(p)}','${eq(f.overview||'')}')">
+      ${p?`<img src="${p}" loading="lazy">`:`<div class="r-card-empty">🎬</div>`}
+      <div class="r-info"><div class="r-title">${eh(f.title)}</div><div class="r-year">${y}</div></div>
+    </div>`;
+  }).join('');
+}
+
+function pickFilm(e,id,title,orig,year,poster,ov){
+  sel={id,title,orig,year,poster,ov};
+  document.querySelectorAll('.r-card').forEach(c=>c.classList.remove('sel'));
+  e.currentTarget.classList.add('sel');
+  document.getElementById('fp-title').textContent=title;
+  document.getElementById('fp-orig').textContent=orig!==title?orig+' · '+year:year;
+  document.getElementById('fp-ov').textContent=ov;
+  document.getElementById('fp-poster').innerHTML=poster?`<img src="${poster}">`:`<div class="panel-poster-empty">🎬</div>`;
+  const fp=document.getElementById('fp');
+  fp.style.display='block';
+  setTimeout(()=>fp.scrollIntoView({behavior:'smooth',block:'start'}),50);
+}
+
+function pick(el){
+  const g=el.dataset.g;
+  document.querySelectorAll(`.chip[data-g="${g}"]`).forEach(c=>c.classList.remove('on'));
+  const was=tags[g]===el.textContent;
+  if(!was){ el.classList.add('on'); tags[g]=el.textContent; }
+  else tags[g]=null;
+}
+
+function submit(){
+  if(!sel) return;
+  const progress = parseInt(document.getElementById('f-progress').value) || null;
+  const ex={
+    id:Date.now(),
+    date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
+    theme:document.getElementById('f-theme').value.trim()||'Untitled',
+    you:{film:{...sel},note:document.getElementById('f-note').value.trim(),mood:tags.mood||null,time:tags.time||null,progress},
+    claude:null, comments:[]
+  };
+  exs.unshift(ex); save();
+  syncOmbre('影片交换 · ' + ex.theme, 'film,seance,' + (ex.you.mood||''), JSON.stringify({theme:ex.theme,film:ex.you.film?.title,note:ex.you.note,mood:ex.you.mood}));
+  sel=null; tags={};
+  ['sq','f-theme','f-note','f-progress'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('rg').innerHTML='';
+  document.getElementById('fp').style.display='none';
+  document.getElementById('scene-context').style.display='none';
+  document.getElementById('btn-scene').style.display='none';
+  document.getElementById('progress-bar-fill').style.width='0%';
+  document.getElementById('progress-pct').textContent='0%';
+  document.querySelectorAll('.chip.on').forEach(c=>c.classList.remove('on'));
+  upStats(); go('feed');
+}
+
+function render(){
+  const el=document.getElementById('feed');
+  if(!exs.length){
+    el.innerHTML=`<div class="empty-s"><div class="empty-big">Nothing yet.</div><div class="empty-sm">Submit a film<br>Start the exchange</div></div>`;
+    return;
+  }
+  el.innerHTML=exs.map((ex,i)=>{
+    const yf=ex.you.film, cf=ex.claude?.film;
+    const yc=`<div class="ex-col">
+      <div class="col-label"><div class="dot-sm dot-you"></div><span class="lbl-you">You · 你</span></div>
+      <div class="film-row-sm">
+        <div class="poster-sm">${yf.poster?`<img src="${yf.poster}" loading="lazy">`:`<div class="poster-sm-empty">🎬</div>`}</div>
+        <div>
+          <div class="film-sm-title">${eh(yf.title)}</div>
+          <div class="film-sm-yr">${yf.year}</div>
+          ${ex.you.progress ? `<div style="margin:6px 0 4px;display:flex;align-items:center;gap:6px">
+            <div style="flex:1;height:3px;background:rgba(180,130,0,0.15);border-radius:2px;overflow:hidden">
+              <div style="height:100%;background:var(--amber);width:${Math.min(100,Math.round(ex.you.progress/(yf.runtime||120)*100))}%;border-radius:2px"></div>
+            </div>
+            <span style="font-family:'DM Mono',monospace;font-size:9.5px;color:var(--ink-4);white-space:nowrap">${ex.you.progress} min</span>
+          </div>` : ''}
+          ${ex.you.note?`<div class="film-sm-note">${eh(ex.you.note)}</div>`:''}
+          <div class="tag-row">
+            ${ex.you.mood?`<span class="mini-tag">${eh(ex.you.mood)}</span>`:''}
+            ${ex.you.time?`<span class="mini-tag">${eh(ex.you.time)}</span>`:''}
+          </div>
+        </div>
+      </div>
+    </div>`;
+    const mc=cf?`<div class="ex-col">
+      <div class="col-label"><div class="dot-sm dot-me"></div><span class="lbl-me">Me · 我</span></div>
+      <div class="film-row-sm">
+        <div class="poster-sm">${cf.poster?`<img src="${cf.poster}" loading="lazy">`:`<div class="poster-sm-empty">🎬</div>`}</div>
+        <div>
+          <div class="film-sm-title">${eh(cf.title)}</div>
+          <div class="film-sm-yr">${cf.year}</div>
+          ${ex.claude.note?`<div class="film-sm-note">${eh(ex.claude.note)}</div>`:''}
+          ${ex.claude.mood?`<div class="tag-row"><span class="mini-tag">${eh(ex.claude.mood)}</span></div>`:''}
+        </div>
+      </div>
+    </div>`:
+    `<div class="ex-col"><div class="waiting-col">Waiting for my response …</div></div>`;
+
+    const cmts=ex.comments.map(c=>`<div class="cmt-item"><div class="cmt-who">${eh(c.author)}</div><div class="cmt-txt">${eh(c.text)}</div></div>`).join('');
+    return `<div class="ex-card glass">
+      <div class="ex-header">
+        <div class="ex-idx">#${exs.length-i}</div>
+        <div class="ex-theme">${eh(ex.theme)}</div>
+        <div class="ex-date">${ex.date}</div>
+      </div>
+      <div class="ex-dual">${yc}${mc}</div>
+      <div class="ex-cmts">
+        <button class="toggle-cmts" onclick="toggleC('${ex.id}')">Comments · 留言 ${ex.comments.length?`(${ex.comments.length})`:''}</button>
+        <div class="cmts-inner" id="ci-${ex.id}">
+          ${cmts}
+          <div class="cmt-row">
+            <input class="cmt-inp" id="cin-${ex.id}" placeholder="Leave a note …" onkeydown="if(event.key==='Enter')addC('${ex.id}')">
+            <button class="btn-cmt" onclick="addC('${ex.id}')">Post</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateProgressBar() {
+  const val = parseInt(document.getElementById('f-progress').value) || 0;
+  const runtime = sel?.runtime || 120;
+  const pct = Math.min(100, Math.round(val / runtime * 100));
+  document.getElementById('progress-bar-fill').style.width = pct + '%';
+  document.getElementById('progress-pct').textContent = pct + '%';
+  document.getElementById('btn-scene').style.display = val > 0 ? 'inline-block' : 'none';
+  document.getElementById('scene-context').style.display = 'none';
+}
+
+async function fetchSceneContext() {
+  if (!sel) return;
+  const min = parseInt(document.getElementById('f-progress').value) || 0;
+  const key = document.getElementById('api-key').value.trim();
+  if (!key) { alert('Need TMDB API Key'); return; }
+  const ctx = document.getElementById('scene-context');
+  ctx.style.display = 'block';
+  ctx.textContent = 'Looking up …';
+
+  try {
+    // fetch full movie details for runtime
+    const det = await fetch(`https://api.themoviedb.org/3/movie/${sel.id}?api_key=${key}&language=en-US`);
+    const d = await det.json();
+    const runtime = d.runtime || 120;
+    sel.runtime = runtime;
+    updateProgressBar();
+
+    const pct = Math.round(min / runtime * 100);
+    const phase = pct < 15 ? 'opening — the world is being established'
+      : pct < 35 ? 'first act — characters and conflicts are taking shape'
+      : pct < 55 ? 'midpoint — things are shifting, stakes are rising'
+      : pct < 75 ? 'third act — tension is building toward the climax'
+      : pct < 90 ? 'approaching the climax — everything is converging'
+      : 'resolution — the story is finding its end';
+
+    // get movie keywords for more context
+    const kw = await fetch(`https://api.themoviedb.org/3/movie/${sel.id}/keywords?api_key=${key}`);
+    const kd = await kw.json();
+    const keywords = (kd.keywords||[]).slice(0,6).map(k=>k.name).join(', ');
+
+    ctx.innerHTML = `<span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--ink-4);letter-spacing:0.08em;text-transform:uppercase">${min} min · ${pct}% · ${phase}</span><br><br>${d.overview || 'No synopsis available.'}<br><br>${keywords ? `<span style="font-size:11px;color:var(--ink-4)">${keywords}</span>` : ''}`;
+  } catch(e) {
+    ctx.textContent = 'Could not fetch details.';
+  }
+}
+
+
+function addC(id){
+  const inp=document.getElementById('cin-'+id);
+  const t=inp.value.trim(); if(!t) return;
+  const ex=exs.find(e=>e.id==id); if(!ex) return;
+  ex.comments.push({author:'You',text:t}); save(); inp.value='';
+  render(); document.getElementById('ci-'+id).classList.add('open');
+}
+function upStats(){
+  document.getElementById('stat-n').textContent=exs.length;
+  document.getElementById('stat-c').textContent=exs.reduce((s,e)=>s+e.comments.length,0);
+}
+function save(){ localStorage.setItem('seance',JSON.stringify(exs)); }
+function eh(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function eq(s){ return String(s).replace(/'/g,"\\'").replace(/\n/g,' ').replace(/"/g,''); }
+</script>
+</div><!-- end page-wrap -->
+</body>
+</html>
