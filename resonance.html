@@ -794,8 +794,24 @@ async function generatePKCE() {
 window.addEventListener('load', async () => {
   const params = new URLSearchParams(window.location.search);
   const code = params.get('code');
+  const error = params.get('error');
+
+  // clean URL regardless
+  if (code || error) {
+    window.history.replaceState({}, '', REDIRECT_URI);
+  }
+
+  if (error) {
+    console.log('Spotify auth error:', error);
+    return;
+  }
+
   if (code) {
     const verifier = localStorage.getItem('spotify-pkce-verifier');
+    if (!verifier) {
+      console.log('No PKCE verifier found');
+      return;
+    }
     try {
       const res = await fetch('https://accounts.spotify.com/api/token', {
         method: 'POST',
@@ -803,7 +819,7 @@ window.addEventListener('load', async () => {
         body: new URLSearchParams({
           client_id: SPOTIFY_CLIENT_ID,
           grant_type: 'authorization_code',
-          code,
+          code: code,
           redirect_uri: REDIRECT_URI,
           code_verifier: verifier,
         })
@@ -811,16 +827,21 @@ window.addEventListener('load', async () => {
       const data = await res.json();
       if (data.access_token) {
         spotifyToken = data.access_token;
-        tokenExpiry = Date.now() + data.expires_in * 1000;
+        tokenExpiry = Date.now() + (data.expires_in || 3600) * 1000;
         localStorage.setItem('spotify-token', spotifyToken);
         localStorage.setItem('spotify-expiry', String(tokenExpiry));
         localStorage.removeItem('spotify-pkce-verifier');
-        window.history.replaceState({}, '', REDIRECT_URI);
         onSpotifyConnected();
         return;
+      } else {
+        console.log('Token error:', data);
       }
-    } catch(e) {}
+    } catch(e) {
+      console.log('Token fetch error:', e);
+    }
+    return;
   }
+
   if (spotifyToken && Date.now() < tokenExpiry) {
     onSpotifyConnected();
   }

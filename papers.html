@@ -211,54 +211,24 @@ function fetchPapers(refresh){
   document.getElementById('heroSection').style.display='block';
   document.getElementById('streamArea').style.display='none';
 
-  // 优先读取预生成的 papers_today.json
-  if(!refresh){
-    fetch('papers_today.json?t='+Date.now())
-      .then(function(r){ if(!r.ok) throw new Error('no file'); return r.json(); })
-      .then(function(data){
-        if(data && data.papers && data.papers.length > 0){
-          isFetching=false;
-          PAPERS=data.papers.slice(0,8);
-          render();
-          document.getElementById('refreshBtn').style.display='block';
-          // show date
-          var d=data.date||'';
-          if(d){
-            var info=document.createElement('div');
-            info.style.cssText='font-family:Inconsolata,monospace;font-size:9px;letter-spacing:.12em;color:var(--ink3);text-transform:uppercase;padding:8px 24px;';
-            info.textContent='Papers from '+d+' · click ↻ to refresh from arXiv live';
-            document.getElementById('streamArea').prepend(info);
-          }
-          return;
-        }
-        throw new Error('empty');
-      })
-      .catch(function(){ fetchFromArxiv(); });
-    return;
-  }
-  fetchFromArxiv();
-}
-
-function fetchFromArxiv(){
-  // 调用 Ombre Brain 后端抓取论文，避免浏览器 CORS 限制
   fetch('https://ombre-brain-production-f64f.up.railway.app/mcp', {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({
       jsonrpc: '2.0', id: Date.now(),
       method: 'tools/call',
-      params: { name: 'papers_fetch', arguments: { category: 'all', limit: 8 } }
+      params: { name: 'papers_fetch', arguments: { category: currentFilter==='all'?'all':currentFilter, limit: 8 } }
     })
   })
   .then(function(r){ return r.json(); })
   .then(function(data){
-    var text = data.result?.content?.[0]?.text || '';
+    var text = (data.result && data.result.content && data.result.content[0]) ? data.result.content[0].text : '';
     var parsed = JSON.parse(text);
     isFetching = false;
     if(parsed.papers && parsed.papers.length > 0){
       PAPERS = parsed.papers;
-      render();
-      document.getElementById('refreshBtn').style.display = 'block';
+      if(PAPERS.length===0){ showError(); }
+      else{ render(); document.getElementById('refreshBtn').style.display='block'; }
     } else {
       showError();
     }
@@ -269,7 +239,6 @@ function fetchFromArxiv(){
   });
 }
 
-}
 
 function parseArxiv(xml,cat){
   var papers=[];
