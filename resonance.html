@@ -719,32 +719,69 @@ const SCOPES = 'user-read-recently-played user-read-currently-playing';
 let spotifyToken = localStorage.getItem('spotify-token') || null;
 let tokenExpiry = parseInt(localStorage.getItem('spotify-expiry') || '0');
 
-// check token on load
-window.addEventListener('load', () => {
-  // handle redirect back from Spotify
-  const hash = window.location.hash.substring(1);
-  if (hash) {
-    const params = new URLSearchParams(hash);
-    const token = params.get('access_token');
-    const expires = params.get('expires_in');
-    if (token) {
-      spotifyToken = token;
-      tokenExpiry = Date.now() + parseInt(expires) * 1000;
-      localStorage.setItem('spotify-token', token);
-      localStorage.setItem('spotify-expiry', tokenExpiry);
-      window.location.hash = '';
-      onSpotifyConnected();
-      return;
-    }
+// PKCE helpers
+async function sha256(plain) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(plain);
+  return window.crypto.subtle.digest('SHA-256', data);
+}
+function base64urlencode(a) {
+  return btoa(String.fromCharCode.apply(null, new Uint8Array(a)))
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+async function generatePKCE() {
+  const verifier = base64urlencode(crypto.getRandomValues(new Uint8Array(32)));
+  const challenge = base64urlencode(await sha256(verifier));
+  return { verifier, challenge };
+}
+
+window.addEventListener('load', async () => {
+  // handle PKCE callback
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get('code');
+  if (code) {
+    const verifier = localStorage.getItem('spotify-pkce-verifier');
+    try {
+      const res = await fetch('https://accounts.spotify.com/api/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          client_id: SPOTIFY_CLIENT_ID,
+          grant_type: 'authorization_code',
+          code,
+          redirect_uri: REDIRECT_URI,
+          code_verifier: verifier,
+        })
+      });
+      const data = await res.json();
+      if (data.access_token) {
+        spotifyToken = data.access_token;
+        tokenExpiry = Date.now() + data.expires_in * 1000;
+        localStorage.setItem('spotify-token', spotifyToken);
+        localStorage.setItem('spotify-expiry', tokenExpiry);
+        localStorage.removeItem('spotify-pkce-verifier');
+        window.history.replaceState({}, '', REDIRECT_URI);
+        onSpotifyConnected();
+        return;
+      }
+    } catch(e) {}
   }
   if (spotifyToken && Date.now() < tokenExpiry) {
     onSpotifyConnected();
   }
 });
 
-function spotifyLogin() {
-  const url = `https://accounts.spotify.com/authorize?client_id=${SPOTIFY_CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=${encodeURIComponent(SCOPES)}`;
-  window.location.href = url;
+async function spotifyLogin() {
+  const { verifier, challenge } = await generatePKCE();
+  localStorage.setItem('spotify-pkce-verifier', verifier);
+  const url = new URL('https://accounts.spotify.com/authorize');
+  url.searchParams.set('client_id', SPOTIFY_CLIENT_ID);
+  url.searchParams.set('response_type', 'code');
+  url.searchParams.set('redirect_uri', REDIRECT_URI);
+  url.searchParams.set('scope', SCOPES);
+  url.searchParams.set('code_challenge_method', 'S256');
+  url.searchParams.set('code_challenge', challenge);
+  window.location.href = url.toString();
 }
 
 function onSpotifyConnected() {
