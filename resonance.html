@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
@@ -14,140 +13,140 @@
 :root { color-scheme: light; }
 
 :root {
-–paper:    #faf6ee;
-–paper-2:  #f5eedf;
-–paper-3:  #ede3ce;
-–paper-4:  #e2d5b8;
-–ink:      #1e1a0e;
-–ink-2:    #2e2818;
-–ink-3:    #5a4e30;
-–ink-4:    #8a7a50;
-–ink-5:    #b8a878;
-–staff:    rgba(80,60,20,0.14);
-–staff-2:  rgba(80,60,20,0.08);
-–accent:   #8b4513;
-–accent-2: #6b3410;
-–gold:     #c8941a;
-–gold-2:   #a87410;
-–border:   rgba(100,80,30,0.15);
-–border-2: rgba(100,80,30,0.25);
-–shadow:   rgba(30,20,5,0.08);
+  --paper:    #faf6ee;
+  --paper-2:  #f5eedf;
+  --paper-3:  #ede3ce;
+  --paper-4:  #e2d5b8;
+  --ink:      #1e1a0e;
+  --ink-2:    #2e2818;
+  --ink-3:    #5a4e30;
+  --ink-4:    #8a7a50;
+  --ink-5:    #b8a878;
+  --staff:    rgba(80,60,20,0.14);
+  --staff-2:  rgba(80,60,20,0.08);
+  --accent:   #8b4513;
+  --accent-2: #6b3410;
+  --gold:     #c8941a;
+  --gold-2:   #a87410;
+  --border:   rgba(100,80,30,0.15);
+  --border-2: rgba(100,80,30,0.25);
+  --shadow:   rgba(30,20,5,0.08);
 }
 
 html { scroll-behavior: smooth; }
 
 body {
-background-color: var(–paper);
-color: var(–ink);
-font-family: ‘Lora’, ‘Noto Serif SC’, serif;
-min-height: 100vh;
-overflow-x: hidden;
-position: relative;
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: 'Lora', 'Noto Serif SC', serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
 }
 
 /* ── AGED PAPER TEXTURE ── */
 body::before {
-content: ‘’;
-position: fixed; inset: 0; pointer-events: none; z-index: 0;
-background:
-url(“data:image/svg+xml,%3Csvg xmlns=‘http://www.w3.org/2000/svg’ width=‘300’ height=‘300’%3E%3Cfilter id=‘n’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=‘0.72’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3CfeColorMatrix type=‘saturate’ values=‘0.3’/%3E%3C/filter%3E%3Crect width=‘300’ height=‘300’ filter=‘url(%23n)’ opacity=‘0.055’/%3E%3C/svg%3E”),
-radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,248,220,0.6) 0%, transparent 65%),
-radial-gradient(ellipse 40% 30% at 10% 90%, rgba(180,140,80,0.08) 0%, transparent 55%),
-radial-gradient(ellipse 40% 30% at 90% 85%, rgba(180,140,80,0.07) 0%, transparent 55%);
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0.3'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,248,220,0.6) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 30% at 10% 90%, rgba(180,140,80,0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 30% at 90% 85%, rgba(180,140,80,0.07) 0%, transparent 55%);
 }
 
 /* ── STAFF LINES BACKGROUND ── */
 .staff-bg {
-position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+  position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
 }
 .staff-group {
-position: absolute; left: 0; right: 0;
+  position: absolute; left: 0; right: 0;
 }
 .staff-line {
-position: absolute; left: 0; right: 0;
-height: 1px; background: var(–staff);
+  position: absolute; left: 0; right: 0;
+  height: 1px; background: var(--staff);
 }
 
 /* floating music notes */
 .note {
-position: absolute;
-font-size: 22px;
-color: rgba(80,60,20,0.08);
-animation: floatNote linear infinite;
-user-select: none; pointer-events: none;
+  position: absolute;
+  font-size: 22px;
+  color: rgba(80,60,20,0.08);
+  animation: floatNote linear infinite;
+  user-select: none; pointer-events: none;
 }
 @keyframes floatNote {
-0%   { transform: translateY(0) rotate(-5deg); opacity: 0; }
-10%  { opacity: 1; }
-90%  { opacity: 0.6; }
-100% { transform: translateY(-120px) rotate(8deg); opacity: 0; }
+  0%   { transform: translateY(0) rotate(-5deg); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 0.6; }
+  100% { transform: translateY(-120px) rotate(8deg); opacity: 0; }
 }
 
 /* ── HEADER ── */
 .site-header {
-position: sticky; top: 0; z-index: 100;
-background: rgba(250,246,238,0.88);
--webkit-backdrop-filter: blur(14px);
-backdrop-filter: blur(14px);
-border-bottom: 1px solid var(–border-2);
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(250,246,238,0.88);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border-2);
 }
 
 /* staff lines in header */
 .site-header::after {
-content: ‘’;
-position: absolute; bottom: 0; left: 0; right: 0; height: 4px;
-background: repeating-linear-gradient(
-to bottom,
-transparent 0px,
-transparent 0px,
-rgba(80,60,20,0.18) 0px,
-rgba(80,60,20,0.18) 1px,
-transparent 1px,
-transparent 4px
-);
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 4px;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 0px,
+    rgba(80,60,20,0.18) 0px,
+    rgba(80,60,20,0.18) 1px,
+    transparent 1px,
+    transparent 4px
+  );
 }
 
 .header-inner {
-max-width: 1100px; margin: 0 auto;
-padding: 0 44px; height: 66px;
-display: flex; align-items: center; gap: 18px;
+  max-width: 1100px; margin: 0 auto;
+  padding: 0 44px; height: 66px;
+  display: flex; align-items: center; gap: 18px;
 }
 
 .logo-wrap { display: flex; align-items: baseline; gap: 10px; }
 
 .logo-en {
-font-family: ‘Cormorant Garamond’, serif;
-font-size: 24px; font-style: italic; font-weight: 600;
-color: var(–ink); letter-spacing: 0.02em;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px; font-style: italic; font-weight: 600;
+  color: var(--ink); letter-spacing: 0.02em;
 }
 .logo-cn {
-font-family: ‘Inconsolata’, monospace; font-size: 9px;
-letter-spacing: 0.2em; color: var(–ink-4); text-transform: uppercase;
+  font-family: 'Inconsolata', monospace; font-size: 9px;
+  letter-spacing: 0.2em; color: var(--ink-4); text-transform: uppercase;
 }
 
 /* pixel cellist in header */
 .pixel-cellist {
-width: 20px; height: 28px;
-image-rendering: pixelated;
-flex-shrink: 0;
+  width: 20px; height: 28px;
+  image-rendering: pixelated;
+  flex-shrink: 0;
 }
 
 nav { display: flex; gap: 2px; margin-left: auto; }
 .nav-btn {
-background: none; border: none; cursor: pointer;
-font-family: ‘Inconsolata’, monospace; font-size: 11px;
-letter-spacing: 0.12em; color: var(–ink-4);
-text-transform: uppercase; padding: 7px 14px; border-radius: 3px;
-transition: all 0.2s; position: relative;
+  background: none; border: none; cursor: pointer;
+  font-family: 'Inconsolata', monospace; font-size: 11px;
+  letter-spacing: 0.12em; color: var(--ink-4);
+  text-transform: uppercase; padding: 7px 14px; border-radius: 3px;
+  transition: all 0.2s; position: relative;
 }
 .nav-btn::after {
-content: ‘’; position: absolute; bottom: 4px; left: 50%;
-transform: translateX(-50%); width: 0; height: 1px;
-background: var(–accent); transition: width 0.2s;
+  content: ''; position: absolute; bottom: 4px; left: 50%;
+  transform: translateX(-50%); width: 0; height: 1px;
+  background: var(--accent); transition: width 0.2s;
 }
-.nav-btn:hover { color: var(–ink); }
+.nav-btn:hover { color: var(--ink); }
 .nav-btn:hover::after { width: 16px; }
-.nav-btn.active { color: var(–ink); }
+.nav-btn.active { color: var(--ink); }
 .nav-btn.active::after { width: 16px; }
 
 /* ── PAGES ── */
@@ -157,243 +156,243 @@ background: var(–accent); transition: width 0.2s;
 
 /* ── HERO ── */
 .hero {
-max-width: 1100px; margin: 0 auto;
-padding: 60px 44px 48px;
-display: grid; grid-template-columns: 1fr 180px;
-gap: 40px; align-items: start;
-border-bottom: 1px solid var(–border);
+  max-width: 1100px; margin: 0 auto;
+  padding: 60px 44px 48px;
+  display: grid; grid-template-columns: 1fr 180px;
+  gap: 40px; align-items: start;
+  border-bottom: 1px solid var(--border);
 }
 
 /* large pixel cellist in hero */
 .hero-pixel {
-display: flex; flex-direction: column; align-items: center; gap: 10px;
-padding-top: 10px;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  padding-top: 10px;
 }
 .hero-pixel-figures {
-display: flex; align-items: flex-end; gap: 12px;
+  display: flex; align-items: flex-end; gap: 12px;
 }
 
 .pixel-art-large {
-image-rendering: pixelated;
-width: 96px; height: 120px;
+  image-rendering: pixelated;
+  width: 96px; height: 120px;
 }
 
 .hero-pixel-caption {
-font-family: ‘Inconsolata’, monospace; font-size: 9px;
-letter-spacing: 0.14em; color: var(–ink-5); text-transform: uppercase;
-text-align: center;
+  font-family: 'Inconsolata', monospace; font-size: 9px;
+  letter-spacing: 0.14em; color: var(--ink-5); text-transform: uppercase;
+  text-align: center;
 }
 
 .hero-eyebrow {
-font-family: ‘Inconsolata’, monospace; font-size: 10px;
-letter-spacing: 0.22em; color: var(–ink-4); text-transform: uppercase;
-margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
+  font-family: 'Inconsolata', monospace; font-size: 10px;
+  letter-spacing: 0.22em; color: var(--ink-4); text-transform: uppercase;
+  margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
 }
-.hero-eyebrow::before { content: ‘𝄞’; font-size: 18px; color: var(–ink-4); }
+.hero-eyebrow::before { content: '𝄞'; font-size: 18px; color: var(--ink-4); }
 
 .hero-title {
-font-family: ‘Cormorant Garamond’, serif;
-font-size: clamp(44px, 5.5vw, 68px);
-font-weight: 600; line-height: 1.06; color: var(–ink);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(44px, 5.5vw, 68px);
+  font-weight: 600; line-height: 1.06; color: var(--ink);
 }
-.hero-title em { font-style: italic; font-weight: 300; color: var(–accent); }
+.hero-title em { font-style: italic; font-weight: 300; color: var(--accent); }
 
 .hero-sub {
-margin-top: 14px; font-size: 14.5px;
-color: var(–ink-3); line-height: 1.85; max-width: 420px;
-font-family: ‘Noto Serif SC’, serif;
+  margin-top: 14px; font-size: 14.5px;
+  color: var(--ink-3); line-height: 1.85; max-width: 420px;
+  font-family: 'Noto Serif SC', serif;
 }
 
 .hero-stats {
-margin-top: 28px; display: flex; gap: 32px;
+  margin-top: 28px; display: flex; gap: 32px;
 }
 .stat-item { }
 .stat-n {
-font-family: ‘Cormorant Garamond’, serif;
-font-size: 34px; font-weight: 300; color: var(–ink); line-height: 1;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 34px; font-weight: 300; color: var(--ink); line-height: 1;
 }
 .stat-l {
-font-family: ‘Inconsolata’, monospace; font-size: 9px;
-letter-spacing: 0.12em; color: var(–ink-4); text-transform: uppercase; margin-top: 3px;
+  font-family: 'Inconsolata', monospace; font-size: 9px;
+  letter-spacing: 0.12em; color: var(--ink-4); text-transform: uppercase; margin-top: 3px;
 }
 
 /* ── CONTENT ── */
 .content {
-max-width: 1100px; margin: 0 auto; padding: 44px 44px 80px;
+  max-width: 1100px; margin: 0 auto; padding: 44px 44px 80px;
 }
 
 /* paper card */
 .card {
-background: var(–paper-2);
-border: 1px solid var(–border-2);
-border-radius: 6px;
-box-shadow: 0 3px 20px var(–shadow), inset 0 1px 0 rgba(255,255,255,0.7);
-margin-bottom: 24px;
-overflow: hidden;
-position: relative;
+  background: var(--paper-2);
+  border: 1px solid var(--border-2);
+  border-radius: 6px;
+  box-shadow: 0 3px 20px var(--shadow), inset 0 1px 0 rgba(255,255,255,0.7);
+  margin-bottom: 24px;
+  overflow: hidden;
+  position: relative;
 }
 
 /* staff lines on cards */
 .card::before {
-content: ‘’;
-position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-background: repeating-linear-gradient(
-to bottom,
-transparent 0px,
-transparent 23px,
-var(–staff-2) 23px,
-var(–staff-2) 24px
-);
-pointer-events: none; border-radius: 6px;
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 23px,
+    var(--staff-2) 23px,
+    var(--staff-2) 24px
+  );
+  pointer-events: none; border-radius: 6px;
 }
 
 .card-inner { position: relative; z-index: 1; padding: 28px; }
 
 .s-label {
-font-family: ‘Inconsolata’, monospace; font-size: 9px;
-letter-spacing: 0.2em; color: var(–ink-4); text-transform: uppercase;
-margin-bottom: 14px; display: flex; align-items: center; gap: 10px;
+  font-family: 'Inconsolata', monospace; font-size: 9px;
+  letter-spacing: 0.2em; color: var(--ink-4); text-transform: uppercase;
+  margin-bottom: 14px; display: flex; align-items: center; gap: 10px;
 }
-.s-label::after { content: ‘’; flex: 1; height: 1px; background: var(–border-2); }
+.s-label::after { content: ''; flex: 1; height: 1px; background: var(--border-2); }
 
 /* inputs */
 .inp-row { display: flex; gap: 10px; margin-bottom: 20px; }
 
 .inp {
-flex: 1; padding: 12px 16px;
-background: rgba(255,252,240,0.8);
-border: 1px solid var(–border-2); border-radius: 4px;
-font-family: ‘Lora’, serif; font-size: 14px;
-color: var(–ink); outline: none; transition: all 0.2s;
-box-shadow: inset 0 1px 3px rgba(30,20,5,0.06);
+  flex: 1; padding: 12px 16px;
+  background: rgba(255,252,240,0.8);
+  border: 1px solid var(--border-2); border-radius: 4px;
+  font-family: 'Lora', serif; font-size: 14px;
+  color: var(--ink); outline: none; transition: all 0.2s;
+  box-shadow: inset 0 1px 3px rgba(30,20,5,0.06);
 }
 .inp:focus {
-border-color: var(–accent);
-background: rgba(255,254,248,0.95);
-box-shadow: 0 0 0 3px rgba(139,69,19,0.08), inset 0 1px 3px rgba(30,20,5,0.04);
+  border-color: var(--accent);
+  background: rgba(255,254,248,0.95);
+  box-shadow: 0 0 0 3px rgba(139,69,19,0.08), inset 0 1px 3px rgba(30,20,5,0.04);
 }
-.inp::placeholder { color: var(–ink-5); font-style: italic; }
+.inp::placeholder { color: var(--ink-5); font-style: italic; }
 
 .inp-key {
-font-family: ‘DM Mono’, monospace; font-size: 11.5px;
-letter-spacing: 0.04em;
+  font-family: 'DM Mono', monospace; font-size: 11.5px;
+  letter-spacing: 0.04em;
 }
 
 .btn {
-padding: 12px 26px; border-radius: 4px; cursor: pointer;
-font-family: ‘Inconsolata’, monospace; font-size: 11px;
-letter-spacing: 0.12em; text-transform: uppercase;
-transition: all 0.2s; border: 1px solid transparent;
-white-space: nowrap;
+  padding: 12px 26px; border-radius: 4px; cursor: pointer;
+  font-family: 'Inconsolata', monospace; font-size: 11px;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  transition: all 0.2s; border: 1px solid transparent;
+  white-space: nowrap;
 }
 .btn-primary {
-background: var(–ink); color: var(–paper);
-box-shadow: 0 3px 12px rgba(30,20,5,0.18);
+  background: var(--ink); color: var(--paper);
+  box-shadow: 0 3px 12px rgba(30,20,5,0.18);
 }
 .btn-primary:hover {
-background: var(–ink-2);
-transform: translateY(-1px);
-box-shadow: 0 6px 16px rgba(30,20,5,0.22);
+  background: var(--ink-2);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(30,20,5,0.22);
 }
 .btn-ghost {
-background: transparent; color: var(–ink-3);
-border-color: var(–border-2);
+  background: transparent; color: var(--ink-3);
+  border-color: var(--border-2);
 }
-.btn-ghost:hover { background: var(–paper-3); color: var(–ink); }
+.btn-ghost:hover { background: var(--paper-3); color: var(--ink); }
 
 .api-note {
-font-family: ‘DM Mono’, monospace; font-size: 10px;
-color: var(–ink-4); letter-spacing: 0.06em;
-margin-bottom: 18px; padding: 8px 12px;
-border-left: 2px solid var(–gold);
-background: rgba(200,148,26,0.06);
-border-radius: 0 3px 3px 0;
-line-height: 1.7;
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  color: var(--ink-4); letter-spacing: 0.06em;
+  margin-bottom: 18px; padding: 8px 12px;
+  border-left: 2px solid var(--gold);
+  background: rgba(200,148,26,0.06);
+  border-radius: 0 3px 3px 0;
+  line-height: 1.7;
 }
-.api-note a { color: var(–accent); }
+.api-note a { color: var(--accent); }
 
 /* search results */
 .results-grid {
-display: grid;
-grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-gap: 10px; margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px; margin-top: 18px;
 }
 
 .r-card {
-cursor: pointer; border-radius: 4px; overflow: hidden;
-background: var(–paper); border: 2px solid transparent;
-transition: all 0.2s;
-box-shadow: 0 2px 8px var(–shadow);
+  cursor: pointer; border-radius: 4px; overflow: hidden;
+  background: var(--paper); border: 2px solid transparent;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px var(--shadow);
 }
-.r-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(30,20,5,0.14); border-color: var(–border-2); }
-.r-card.sel { border-color: var(–accent); box-shadow: 0 6px 18px rgba(139,69,19,0.2); transform: translateY(-4px); }
+.r-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(30,20,5,0.14); border-color: var(--border-2); }
+.r-card.sel { border-color: var(--accent); box-shadow: 0 6px 18px rgba(139,69,19,0.2); transform: translateY(-4px); }
 .r-card img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
-.r-card-empty { aspect-ratio: 1; background: var(–paper-3); display: flex; align-items: center; justify-content: center; font-size: 24px; }
+.r-card-empty { aspect-ratio: 1; background: var(--paper-3); display: flex; align-items: center; justify-content: center; font-size: 24px; }
 .r-info { padding: 7px 9px 9px; }
-.r-title { font-size: 11px; color: var(–ink); line-height: 1.35; font-family: ‘Inconsolata’, monospace; }
-.r-artist { font-size: 10px; color: var(–ink-4); margin-top: 2px; font-family: ‘Inconsolata’, monospace; }
+.r-title { font-size: 11px; color: var(--ink); line-height: 1.35; font-family: 'Inconsolata', monospace; }
+.r-artist { font-size: 10px; color: var(--ink-4); margin-top: 2px; font-family: 'Inconsolata', monospace; }
 
 /* selected track panel */
 .track-panel { display: none; margin-top: 20px; }
 .track-panel.show { display: block; }
 
 .track-top {
-display: flex; gap: 20px; align-items: flex-start;
-padding: 20px; background: rgba(255,252,240,0.6);
-border-radius: 5px; border: 1px solid var(–border);
-margin-bottom: 20px;
+  display: flex; gap: 20px; align-items: flex-start;
+  padding: 20px; background: rgba(255,252,240,0.6);
+  border-radius: 5px; border: 1px solid var(--border);
+  margin-bottom: 20px;
 }
 .track-cover {
-width: 80px; flex-shrink: 0; border-radius: 3px; overflow: hidden;
-box-shadow: 0 4px 14px rgba(30,20,5,0.2);
+  width: 80px; flex-shrink: 0; border-radius: 3px; overflow: hidden;
+  box-shadow: 0 4px 14px rgba(30,20,5,0.2);
 }
 .track-cover img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
-.track-cover-empty { aspect-ratio: 1; background: var(–paper-3); display: flex; align-items: center; justify-content: center; font-size: 26px; }
-.track-title { font-family: ‘Cormorant Garamond’, serif; font-size: 24px; font-style: italic; font-weight: 400; line-height: 1.2; }
-.track-artist { font-family: ‘Inconsolata’, monospace; font-size: 11px; color: var(–ink-3); margin-top: 4px; letter-spacing: 0.06em; }
-.track-album { font-family: ‘Inconsolata’, monospace; font-size: 10px; color: var(–ink-5); margin-top: 2px; }
+.track-cover-empty { aspect-ratio: 1; background: var(--paper-3); display: flex; align-items: center; justify-content: center; font-size: 26px; }
+.track-title { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-style: italic; font-weight: 400; line-height: 1.2; }
+.track-artist { font-family: 'Inconsolata', monospace; font-size: 11px; color: var(--ink-3); margin-top: 4px; letter-spacing: 0.06em; }
+.track-album { font-family: 'Inconsolata', monospace; font-size: 10px; color: var(--ink-5); margin-top: 2px; }
 
 /* form */
 .f-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .f-full { grid-column: 1/-1; }
 .f-label {
-display: block; font-family: ‘Inconsolata’, monospace; font-size: 9px;
-letter-spacing: 0.18em; color: var(–ink-4); text-transform: uppercase; margin-bottom: 7px;
+  display: block; font-family: 'Inconsolata', monospace; font-size: 9px;
+  letter-spacing: 0.18em; color: var(--ink-4); text-transform: uppercase; margin-bottom: 7px;
 }
 .f-textarea {
-width: 100%; padding: 11px 14px;
-background: rgba(255,252,240,0.8);
-border: 1px solid var(–border-2); border-radius: 4px;
-font-family: ‘Lora’, serif; font-size: 14px;
-color: var(–ink); outline: none; resize: vertical; min-height: 88px;
-line-height: 1.72; transition: all 0.2s;
+  width: 100%; padding: 11px 14px;
+  background: rgba(255,252,240,0.8);
+  border: 1px solid var(--border-2); border-radius: 4px;
+  font-family: 'Lora', serif; font-size: 14px;
+  color: var(--ink); outline: none; resize: vertical; min-height: 88px;
+  line-height: 1.72; transition: all 0.2s;
 }
-.f-textarea:focus { border-color: var(–accent); background: rgba(255,254,248,0.95); box-shadow: 0 0 0 3px rgba(139,69,19,0.07); }
-.f-textarea::placeholder { color: var(–ink-5); font-style: italic; }
+.f-textarea:focus { border-color: var(--accent); background: rgba(255,254,248,0.95); box-shadow: 0 0 0 3px rgba(139,69,19,0.07); }
+.f-textarea::placeholder { color: var(--ink-5); font-style: italic; }
 
 /* chips */
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chip {
-padding: 5px 13px; border-radius: 14px; cursor: pointer;
-font-size: 12px; background: rgba(255,252,240,0.7);
-border: 1px solid var(–border-2); color: var(–ink-3);
-transition: all 0.16s; user-select: none;
-font-family: ‘Noto Serif SC’, serif;
+  padding: 5px 13px; border-radius: 14px; cursor: pointer;
+  font-size: 12px; background: rgba(255,252,240,0.7);
+  border: 1px solid var(--border-2); color: var(--ink-3);
+  transition: all 0.16s; user-select: none;
+  font-family: 'Noto Serif SC', serif;
 }
-.chip:hover { border-color: var(–accent); color: var(–accent); background: rgba(139,69,19,0.06); }
-.chip.on { background: var(–ink); color: var(–paper); border-color: var(–ink); }
+.chip:hover { border-color: var(--accent); color: var(--accent); background: rgba(139,69,19,0.06); }
+.chip.on { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 
 .btn-submit {
-margin-top: 22px; padding: 14px 40px;
-background: var(–ink); color: var(–paper-2);
-border: none; border-radius: 4px; cursor: pointer;
-font-family: ‘Cormorant Garamond’, serif; font-size: 20px;
-font-style: italic; font-weight: 400; transition: all 0.22s;
-box-shadow: 0 5px 16px rgba(30,20,5,0.18);
-display: inline-flex; align-items: center; gap: 10px;
+  margin-top: 22px; padding: 14px 40px;
+  background: var(--ink); color: var(--paper-2);
+  border: none; border-radius: 4px; cursor: pointer;
+  font-family: 'Cormorant Garamond', serif; font-size: 20px;
+  font-style: italic; font-weight: 400; transition: all 0.22s;
+  box-shadow: 0 5px 16px rgba(30,20,5,0.18);
+  display: inline-flex; align-items: center; gap: 10px;
 }
-.btn-submit::after { content: ‘♩’; font-style: normal; }
-.btn-submit:hover { background: var(–ink-2); transform: translateY(-2px); box-shadow: 0 8px 22px rgba(30,20,5,0.22); }
+.btn-submit::after { content: '♩'; font-style: normal; }
+.btn-submit:hover { background: var(--ink-2); transform: translateY(-2px); box-shadow: 0 8px 22px rgba(30,20,5,0.22); }
 
 /* ── EXCHANGE FEED ── */
 .feed { display: flex; flex-direction: column; gap: 22px; }
@@ -402,128 +401,125 @@ display: inline-flex; align-items: center; gap: 10px;
 .ex-card:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(30,20,5,0.12) !important; }
 
 .ex-header {
-padding: 16px 24px 14px;
-display: grid; grid-template-columns: 28px 1fr auto;
-gap: 12px; align-items: center;
-border-bottom: 1px solid var(–border);
-background: rgba(230,210,170,0.2);
+  padding: 16px 24px 14px;
+  display: grid; grid-template-columns: 28px 1fr auto;
+  gap: 12px; align-items: center;
+  border-bottom: 1px solid var(--border);
+  background: rgba(230,210,170,0.2);
 }
 .ex-num {
-font-family: ‘Cormorant Garamond’, serif; font-size: 14px;
-font-style: italic; color: var(–ink-4);
+  font-family: 'Cormorant Garamond', serif; font-size: 14px;
+  font-style: italic; color: var(--ink-4);
 }
 .ex-theme {
-font-family: ‘Cormorant Garamond’, serif; font-size: 21px;
-font-style: italic; font-weight: 400; color: var(–ink);
+  font-family: 'Cormorant Garamond', serif; font-size: 21px;
+  font-style: italic; font-weight: 400; color: var(--ink);
 }
 .ex-date {
-font-family: ‘Inconsolata’, monospace; font-size: 9.5px;
-color: var(–ink-5); letter-spacing: 0.07em; white-space: nowrap;
+  font-family: 'Inconsolata', monospace; font-size: 9.5px;
+  color: var(--ink-5); letter-spacing: 0.07em; white-space: nowrap;
 }
 
 .ex-dual { display: grid; grid-template-columns: 1fr 1fr; }
 .ex-col { padding: 20px 24px; }
-.ex-col:first-child { border-right: 1px solid var(–border); }
+.ex-col:first-child { border-right: 1px solid var(--border); }
 
 .col-owner {
-font-family: ‘Inconsolata’, monospace; font-size: 9px;
-letter-spacing: 0.18em; text-transform: uppercase;
-margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
+  font-family: 'Inconsolata', monospace; font-size: 9px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
 }
-.dot-you { width: 5px; height: 5px; border-radius: 50%; background: var(–gold); }
-.dot-me  { width: 5px; height: 5px; border-radius: 50%; background: var(–accent); }
-.lbl-you { color: var(–gold-2); }
-.lbl-me  { color: var(–accent); }
+.dot-you { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); }
+.dot-me  { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+.lbl-you { color: var(--gold-2); }
+.lbl-me  { color: var(--accent); }
 
 .track-row { display: flex; gap: 13px; }
 .cover-sm {
-width: 60px; flex-shrink: 0; border-radius: 3px; overflow: hidden;
-box-shadow: 0 3px 12px rgba(30,20,5,0.18);
+  width: 60px; flex-shrink: 0; border-radius: 3px; overflow: hidden;
+  box-shadow: 0 3px 12px rgba(30,20,5,0.18);
 }
 .cover-sm img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
-.cover-sm-empty { aspect-ratio: 1; background: var(–paper-3); display: flex; align-items: center; justify-content: center; font-size: 16px; }
+.cover-sm-empty { aspect-ratio: 1; background: var(--paper-3); display: flex; align-items: center; justify-content: center; font-size: 16px; }
 
-.track-sm-title { font-family: ‘Cormorant Garamond’, serif; font-size: 17px; font-style: italic; font-weight: 400; line-height: 1.25; }
-.track-sm-artist { font-family: ‘Inconsolata’, monospace; font-size: 10px; color: var(–ink-4); margin-top: 3px; margin-bottom: 8px; }
-.track-sm-note { font-size: 13px; line-height: 1.78; color: var(–ink-3); font-family: ‘Lora’, serif; }
+.track-sm-title { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-style: italic; font-weight: 400; line-height: 1.25; }
+.track-sm-artist { font-family: 'Inconsolata', monospace; font-size: 10px; color: var(--ink-4); margin-top: 3px; margin-bottom: 8px; }
+.track-sm-note { font-size: 13px; line-height: 1.78; color: var(--ink-3); font-family: 'Lora', serif; }
 
 .tag-row { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
 .mini-tag {
-padding: 2px 8px; border-radius: 10px; font-size: 11px;
-background: rgba(200,148,26,0.1); color: var(–ink-3);
-border: 1px solid var(–border); font-family: ‘Noto Serif SC’, serif;
+  padding: 2px 8px; border-radius: 10px; font-size: 11px;
+  background: rgba(200,148,26,0.1); color: var(--ink-3);
+  border: 1px solid var(--border); font-family: 'Noto Serif SC', serif;
 }
 
 .waiting-col {
-display: flex; align-items: center; justify-content: center; min-height: 110px;
-font-family: ‘Playfair Display’, serif; font-size: 14px; font-style: italic;
-color: var(–ink-5); gap: 8px;
+  display: flex; align-items: center; justify-content: center; min-height: 110px;
+  font-family: 'Playfair Display', serif; font-size: 14px; font-style: italic;
+  color: var(--ink-5); gap: 8px;
 }
 
 /* comments */
-.ex-cmts { border-top: 1px solid var(–border); padding: 13px 24px; background: rgba(230,210,170,0.08); }
+.ex-cmts { border-top: 1px solid var(--border); padding: 13px 24px; background: rgba(230,210,170,0.08); }
 .toggle-cmts {
-background: none; border: none; cursor: pointer;
-font-family: ‘Inconsolata’, monospace; font-size: 9.5px;
-letter-spacing: 0.12em; color: var(–ink-4); text-transform: uppercase; padding: 0;
-transition: color 0.2s;
+  background: none; border: none; cursor: pointer;
+  font-family: 'Inconsolata', monospace; font-size: 9.5px;
+  letter-spacing: 0.12em; color: var(--ink-4); text-transform: uppercase; padding: 0;
+  transition: color 0.2s;
 }
-.toggle-cmts:hover { color: var(–accent); }
+.toggle-cmts:hover { color: var(--accent); }
 .cmts-inner { margin-top: 12px; display: none; }
 .cmts-inner.open { display: block; }
-.cmt-item { padding: 8px 0; border-bottom: 1px solid var(–border); }
+.cmt-item { padding: 8px 0; border-bottom: 1px solid var(--border); }
 .cmt-item:last-of-type { border-bottom: none; }
-.cmt-who { font-family: ‘Inconsolata’, monospace; font-size: 9px; letter-spacing: 0.1em; color: var(–ink-5); margin-bottom: 3px; text-transform: uppercase; }
-.cmt-txt { font-size: 13px; line-height: 1.7; color: var(–ink-3); font-family: ‘Lora’, serif; }
+.cmt-who { font-family: 'Inconsolata', monospace; font-size: 9px; letter-spacing: 0.1em; color: var(--ink-5); margin-bottom: 3px; text-transform: uppercase; }
+.cmt-txt { font-size: 13px; line-height: 1.7; color: var(--ink-3); font-family: 'Lora', serif; }
 .cmt-row { display: flex; gap: 8px; margin-top: 10px; }
 .cmt-inp {
-flex: 1; padding: 9px 13px;
-background: rgba(255,252,240,0.8); border: 1px solid var(–border-2); border-radius: 4px;
-font-family: ‘Lora’, serif; font-size: 13px; color: var(–ink);
-outline: none; transition: border-color 0.2s;
+  flex: 1; padding: 9px 13px;
+  background: rgba(255,252,240,0.8); border: 1px solid var(--border-2); border-radius: 4px;
+  font-family: 'Lora', serif; font-size: 13px; color: var(--ink);
+  outline: none; transition: border-color 0.2s;
 }
-.cmt-inp:focus { border-color: var(–accent); }
-.cmt-inp::placeholder { color: var(–ink-5); font-style: italic; }
+.cmt-inp:focus { border-color: var(--accent); }
+.cmt-inp::placeholder { color: var(--ink-5); font-style: italic; }
 .btn-cmt {
-padding: 9px 16px; background: var(–ink); color: var(–paper);
-border: none; border-radius: 4px; cursor: pointer;
-font-family: ‘Inconsolata’, monospace; font-size: 10px; letter-spacing: 0.08em; transition: all 0.2s;
+  padding: 9px 16px; background: var(--ink); color: var(--paper);
+  border: none; border-radius: 4px; cursor: pointer;
+  font-family: 'Inconsolata', monospace; font-size: 10px; letter-spacing: 0.08em; transition: all 0.2s;
 }
-.btn-cmt:hover { background: var(–ink-2); }
+.btn-cmt:hover { background: var(--ink-2); }
 
 /* empty */
 .empty-s { text-align: center; padding: 90px 20px; }
 .empty-big {
-font-family: ‘Cormorant Garamond’, serif; font-size: 52px;
-font-style: italic; font-weight: 300; color: var(–ink); margin-bottom: 10px;
+  font-family: 'Cormorant Garamond', serif; font-size: 52px;
+  font-style: italic; font-weight: 300; color: var(--ink); margin-bottom: 10px;
 }
-.empty-sm { font-family: ‘Inconsolata’, monospace; font-size: 10.5px; color: var(–ink-4); letter-spacing: 0.1em; line-height: 2; text-transform: uppercase; }
+.empty-sm { font-family: 'Inconsolata', monospace; font-size: 10.5px; color: var(--ink-4); letter-spacing: 0.1em; line-height: 2; text-transform: uppercase; }
 
 /* loading */
-.loading-row { display: none; align-items: center; gap: 8px; margin-top: 10px; font-family: ‘DM Mono’, monospace; font-size: 10px; color: var(–ink-4); letter-spacing: 0.07em; }
-.da { width: 4px; height: 4px; background: var(–accent); border-radius: 50%; animation: bk 1.2s ease-in-out infinite; }
+.loading-row { display: none; align-items: center; gap: 8px; margin-top: 10px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--ink-4); letter-spacing: 0.07em; }
+.da { width: 4px; height: 4px; background: var(--accent); border-radius: 50%; animation: bk 1.2s ease-in-out infinite; }
 .da:nth-child(2){animation-delay:.2s}.da:nth-child(3){animation-delay:.4s}
 @keyframes bk{0%,80%,100%{opacity:.2;transform:scale(.7)}40%{opacity:1;transform:scale(1)}}
 
 @media(max-width:768px){
-.header-inner{padding:0 20px}
-.hero{grid-template-columns:1fr;padding:36px 20px 32px}
-.hero-pixel{display:none}
-.content{padding:28px 20px 60px}
-.ex-dual,.f-cols{grid-template-columns:1fr}
-.ex-col:first-child{border-right:none;border-bottom:1px solid var(–border)}
+  .header-inner{padding:0 20px}
+  .hero{grid-template-columns:1fr;padding:36px 20px 32px}
+  .hero-pixel{display:none}
+  .content{padding:28px 20px 60px}
+  .ex-dual,.f-cols{grid-template-columns:1fr}
+  .ex-col:first-child{border-right:none;border-bottom:1px solid var(--border)}
 }
 </style>
-
 </head>
 <body>
 
 <!-- staff lines background -->
-
 <div class="staff-bg" id="staff-bg"></div>
 
 <!-- floating notes -->
-
 <div id="notes-layer"></div>
 
 <header class="site-header">
@@ -540,7 +536,6 @@ font-style: italic; font-weight: 300; color: var(–ink); margin-bottom: 10px;
 </header>
 
 <!-- ADD PAGE -->
-
 <div class="page active" id="page-add">
   <div class="hero">
     <div>
@@ -558,108 +553,103 @@ font-style: italic; font-weight: 300; color: var(–ink); margin-bottom: 10px;
         </div>
       </div>
     </div>
-
   </div>
 
   <div class="content">
     <div class="card">
       <div class="card-inner">
 
-```
-    <!-- Spotify connect -->
-    <div class="s-label">Spotify · 连接</div>
-    <div id="spotify-connect-area">
-      <div class="api-note">
-        连接 Spotify 后可以直接从你最近听的歌里选 · 或者用下方搜索手动添加
-      </div>
-      <button class="btn btn-primary" onclick="spotifyLogin()" id="btn-connect" style="margin-bottom:18px">
-        ♫ Connect Spotify
-      </button>
-    </div>
-
-    <!-- recently played (shown after auth) -->
-    <div id="recent-section" style="display:none">
-      <div class="s-label" style="margin-top:4px">Recently Played · 最近在听</div>
-      <div class="loading-row" id="loading-recent" style="display:flex"><div class="da"></div><div class="da"></div><div class="da"></div><span>Loading …</span></div>
-      <div class="results-grid" id="rg-recent"></div>
-      <div style="margin-top:18px;margin-bottom:4px">
-        <div class="s-label">Search Spotify · 搜索全库</div>
-      </div>
-      <div class="inp-row">
-        <input class="inp" id="sq-spotify" placeholder="Search entire Spotify library … 搜索全球曲库" onkeydown="if(event.key==='Enter')searchSpotify()">
-        <button class="btn btn-primary" onclick="searchSpotify()">Search</button>
-      </div>
-      <div class="loading-row" id="loading-spotify"><div class="da"></div><div class="da"></div><div class="da"></div><span>Searching Spotify …</span></div>
-      <div class="results-grid" id="rg-spotify"></div>
-      <div style="margin-top:18px;margin-bottom:4px">
-        <div class="s-label">Or Search iTunes · 或用 iTunes</div>
-      </div>
-    </div>
-
-    <!-- search row (always visible) -->
-    <div id="search-area">
-      <div class="inp-row">
-        <input class="inp" id="sq" placeholder="Song title, artist name … 歌曲名、艺术家" onkeydown="if(event.key==='Enter')searchItunes()">
-        <button class="btn btn-primary" onclick="searchItunes()">Search</button>
-      </div>
-      <div class="loading-row" id="loading"><div class="da"></div><div class="da"></div><div class="da"></div><span>Searching …</span></div>
-      <div class="results-grid" id="rg"></div>
-    </div>
-
-    <!-- track form -->
-    <div class="track-panel" id="tp">
-      <div class="track-top">
-        <div class="track-cover" id="tp-cover"></div>
-        <div>
-          <div class="track-title" id="tp-title"></div>
-          <div class="track-artist" id="tp-artist"></div>
-          <div class="track-album" id="tp-album"></div>
+        <!-- Spotify connect -->
+        <div class="s-label">Spotify · 连接</div>
+        <div id="spotify-connect-area">
+          <div class="api-note">
+            连接 Spotify 后可以直接从你最近听的歌里选 · 或者用下方搜索手动添加
+          </div>
+          <button class="btn btn-primary" onclick="spotifyLogin()" id="btn-connect" style="margin-bottom:18px">
+            ♫ Connect Spotify
+          </button>
         </div>
-      </div>
-      <div class="f-cols">
-        <div class="f-full">
-          <label class="f-label">Theme · 这次的主题</label>
-          <input class="inp" id="f-theme" placeholder="e.g. Songs that feel like falling asleep on a train · 在火车上睡着的那种歌">
-        </div>
-        <div class="f-full">
-          <label class="f-label">Your note · 听歌笔记</label>
-          <textarea class="f-textarea" id="f-note" placeholder="When do you listen to this? What does it do to you? &#10;什么时候听这首？它对你做了什么？"></textarea>
-        </div>
-        <div>
-          <label class="f-label">Mood · 心情</label>
-          <div class="chips">
-            <span class="chip" data-g="mood" onclick="pick(this)">平静 Calm</span>
-            <span class="chip" data-g="mood" onclick="pick(this)">思念 Longing</span>
-            <span class="chip" data-g="mood" onclick="pick(this)">温柔 Tender</span>
-            <span class="chip" data-g="mood" onclick="pick(this)">感伤 Wistful</span>
-            <span class="chip" data-g="mood" onclick="pick(this)">振奋 Lifted</span>
-            <span class="chip" data-g="mood" onclick="pick(this)">孤独 Solitary</span>
+
+        <!-- recently played (shown after auth) -->
+        <div id="recent-section" style="display:none">
+          <div class="s-label" style="margin-top:4px">Recently Played · 最近在听</div>
+          <div class="loading-row" id="loading-recent" style="display:flex"><div class="da"></div><div class="da"></div><div class="da"></div><span>Loading …</span></div>
+          <div class="results-grid" id="rg-recent"></div>
+          <div style="margin-top:18px;margin-bottom:4px">
+            <div class="s-label">Search Spotify · 搜索全库</div>
+          </div>
+          <div class="inp-row">
+            <input class="inp" id="sq-spotify" placeholder="Search entire Spotify library … 搜索全球曲库" onkeydown="if(event.key==='Enter')searchSpotify()">
+            <button class="btn btn-primary" onclick="searchSpotify()">Search</button>
+          </div>
+          <div class="loading-row" id="loading-spotify"><div class="da"></div><div class="da"></div><div class="da"></div><span>Searching Spotify …</span></div>
+          <div class="results-grid" id="rg-spotify"></div>
+          <div style="margin-top:18px;margin-bottom:4px">
+            <div class="s-label">Or Search iTunes · 或用 iTunes</div>
           </div>
         </div>
-        <div>
-          <label class="f-label">When · 时间</label>
-          <div class="chips">
-            <span class="chip" data-g="time" onclick="pick(this)">清晨 Dawn</span>
-            <span class="chip" data-g="time" onclick="pick(this)">午后 Afternoon</span>
-            <span class="chip" data-g="time" onclick="pick(this)">深夜 Late Night</span>
-            <span class="chip" data-g="time" onclick="pick(this)">失眠 Sleepless</span>
-            <span class="chip" data-g="time" onclick="pick(this)">雨天 Rainy</span>
-            <span class="chip" data-g="time" onclick="pick(this)">通勤 Commute</span>
+
+        <!-- search row (always visible) -->
+        <div id="search-area">
+          <div class="inp-row">
+            <input class="inp" id="sq" placeholder="Song title, artist name … 歌曲名、艺术家" onkeydown="if(event.key==='Enter')searchItunes()">
+            <button class="btn btn-primary" onclick="searchItunes()">Search</button>
           </div>
+          <div class="loading-row" id="loading"><div class="da"></div><div class="da"></div><div class="da"></div><span>Searching …</span></div>
+          <div class="results-grid" id="rg"></div>
         </div>
+
+        <!-- track form -->
+        <div class="track-panel" id="tp">
+          <div class="track-top">
+            <div class="track-cover" id="tp-cover"></div>
+            <div>
+              <div class="track-title" id="tp-title"></div>
+              <div class="track-artist" id="tp-artist"></div>
+              <div class="track-album" id="tp-album"></div>
+            </div>
+          </div>
+          <div class="f-cols">
+            <div class="f-full">
+              <label class="f-label">Theme · 这次的主题</label>
+              <input class="inp" id="f-theme" placeholder="e.g. Songs that feel like falling asleep on a train · 在火车上睡着的那种歌">
+            </div>
+            <div class="f-full">
+              <label class="f-label">Your note · 听歌笔记</label>
+              <textarea class="f-textarea" id="f-note" placeholder="When do you listen to this? What does it do to you? &#10;什么时候听这首？它对你做了什么？"></textarea>
+            </div>
+            <div>
+              <label class="f-label">Mood · 心情</label>
+              <div class="chips">
+                <span class="chip" data-g="mood" onclick="pick(this)">平静 Calm</span>
+                <span class="chip" data-g="mood" onclick="pick(this)">思念 Longing</span>
+                <span class="chip" data-g="mood" onclick="pick(this)">温柔 Tender</span>
+                <span class="chip" data-g="mood" onclick="pick(this)">感伤 Wistful</span>
+                <span class="chip" data-g="mood" onclick="pick(this)">振奋 Lifted</span>
+                <span class="chip" data-g="mood" onclick="pick(this)">孤独 Solitary</span>
+              </div>
+            </div>
+            <div>
+              <label class="f-label">When · 时间</label>
+              <div class="chips">
+                <span class="chip" data-g="time" onclick="pick(this)">清晨 Dawn</span>
+                <span class="chip" data-g="time" onclick="pick(this)">午后 Afternoon</span>
+                <span class="chip" data-g="time" onclick="pick(this)">深夜 Late Night</span>
+                <span class="chip" data-g="time" onclick="pick(this)">失眠 Sleepless</span>
+                <span class="chip" data-g="time" onclick="pick(this)">雨天 Rainy</span>
+                <span class="chip" data-g="time" onclick="pick(this)">通勤 Commute</span>
+              </div>
+            </div>
+          </div>
+          <button class="btn-submit" onclick="submit()">Submit · 提交</button>
+        </div>
+
       </div>
-      <button class="btn-submit" onclick="submit()">Submit · 提交</button>
     </div>
-
-  </div>
-</div>
-```
-
   </div>
 </div>
 
 <!-- FEED PAGE -->
-
 <div class="page" id="page-feed">
   <div class="hero" style="grid-template-columns:1fr">
     <div>
@@ -674,66 +664,6 @@ font-style: italic; font-weight: 300; color: var(–ink); margin-bottom: 10px;
 
 <script>
 // ── STATE ──────────────────────────────────────────
-
-// ── Ombre Brain ────────────────────────────────────
-const OMBRE = 'https://ombre-brain-production-f64f.up.railway.app/mcp';
-async function ombreTool(tool, args) {
-  try {
-    const res = await fetch(OMBRE, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({jsonrpc:'2.0',id:Date.now(),method:'tools/call',params:{name:tool,arguments:args}})
-    });
-    const data = await res.json();
-    const content = data.result?.content;
-    return Array.isArray(content) ? content.map(c=>c.text||'').join('\n') : '';
-  } catch(e) { return ''; }
-}
-async function syncToRailway(ex) {
-  const t = ex.you.track || {};
-  ombreTool('resonance_save', {
-    exchange_id: ex.id, theme: ex.theme||'', date: ex.date||'',
-    you_title: t.title||'', you_artist: t.artist||'', you_art: t.art||'',
-    you_note: ex.you.note||'', you_mood: ex.you.mood||'', you_time: ex.you.time||'',
-  });
-}
-async function refreshFeed() {
-  const btn = document.getElementById('btn-refresh');
-  if(btn) { btn.textContent = '↻ ...'; btn.disabled = true; }
-  try {
-    const text = await ombreTool('resonance_get', {limit:50});
-    if(text) {
-      const lines = text.split('\n');
-      let curId = null, updated = 0;
-      for(let i = 0; i < lines.length; i++) {
-        const line = lines[i];
-        const m = line.match(/\[(\d+)\]/);
-        if(m) curId = parseInt(m[1]);
-        const replyMatch = line.match(/^\s*我：(.+?)[—–\-](.+)$/);
-        if(replyMatch && curId) {
-          const ex = exs.find(e => e.id == curId);
-          if(ex && !ex.claude) {
-            const title = replyMatch[1].trim();
-            const artist = replyMatch[2].trim();
-            const noteLine = (lines[i+1]||'').match(/^\s*回应：(.+)$/);
-            const note = noteLine ? noteLine[1].trim() : '';
-            ex.claude = { track: { title, artist, art: '' }, note };
-            updated++;
-          }
-        } else if(curId && line.trim().startsWith('我：') && !line.includes('（待回应）') && !replyMatch) {
-          const ex = exs.find(e => e.id == curId);
-          if(ex && !ex.claude) {
-            ex.claude = { track: { title: line.replace(/.*我：/,'').trim(), artist:'', art:'' }, note:'' };
-            updated++;
-          }
-        }
-      }
-      if(updated) { save(); render(); upStats(); showToast('✦ 同步了 ' + updated + ' 条新回应'); }
-    }
-  } catch(e) {}
-  if(btn) { btn.textContent = '↻ Refresh'; btn.disabled = false; }
-}
-
 let sel = null, tags = {}, exs = JSON.parse(localStorage.getItem('resonance')||'[]');
 upStats();
 
@@ -792,73 +722,85 @@ function go(id) {
 // ── SPOTIFY ────────────────────────────────────────
 const SPOTIFY_CLIENT_ID = '3baf3ff0845f4ae29a15c632c5eb7cee';
 const REDIRECT_URI = 'https://uzhou0211-crypto.github.io/home/resonance.html';
-const SCOPES = 'user-read-recently-played user-read-currently-playing';
+const SCOPES = 'user-read-recently-played user-read-currently-playing user-read-playback-state';
 
 let spotifyToken = localStorage.getItem('spotify-token') || null;
 let tokenExpiry = parseInt(localStorage.getItem('spotify-expiry') || '0');
 
+// ── Ombre Brain ───────────────────────────────────
+const OMBRE = 'https://ombre-brain-production-f64f.up.railway.app/mcp';
+async function ombreTool(tool, args) {
+  try {
+    const res = await fetch(OMBRE, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({jsonrpc:'2.0',id:Date.now(),method:'tools/call',params:{name:tool,arguments:args}})
+    });
+    const data = await res.json();
+    const c = data.result?.content;
+    return Array.isArray(c) ? c.map(x=>x.text||'').join('\n') : '';
+  } catch(e) { return ''; }
+}
+
+// ── PKCE helpers ──────────────────────────────────
 async function sha256(plain) {
   const data = new TextEncoder().encode(plain);
   return window.crypto.subtle.digest('SHA-256', data);
 }
-function base64urlencode(a) {
-  return btoa(String.fromCharCode.apply(null, new Uint8Array(a)))
-    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+function base64url(buf) {
+  return btoa(String.fromCharCode(...new Uint8Array(buf)))
+    .replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 }
-async function generatePKCE() {
-  const verifier = base64urlencode(crypto.getRandomValues(new Uint8Array(32)));
-  const challenge = base64urlencode(await sha256(verifier));
+async function pkce() {
+  const verifier = base64url(crypto.getRandomValues(new Uint8Array(32)));
+  const challenge = base64url(await sha256(verifier));
   return { verifier, challenge };
 }
 
-window.addEventListener('load', async () => {
-  const params = new URLSearchParams(window.location.search);
-  const code = params.get('code');
-  const error = params.get('error');
+// ── Token exchange ────────────────────────────────
 
-  // clean URL regardless
-  if (code || error) {
+
+// ── On load: handle callback or restore token ─────
+window.addEventListener('load', async () => {
+  const p = new URLSearchParams(window.location.search);
+  const code = p.get('code');
+  const err = p.get('error');
+
+  if (code || err) {
+    // clean URL first
     window.history.replaceState({}, '', REDIRECT_URI);
   }
 
-  if (error) {
-    console.log('Spotify auth error:', error);
-    return;
-  }
+  if (err) return;
 
   if (code) {
-    const verifier = localStorage.getItem('spotify-pkce-verifier');
-    if (!verifier) {
-      console.log('No PKCE verifier found');
-      return;
-    }
+    const verifier = localStorage.getItem('pkce_v');
+    if (!verifier) return;
     try {
-      const res = await fetch('https://accounts.spotify.com/api/token', {
+      // Use backend to exchange code for token (avoids CORS restrictions)
+      const res = await fetch('https://ombre-brain-production-f64f.up.railway.app/mcp', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({
-          client_id: SPOTIFY_CLIENT_ID,
-          grant_type: 'authorization_code',
-          code: code,
-          redirect_uri: REDIRECT_URI,
-          code_verifier: verifier,
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          jsonrpc: '2.0', id: Date.now(),
+          method: 'tools/call',
+          params: { name: 'spotify_auth', arguments: { code: code, code_verifier: verifier } }
         })
       });
-      const data = await res.json();
+      const result = await res.json();
+      const text = result.result?.content?.[0]?.text || '{}';
+      const data = JSON.parse(text);
       if (data.access_token) {
         spotifyToken = data.access_token;
-        tokenExpiry = Date.now() + (data.expires_in || 3600) * 1000;
+        tokenExpiry = Date.now() + (data.expires_in||3600)*1000;
         localStorage.setItem('spotify-token', spotifyToken);
         localStorage.setItem('spotify-expiry', String(tokenExpiry));
-        localStorage.removeItem('spotify-pkce-verifier');
+        localStorage.removeItem('pkce_v');
         onSpotifyConnected();
-        return;
       } else {
-        console.log('Token error:', data);
+        console.error('Auth failed:', data.error);
       }
-    } catch(e) {
-      console.log('Token fetch error:', e);
-    }
+    } catch(e) { console.error('token exchange failed', e); }
     return;
   }
 
@@ -868,8 +810,8 @@ window.addEventListener('load', async () => {
 });
 
 async function spotifyLogin() {
-  const { verifier, challenge } = await generatePKCE();
-  localStorage.setItem('spotify-pkce-verifier', verifier);
+  const { verifier, challenge } = await pkce();
+  localStorage.setItem('pkce_v', verifier);
   const url = new URL('https://accounts.spotify.com/authorize');
   url.searchParams.set('client_id', SPOTIFY_CLIENT_ID);
   url.searchParams.set('response_type', 'code');
@@ -877,7 +819,206 @@ async function spotifyLogin() {
   url.searchParams.set('scope', SCOPES);
   url.searchParams.set('code_challenge_method', 'S256');
   url.searchParams.set('code_challenge', challenge);
+  url.searchParams.set('show_dialog', 'false');
   window.location.href = url.toString();
+}
+
+function onSpotifyConnected() {
+  const btn = document.getElementById('btn-connect');
+  if(btn) { btn.textContent = '✓ Spotify Connected'; btn.style.background = 'var(--accent)'; }
+  const rs = document.getElementById('recent-section');
+  if(rs) rs.style.display = 'block';
+  loadRecentTracks();
+}
+
+async function loadRecentTracks() {
+  document.getElementById('loading-recent').style.display = 'flex';
+  try {
+    const r = await fetch('https://api.spotify.com/v1/me/player/recently-played?limit=8', {
+      headers: {'Authorization': 'Bearer ' + spotifyToken}
+    });
+    if(r.status === 401) {
+      spotifyToken = null;
+      localStorage.removeItem('spotify-token');
+      document.getElementById('loading-recent').style.display = 'none';
+      return;
+    }
+    const d = await r.json();
+    showRecentTracks(d.items || []);
+  } catch(e) {
+    document.getElementById('rg-recent').innerHTML = '<div style="font-family:Inconsolata,monospace;font-size:11px;color:var(--ink-4);grid-column:1/-1">Could not load recent tracks.</div>';
+  }
+  document.getElementById('loading-recent').style.display = 'none';
+}
+
+function showRecentTracks(items) {
+  const g = document.getElementById('rg-recent');
+  if(!items.length) { g.innerHTML = '<div style="font-family:Inconsolata,monospace;font-size:11px;color:var(--ink-4);grid-column:1/-1">No recent tracks found.</div>'; return; }
+  const seen = new Set();
+  const unique = items.filter(i => { if(seen.has(i.track.id)) return false; seen.add(i.track.id); return true; });
+  g.innerHTML = unique.map(i => {
+    const t = i.track;
+    const art = t.album?.images?.[1]?.url || t.album?.images?.[0]?.url || '';
+    const artist = t.artists?.map(a=>a.name).join(', ') || '';
+    return '<div class="r-card" onclick="pickTrack(event,\''+eq(t.name)+'\',\''+eq(artist)+'\',\''+eq(t.album?.name||'')+'\',\''+eq(art)+'\',\''+eq(t.external_urls?.spotify||'')+'\')">'+
+      (art ? '<img src="'+art+'" loading="lazy">' : '<div class="r-card-empty">♪</div>')+
+      '<div class="r-info"><div class="r-title">'+eh(t.name)+'</div><div class="r-artist">'+eh(artist)+'</div></div></div>';
+  }).join('');
+}
+
+async function searchSpotify() {
+  if(!spotifyToken) return;
+  const q = document.getElementById('sq-spotify').value.trim();
+  if(!q) return;
+  document.getElementById('loading-spotify').style.display = 'flex';
+  document.getElementById('rg-spotify').innerHTML = '';
+  try {
+    const r = await fetch('https://api.spotify.com/v1/search?q='+encodeURIComponent(q)+'&type=track&limit=8', {
+      headers: {'Authorization': 'Bearer '+spotifyToken}
+    });
+    const d = await r.json();
+    const tracks = d.tracks?.items || [];
+    const g = document.getElementById('rg-spotify');
+    if(!tracks.length) { g.innerHTML = '<div style="font-family:Inconsolata,monospace;font-size:11px;color:var(--ink-4);grid-column:1/-1">No results.</div>'; }
+    else {
+      g.innerHTML = tracks.map(t => {
+        const art = t.album?.images?.[1]?.url || t.album?.images?.[0]?.url || '';
+        const artist = t.artists?.map(a=>a.name).join(', ') || '';
+        return '<div class="r-card" onclick="pickTrack(event,\''+eq(t.name)+'\',\''+eq(artist)+'\',\''+eq(t.album?.name||'')+'\',\''+eq(art)+'\',\''+eq(t.external_urls?.spotify||'')+'\')">'+
+          (art ? '<img src="'+art+'" loading="lazy">' : '<div class="r-card-empty">♪</div>')+
+          '<div class="r-info"><div class="r-title">'+eh(t.name)+'</div><div class="r-artist">'+eh(artist)+'</div></div></div>';
+      }).join('');
+    }
+  } catch(e) {
+    document.getElementById('rg-spotify').innerHTML = '<div style="font-family:Inconsolata,monospace;font-size:11px;color:var(--ink-4);grid-column:1/-1">Search failed.</div>';
+  }
+  document.getElementById('loading-spotify').style.display = 'none';
+}
+
+async function syncToRailway(ex) {
+  const t = ex.you.track || {};
+  ombreTool('resonance_save', {
+    exchange_id: ex.id, theme: ex.theme||'', date: ex.date||'',
+    you_title: t.title||'', you_artist: t.artist||'', you_art: t.art||'',
+    you_note: ex.you.note||'', you_mood: ex.you.mood||'', you_time: ex.you.time||'',
+  });
+}
+
+async function refreshFeed() {
+  const btn = document.getElementById('btn-refresh');
+  if(btn) { btn.textContent = '↻ ...'; btn.disabled = true; }
+  try {
+    const text = await ombreTool('resonance_get', {limit:50});
+    if(text) {
+      const lines = text.split('\n');
+      let curId = null, updated = 0;
+      for(const line of lines) {
+        const m = line.match(/\[(\d+)\]/);
+        if(m) curId = parseInt(m[1]);
+        if(curId && line.trim().startsWith('我：') && !line.includes('（待回应）')) {
+          const ex = exs.find(e => e.id == curId);
+          if(ex && !ex.claude) {
+            ex.claude = { track: { title: line.replace(/.*我：/,'').trim(), artist:'', art:'' }, note:'' };
+            updated++;
+          }
+        }
+      }
+      if(updated) { save(); render(); upStats(); }
+    }
+  } catch(e) {}
+  if(btn) { btn.textContent = '↻ Refresh'; btn.disabled = false; }
+}
+
+
+let sel = null, tags = {}, exs = JSON.parse(localStorage.getItem('resonance')||'[]');
+upStats();
+
+// ── CANVAS PIXEL FIGURES ───────────────────────────
+
+
+
+
+// ── STAFF LINES ────────────────────────────────────
+function buildStaff() {
+  const bg = document.getElementById('staff-bg');
+  const h = document.documentElement.scrollHeight || window.innerHeight * 3;
+  const groupH = 60;
+  for (let y = 80; y < h; y += groupH + 80) {
+    const g = document.createElement('div');
+    g.className = 'staff-group';
+    g.style.top = y + 'px';
+    for (let i = 0; i < 5; i++) {
+      const l = document.createElement('div');
+      l.className = 'staff-line';
+      l.style.top = (i * 12) + 'px';
+      g.appendChild(l);
+    }
+    bg.appendChild(g);
+  }
+}
+buildStaff();
+
+// ── FLOATING NOTES ─────────────────────────────────
+const noteSymbols = ['♩','♪','♫','♬','𝄞','𝄢'];
+function spawnNote() {
+  const layer = document.getElementById('notes-layer');
+  const n = document.createElement('div');
+  n.className = 'note';
+  n.textContent = noteSymbols[Math.floor(Math.random()*noteSymbols.length)];
+  n.style.left = (Math.random()*95) + '%';
+  n.style.top = (40 + Math.random()*60) + '%';
+  n.style.fontSize = (16 + Math.random()*14) + 'px';
+  n.style.animationDuration = (6 + Math.random()*8) + 's';
+  n.style.animationDelay = (Math.random()*4) + 's';
+  layer.appendChild(n);
+  setTimeout(() => n.remove(), 14000);
+}
+setInterval(spawnNote, 1800);
+spawnNote(); spawnNote(); spawnNote();
+
+// ── NAV ────────────────────────────────────────────
+function go(id) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.getElementById('nav-'+id).classList.add('active');
+  if(id==='feed') render();
+}
+
+// ── SPOTIFY ────────────────────────────────────────
+const SPOTIFY_CLIENT_ID = '3baf3ff0845f4ae29a15c632c5eb7cee';
+const REDIRECT_URI = window.location.href.split('?')[0].split('#')[0];
+const SCOPES = 'user-read-recently-played user-read-currently-playing';
+
+let spotifyToken = localStorage.getItem('spotify-token') || null;
+let tokenExpiry = parseInt(localStorage.getItem('spotify-expiry') || '0');
+
+// check token on load
+window.addEventListener('load', () => {
+  // handle redirect back from Spotify
+  const hash = window.location.hash.substring(1);
+  if (hash) {
+    const params = new URLSearchParams(hash);
+    const token = params.get('access_token');
+    const expires = params.get('expires_in');
+    if (token) {
+      spotifyToken = token;
+      tokenExpiry = Date.now() + parseInt(expires) * 1000;
+      localStorage.setItem('spotify-token', token);
+      localStorage.setItem('spotify-expiry', tokenExpiry);
+      window.location.hash = '';
+      onSpotifyConnected();
+      return;
+    }
+  }
+  if (spotifyToken && Date.now() < tokenExpiry) {
+    onSpotifyConnected();
+  }
+});
+
+function spotifyLogin() {
+  const url = `https://accounts.spotify.com/authorize?client_id=${SPOTIFY_CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=${encodeURIComponent(SCOPES)}`;
+  window.location.href = url;
 }
 
 function onSpotifyConnected() {
@@ -1009,6 +1150,59 @@ function pick(el) {
 }
 
 // ── SUBMIT ─────────────────────────────────────────
+// ── RAILWAY SYNC ─────────────────────────────────
+const RAILWAY = 'https://precious-cat-production-6140.up.railway.app';
+
+async function syncToRailway(ex) {
+  try {
+    await fetch(RAILWAY + '/mcp', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        method: 'tools/call',
+        params: {
+          name: 'save_memory',
+          arguments: {
+            area: 'resonance',
+            content: JSON.stringify({
+              id: ex.id, theme: ex.theme, date: ex.date,
+              you: ex.you, claude: ex.claude
+            }),
+            tags: 'music,exchange,' + (ex.you.mood||'') + ',' + (ex.you.time||'')
+          }
+        }
+      })
+    });
+  } catch(e) { /* offline ok */ }
+}
+
+async function refreshFeed() {
+  const btn = document.getElementById('btn-refresh');
+  if(btn) { btn.textContent = '↻ ...'; btn.disabled = true; }
+  let updated = 0;
+  for (const ex of exs) {
+    if (ex.claude) continue;
+    try {
+      const r = await fetch(RAILWAY + '/mcp', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({
+          method: 'tools/call',
+          params: { name: 'get_memories', arguments: { area: 'resonance_reply', search: String(ex.id) } }
+        })
+      });
+      const data = await r.json();
+      const mems = data?.result?.memories || [];
+      if (mems.length) {
+        const reply = JSON.parse(mems[0].content);
+        ex.claude = reply;
+        updated++;
+      }
+    } catch(e) { /* skip */ }
+  }
+  if (updated) { save(); render(); upStats(); }
+  if(btn) { btn.textContent = updated ? '✦ Updated' : '↻ Refresh'; btn.disabled = false; setTimeout(()=>{if(btn)btn.textContent='↻ Refresh';},2000); }
+}
 
 function showToast(msg) {
   const t = document.createElement('div');
@@ -1116,6 +1310,5 @@ function save(){ localStorage.setItem('resonance',JSON.stringify(exs)); }
 function eh(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function eq(s){ return String(s).replace(/'/g,"\\'").replace(/\n/g,' ').replace(/"/g,''); }
 </script>
-
 </body>
 </html>
