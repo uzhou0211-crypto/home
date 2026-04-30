@@ -240,42 +240,32 @@ function fetchPapers(refresh){
 }
 
 function fetchFromArxiv(){
-
-  var allPapers=[],seen=new Set(),done=0;
-
-  function oneDone(){
-    done++;
-    if(done===QUERIES.length){
-      isFetching=false;
-      PAPERS=allPapers.slice(0,8);
-      if(PAPERS.length===0){showError();}
-      else{render();document.getElementById('refreshBtn').style.display='block';}
+  // 调用 Ombre Brain 后端抓取论文，避免浏览器 CORS 限制
+  fetch('https://ombre-brain-production-f64f.up.railway.app/mcp', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      jsonrpc: '2.0', id: Date.now(),
+      method: 'tools/call',
+      params: { name: 'papers_fetch', arguments: { category: 'all', limit: 8 } }
+    })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    var text = data.result?.content?.[0]?.text || '';
+    var parsed = JSON.parse(text);
+    isFetching = false;
+    if(parsed.papers && parsed.papers.length > 0){
+      PAPERS = parsed.papers;
+      render();
+      document.getElementById('refreshBtn').style.display = 'block';
+    } else {
+      showError();
     }
-  }
-  QUERIES.forEach(function(q){
-    var arxivUrl='https://export.arxiv.org/api/query?search_query='+q.q
-      +'&sortBy=submittedDate&sortOrder=descending&max_results=2';
-    // try proxies in order until one works
-    var proxies=[
-      'https://corsproxy.io/?'+encodeURIComponent(arxivUrl),
-      'https://api.allorigins.win/raw?url='+encodeURIComponent(arxivUrl)
-    ];
-    function tryNext(i){
-      if(i>=proxies.length){oneDone();return;}
-      fetch(proxies[i])
-        .then(function(r){
-          if(!r.ok)throw new Error('status '+r.status);
-          return r.text();
-        })
-        .then(function(xml){
-          parseArxiv(xml,q.cat).forEach(function(p){
-            if(!seen.has(p.id)){seen.add(p.id);allPapers.push(p);}
-          });
-          oneDone();
-        })
-        .catch(function(){tryNext(i+1);});
-    }
-    tryNext(0);
+  })
+  .catch(function(e){
+    isFetching = false;
+    showError();
   });
 }
 
