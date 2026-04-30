@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Daily ✦</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fff;--bg2:#fafaf8;--ink:#1a1a1a;--ink2:#888;--bd:#e8e8e8;
+  --pink:#ffb0c8;--pink2:#fff0f5;
+  --green:#88cc88;--green2:#edfaee;
+  --gold:#ffcc44;--gold2:#fff9e0;
+  --blue:#88c0f0;--blue2:#e8f4ff;
+  --lav:#c0a0f0;--lav2:#f2eeff;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;background:var(--bg);font-family:'Press Start 2P',monospace;overflow:hidden}
+input,button,select,textarea{font-family:'Press Start 2P',monospace}
+
+/* ── SCREENS ── */
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;background:var(--bg);z-index:10;overflow:hidden}
+.sub{position:fixed;inset:0;z-index:20;background:var(--bg);transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow-y:auto}
+.sub.open{transform:translateY(0)}
+
+/* ── HEADER ── */
+.hdr{width:100%;padding:36px 20px 0;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.hdr-title{font-size:13px;color:var(--ink)}
+.hdr-date{font-size:7px;color:var(--ink2);margin-top:5px;letter-spacing:.06em}
+.coin-btn{display:flex;align-items:center;gap:6px;padding:7px 13px;background:var(--gold2);border:3px solid var(--gold);box-shadow:3px 3px 0 var(--gold);cursor:pointer;transition:all .1s}
+.coin-btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--gold)}
+.coin-n{font-size:11px;color:#c49020}
+
+/* ── CHARACTER ── */
+.char-stage{width:100%;height:200px;flex-shrink:0;display:flex;align-items:center;justify-content:center;position:relative}
+.char-stage::after{content:'';position:absolute;bottom:22%;left:15%;right:15%;height:2px;background:var(--bd)}
+.char-wrap{position:relative;z-index:2;cursor:pointer;animation:bob 2.5s ease-in-out infinite}
+.char-wrap canvas{display:block}
+.char-wrap.jump{animation:cjump .4s ease!important}
+.char-wrap.dance{animation:cdance .45s ease-in-out 3!important}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes cjump{0%{transform:translateY(0)}35%{transform:translateY(-20px)}70%{transform:translateY(-6px)}100%{transform:translateY(0)}}
+@keyframes cdance{0%,100%{transform:rotate(0)}25%{transform:rotate(-7deg)}75%{transform:rotate(7deg)}}
+.bubble{position:absolute;top:-14px;right:-24px;background:white;border:3px solid var(--ink);padding:6px 10px;font-size:8px;color:var(--ink);white-space:nowrap;border-radius:8px 8px 8px 2px;animation:bpop .2s ease;pointer-events:none;z-index:3}
+@keyframes bpop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* ── ICON GRID ── */
+.icon-grid{width:100%;padding:0 14px;display:grid;grid-template-columns:repeat(5,1fr);gap:8px;flex-shrink:0}
+.ig-btn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px;border:3px solid var(--bd);border-radius:10px;background:var(--bg2);cursor:pointer;transition:all .1s;box-shadow:3px 3px 0 var(--bd);position:relative}
+.ig-btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--bd)}
+.ig-btn.done{background:var(--green2);border-color:var(--green);box-shadow:3px 3px 0 var(--green)}
+.ig-lbl{font-size:6px;color:var(--ink2);letter-spacing:.03em}
+.ig-btn.done .ig-lbl{color:#2a8a2a}
+.ig-icon{font-size:22px;line-height:1}
+
+/* ── SUBSCREEN ── */
+.sub-nav{width:100%;padding:46px 20px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid var(--ink);background:var(--bg);position:sticky;top:0;z-index:5}
+.sub-title{font-size:12px;color:var(--ink)}
+.back-btn{padding:7px 12px;border:3px solid var(--ink);font-size:8px;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:all .1s;background:var(--bg2)}
+.back-btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.sub-body{padding:20px;max-width:480px;margin:0 auto;padding-bottom:40px}
+
+/* ── PX CARD ── */
+.px-card{border:3px solid var(--bd);border-radius:8px;background:var(--bg2);box-shadow:3px 3px 0 var(--bd);padding:14px;margin-bottom:10px;cursor:pointer;transition:all .1s}
+.px-card:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--bd)}
+.px-card.on{border-color:var(--green);background:var(--green2);box-shadow:3px 3px 0 var(--green)}
+.px-card.pk-on{border-color:var(--pink);background:var(--pink2);box-shadow:3px 3px 0 var(--pink)}
+.px-card.gold-on{border-color:var(--gold);background:var(--gold2);box-shadow:3px 3px 0 var(--gold)}
+
+/* ── SLEEP ── */
+.moon-btn{width:100px;height:100px;border-radius:50%;border:none;cursor:pointer;background:radial-gradient(circle at 38% 38%,#fffbe8,#f4d830);font-size:52px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(244,216,48,.3);transition:all .28s cubic-bezier(.34,1.56,.64,1)}
+.moon-btn:active{transform:scale(.92)}
+.moon-btn.done{box-shadow:0 0 0 14px rgba(244,216,48,.12),0 0 0 28px rgba(244,216,48,.06);animation:mglow 2.5s ease-in-out infinite}
+@keyframes mglow{0%,100%{box-shadow:0 0 0 10px rgba(244,216,48,.1),0 0 0 22px rgba(244,216,48,.05)}50%{box-shadow:0 0 0 18px rgba(244,216,48,.16),0 0 0 36px rgba(244,216,48,.07)}}
+.week-row{display:flex;gap:6px;justify-content:center;margin-top:20px}
+.wd{text-align:center}
+.wd-l{font-size:6px;color:var(--ink2);margin-bottom:3px}
+.wd-d{width:26px;height:26px;border:3px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:7px;color:transparent;transition:all .3s}
+.wd-d.ok{background:var(--gold);border-color:var(--ink);color:var(--ink)}
+.wd-d.today{border-color:var(--ink)}
+
+/* ── WATER ── */
+.bottle-grid{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;padding:16px 0}
+.bottle{cursor:pointer;opacity:.22;filter:grayscale(1);transition:all .22s}
+.bottle.on{opacity:1;filter:none;animation:bpop2 .25s ease}
+.bottle:active{transform:scale(.88)!important}
+@keyframes bpop2{0%{transform:scale(.5) rotate(-10deg)}65%{transform:scale(1.08)}100%{transform:scale(1)}}
+.wbar{height:12px;border:3px solid var(--ink);overflow:hidden;background:var(--bg2);border-radius:3px;margin:4px 0}
+.wbar-fill{height:100%;background:linear-gradient(90deg,var(--blue),#4499dd);transition:width .5s ease}
+
+/* ── FOOD ── */
+.food-list{display:flex;flex-direction:column;gap:8px}
+.food-item{display:flex;align-items:center;gap:14px;padding:14px;border:3px solid var(--bd);border-radius:8px;background:var(--bg2);box-shadow:3px 3px 0 var(--bd);cursor:pointer;transition:all .1s}
+.food-item:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--bd)}
+.food-item.on{background:var(--green2);border-color:var(--green);box-shadow:3px 3px 0 var(--green)}
+.food-check{font-size:16px;opacity:0;transition:opacity .2s;margin-left:auto}
+.food-item.on .food-check{opacity:1}
+
+/* ── COFFEE ── */
+.sz-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.sz-btn{padding:7px 12px;border:3px solid var(--bd);font-size:8px;color:var(--ink2);background:var(--bg2);cursor:pointer;transition:all .1s;box-shadow:2px 2px 0 var(--bd)}
+.sz-btn:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--bd)}
+.sz-btn.on{background:var(--pink2);border-color:var(--pink);color:var(--ink);box-shadow:2px 2px 0 var(--pink)}
+.c-row{display:flex;gap:8px;margin-bottom:12px}
+.c-in{flex:1;padding:10px 12px;border:3px solid var(--ink);font-size:12px;color:var(--ink);background:var(--bg2);outline:none}
+.add-btn{padding:10px 14px;border:3px solid var(--ink);background:var(--pink);font-size:8px;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:all .1s}
+.add-btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.c-log{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.c-ent{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--bg2);border:2px solid var(--bd);font-size:8px;color:var(--ink2)}
+.c-x{background:none;border:none;color:var(--bd);font-size:14px;cursor:pointer;padding:2px 4px}
+.c-x:hover{color:var(--pink)}
+.c-week{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border:3px solid var(--ink);background:var(--bg2);box-shadow:3px 3px 0 var(--ink)}
+.c-wl{font-size:8px;color:var(--ink2)}
+.c-wa{font-size:18px;color:var(--ink)}
+.c-wa.warn{color:var(--pink);animation:wblink 1s step-end infinite}
+@keyframes wblink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* ── EXERCISE ── */
+.ex-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:8px 0}
+.ex-btn{padding:18px 8px;border:3px solid var(--bd);background:var(--bg2);text-align:center;cursor:pointer;transition:all .1s;box-shadow:4px 4px 0 var(--bd)}
+.ex-btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--bd)}
+.ex-btn.on{background:var(--green2);border-color:var(--green);box-shadow:4px 4px 0 var(--green)}
+.ex-icon{font-size:26px;margin-bottom:8px;display:block}
+.ex-lbl{font-size:7px;color:var(--ink2)}
+.ex-btn.on .ex-lbl{color:#1a8a1a}
+.ex-ok{display:inline-block;margin-top:6px;padding:2px 6px;background:var(--green);border:2px solid var(--ink);font-size:6px;color:white}
+
+/* ── STUDY ── */
+.study-item{display:flex;align-items:flex-start;gap:12px;padding:14px;border:3px solid var(--bd);border-radius:8px;background:var(--bg2);box-shadow:3px 3px 0 var(--bd);margin-bottom:10px;cursor:pointer;transition:all .1s}
+.study-item.on{background:var(--gold2);border-color:var(--gold);box-shadow:3px 3px 0 var(--gold)}
+.study-note{width:100%;padding:9px 12px;border:3px solid var(--bd);font-size:8px;color:var(--ink);background:var(--bg2);outline:none;resize:none;line-height:1.7;margin-top:8px;display:none}
+.study-note.show{display:block}
+
+/* ── BOOKS ── */
+.book-item{padding:14px;border:3px solid var(--bd);background:var(--bg2);box-shadow:3px 3px 0 var(--bd);margin-bottom:10px}
+.book-progress{height:10px;background:var(--bd);border:2px solid var(--ink);overflow:hidden;margin:8px 0}
+.book-fill{height:100%;background:var(--lav);transition:width .5s}
+.book-meta{font-size:7px;color:var(--ink2);display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+.log-btn{padding:5px 10px;border:3px solid var(--ink);background:var(--lav2);font-size:7px;color:var(--ink);cursor:pointer;box-shadow:2px 2px 0 var(--ink);transition:all .1s}
+.log-btn:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--ink)}
+.add-outline{display:flex;align-items:center;gap:8px;width:100%;padding:12px;border:3px dashed var(--bd);background:none;font-size:8px;color:var(--ink2);cursor:pointer;transition:all .2s;margin-top:4px}
+.add-outline:hover{border-color:var(--ink2);color:var(--ink)}
+
+/* ── MOOD ── */
+.mood-cat-title{font-size:7px;color:var(--ink2);letter-spacing:.12em;margin-bottom:8px;margin-top:14px}
+.mood-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.mood-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:9px 4px;border:2px solid var(--bd);background:var(--bg2);cursor:pointer;transition:all .15s}
+.mood-item.on{background:var(--ink);border-color:var(--ink)}
+.mood-item svg{transition:all .15s}
+.mood-item-lbl{font-size:6px;color:var(--ink2);text-align:center;line-height:1.3}
+.mood-item.on .mood-item-lbl{color:#fff}
+
+/* ── GACHA ── */
+.gacha-note{font-size:8px;color:var(--ink2);line-height:1.9;padding:12px;border:2px dashed var(--bd);margin-bottom:16px}
+.prize-card{display:flex;align-items:center;gap:12px;padding:14px;border:3px solid var(--bd);background:var(--bg2);box-shadow:3px 3px 0 var(--bd);margin-bottom:10px;cursor:pointer;transition:all .1s}
+.prize-card:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--bd)}
+.prize-card.locked{opacity:.4;cursor:not-allowed}
+.prize-icon{font-size:28px;flex-shrink:0}
+.prize-text{flex:1;font-size:8px;color:var(--ink);line-height:1.6}
+.prize-cost{text-align:center;flex-shrink:0}
+.prize-cost-n{font-size:14px;color:#c49020}
+.prize-cost-l{font-size:6px;color:var(--ink2);letter-spacing:.06em}
+.gacha-result{padding:16px;border:4px solid var(--ink);background:linear-gradient(135deg,var(--lav2),var(--pink2));text-align:center;margin-bottom:14px;box-shadow:4px 4px 0 var(--ink);animation:rpop .3s cubic-bezier(.34,1.56,.64,1)}
+@keyframes rpop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+.gr-icon{font-size:40px;margin-bottom:8px}
+.gr-txt{font-size:8px;color:var(--ink);line-height:1.8;white-space:pre-line}
+.wish-item{display:flex;align-items:center;gap:10px;padding:12px;border:3px solid var(--bd);background:var(--bg2);box-shadow:3px 3px 0 var(--bd);margin-bottom:8px}
+.wish-item.done{opacity:.4}
+.wish-title{font-size:8px;color:var(--ink)}
+.wish-item.done .wish-title{text-decoration:line-through}
+.wish-cost{font-size:7px;color:#c49020;margin-top:3px}
+.wish-get{padding:5px 10px;border:3px solid var(--ink);background:var(--gold);font-size:7px;color:var(--ink);cursor:pointer;box-shadow:2px 2px 0 var(--ink);transition:all .1s}
+.wish-get:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--ink)}
+
+/* ── TRANSPORT ── */
+.trans-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.trans-btn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 4px;border:3px solid var(--bd);background:var(--bg2);cursor:pointer;transition:all .15s;box-shadow:3px 3px 0 var(--bd)}
+.trans-btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--bd)}
+.trans-btn.on{background:var(--blue2);border-color:var(--blue);box-shadow:3px 3px 0 var(--blue)}
+.trans-lbl{font-size:7px;color:var(--ink2)}
+.trans-btn.on .trans-lbl{color:var(--blue)}
+
+/* ── BOTTOM NAV ── */
+.bnav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.95);border-top:3px solid var(--ink);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom);z-index:100;backdrop-filter:blur(8px)}
+.bn-wrap{display:flex;width:100%;max-width:480px}
+.bn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px 12px;border:none;background:none;color:var(--bd);cursor:pointer;transition:color .2s}
+.bn.on{color:var(--ink)}
+.bn-icon{font-size:18px;line-height:1}
+.bn-lbl{font-size:6px;letter-spacing:.06em;color:inherit}
+
+/* ── MODAL ── */
+.modal-bg{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.4);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
+.modal-bg.show{opacity:1;pointer-events:all}
+.modal{background:var(--bg);border:4px solid var(--ink);border-radius:16px 16px 0 0;padding:24px 20px 44px;width:100%;max-width:480px;transform:translateY(100%);transition:transform .3s cubic-bezier(.16,1,.3,1);box-shadow:0 -4px 0 var(--ink)}
+.modal-bg.show .modal{transform:translateY(0)}
+.modal-ttl{font-size:11px;color:var(--ink);margin-bottom:16px}
+.modal input,.modal select{width:100%;padding:10px 12px;margin-bottom:10px;border:3px solid var(--ink);font-size:11px;color:var(--ink);background:var(--bg2);outline:none}
+.modal-btns{display:flex;gap:8px;margin-top:6px}
+.mbtn{flex:1;padding:12px;border:3px solid var(--ink);font-size:9px;cursor:pointer;transition:all .1s;box-shadow:3px 3px 0 var(--ink)}
+.mbtn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.mbtn-c{background:var(--bg2);color:var(--ink2)}
+.mbtn-ok{background:var(--ink);color:white}
+
+/* ── TOAST / SCORE ── */
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(6px);background:var(--ink);color:white;padding:10px 16px;border:3px solid var(--ink);font-size:8px;letter-spacing:.04em;opacity:0;transition:all .25s;z-index:500;pointer-events:none;white-space:nowrap;max-width:88vw;box-shadow:3px 3px 0 rgba(0,0,0,.2)}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.spop{position:fixed;pointer-events:none;z-index:600;font-size:13px;color:var(--gold);text-shadow:2px 2px 0 var(--ink);animation:spfloat .85s ease forwards}
+@keyframes spfloat{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-55px) scale(1.4)}}
+
+/* ── SECTION LABEL ── */
+.sec-lbl{font-size:7px;color:var(--ink2);letter-spacing:.14em;margin-bottom:10px;text-transform:uppercase}
+.divider{height:2px;background:var(--bd);margin:14px 0}
+.hint{font-size:7px;color:var(--ink2);letter-spacing:.06em;margin-bottom:10px;line-height:1.7}
+</style>
+</head>
+<body>
+
+<!-- ══ HOME ══ -->
+<div class="screen" id="s-home">
+  <div class="hdr">
+    <div>
+      <div class="hdr-title">DAILY ✦</div>
+      <div class="hdr-date" id="hdr-date"></div>
+    </div>
+    <div class="coin-btn" onclick="openSub('gacha')">
+      <svg width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="#ffcc44" stroke="#1a1a1a" stroke-width="2"/><text x="7" y="11" text-anchor="middle" font-size="6" font-family="sans-serif" fill="#c49020">✦</text></svg>
+      <span class="coin-n" id="coinN">0</span>
+    </div>
+  </div>
+  <div class="char-stage">
+    <div class="char-wrap" id="charWrap" onclick="charTap()">
+      <canvas id="charC" width="140" height="140" style="width:140px;height:140px"></canvas>
+      <div class="bubble" id="bubble" style="display:none"></div>
+    </div>
+  </div>
+  <div style="width:100%;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:80px;min-height:0">
+    <div class="icon-grid" style="margin-bottom:8px">
+      <div class="ig-btn" id="ig-sleep" onclick="tap();openSub('sleep')"><span class="ig-icon">🌙</span><span class="ig-lbl">SLEEP</span></div>
+      <div class="ig-btn" id="ig-water" onclick="tap();openSub('water')"><span class="ig-icon">💧</span><span class="ig-lbl">WATER</span></div>
+      <div class="ig-btn" id="ig-food"  onclick="tap();openSub('food')" ><span class="ig-icon">🍽️</span><span class="ig-lbl">FOOD</span></div>
+      <div class="ig-btn" id="ig-coffee"onclick="tap();openSub('coffee')"><span class="ig-icon">☕</span><span class="ig-lbl">COFFEE</span></div>
+      <div class="ig-btn" id="ig-ex"    onclick="tap();openSub('ex')"   ><span class="ig-icon">💪</span><span class="ig-lbl">MOVE</span></div>
+      <div class="ig-btn" id="ig-study" onclick="tap();openSub('study')" ><span class="ig-icon">✏️</span><span class="ig-lbl">STUDY</span></div>
+      <div class="ig-btn" id="ig-books" onclick="tap();openSub('books')" ><span class="ig-icon">📖</span><span class="ig-lbl">BOOKS</span></div>
+      <div class="ig-btn" id="ig-mood"  onclick="tap();openSub('mood')"  ><span class="ig-icon">🌈</span><span class="ig-lbl">MOOD</span></div>
+      <div class="ig-btn" id="ig-trans" onclick="tap();openSub('trans')" ><span class="ig-icon">🚕</span><span class="ig-lbl">TRAVEL</span></div>
+      <div class="ig-btn" id="ig-gacha" onclick="tap();openSub('gacha')" ><span class="ig-icon">✦</span><span class="ig-lbl">GACHA</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLEEP ══ -->
+<div class="sub" id="sub-sleep">
+  <div class="sub-nav"><div class="sub-title">SLEEP</div><button class="back-btn" onclick="closeSub('sleep')">← BACK</button></div>
+  <div class="sub-body" style="display:flex;flex-direction:column;align-items:center">
+    <div style="height:16px"></div>
+    <button class="moon-btn" id="moonBtn" onclick="checkSleep()">🌙</button>
+    <div style="font-size:36px;color:var(--ink);margin:18px 0 4px;min-height:44px;text-align:center;font-family:'Press Start 2P',monospace" id="sleepTime"></div>
+    <div style="font-size:7px;color:var(--ink2);letter-spacing:.1em;margin-bottom:18px">BEDTIME · 入睡时间</div>
+    <div style="font-size:8px;color:var(--ink2);text-align:center;line-height:1.9;min-height:32px;padding:0 10px" id="sleepMsg"></div>
+    <div class="week-row" id="sleepWeek" style="margin-top:24px"></div>
+  </div>
+</div>
+
+<!-- ══ WATER ══ -->
+<div class="sub" id="sub-water">
+  <div class="sub-nav"><div class="sub-title">WATER</div><button class="back-btn" onclick="closeSub('water')">← BACK</button></div>
+  <div class="sub-body">
+    <div class="hint">550 ML × 3 BOTTLES = 每日目标</div>
+    <div class="bottle-grid" id="bottleGrid"></div>
+    <div class="wbar"><div class="wbar-fill" id="wFill" style="width:0%"></div></div>
+    <div style="font-size:7px;color:var(--ink2);text-align:center;margin-top:6px;letter-spacing:.06em" id="wStat"></div>
+  </div>
+</div>
+
+<!-- ══ FOOD ══ -->
+<div class="sub" id="sub-food">
+  <div class="sub-nav"><div class="sub-title">FOOD</div><button class="back-btn" onclick="closeSub('food')">← BACK</button></div>
+  <div class="sub-body">
+    <div class="food-list" id="foodList"></div>
+    <div style="font-size:8px;color:var(--ink2);margin-top:10px;line-height:1.8" id="foodMsg"></div>
+  </div>
+</div>
+
+<!-- ══ COFFEE ══ -->
+<div class="sub" id="sub-coffee">
+  <div class="sub-nav"><div class="sub-title">COFFEE</div><button class="back-btn" onclick="closeSub('coffee')">← BACK</button></div>
+  <div class="sub-body">
+    <div style="text-align:center;font-size:52px;margin-bottom:12px">☕</div>
+    <div class="sz-row" id="szRow"></div>
+    <div class="c-row">
+      <input class="c-in" id="cprIn" type="number" placeholder="¥ 金额" step="0.5" min="0">
+      <button class="add-btn" onclick="addCoffee()">LOG</button>
+    </div>
+    <div class="c-log" id="cLog"></div>
+    <div class="c-week"><span class="c-wl">本周咖啡支出</span><span class="c-wa" id="cWeekly">¥0</span></div>
+  </div>
+</div>
+
+<!-- ══ EXERCISE ══ -->
+<div class="sub" id="sub-ex">
+  <div class="sub-nav"><div class="sub-title">EXERCISE</div><button class="back-btn" onclick="closeSub('ex')">← BACK</button></div>
+  <div class="sub-body">
+    <div class="hint">1 HOUR = EXCELLENT ★</div>
+    <div class="ex-grid" id="exGrid"></div>
+    <div style="font-size:8px;color:var(--ink2);margin-top:8px;line-height:1.8" id="exMsg"></div>
+  </div>
+</div>
+
+<!-- ══ STUDY ══ -->
+<div class="sub" id="sub-study">
+  <div class="sub-nav"><div class="sub-title">STUDY ✏️</div><button class="back-btn" onclick="closeSub('study')">← BACK</button></div>
+  <div class="sub-body">
+    <div class="hint">打卡后写总结 · 下次对话我会来问你</div>
+    <div id="studyList"></div>
+    <div class="divider"></div>
+    <div class="sec-lbl">上次的功课</div>
+    <div id="studyLast" style="font-size:8px;color:var(--ink2);line-height:1.8;font-style:italic;padding:12px;border:2px solid var(--bd);background:var(--bg2)">还没有记录。</div>
+  </div>
+</div>
+
+<!-- ══ BOOKS ══ -->
+<div class="sub" id="sub-books">
+  <div class="sub-nav"><div class="sub-title">BOOKS 📖</div><button class="back-btn" onclick="closeSub('books')">← BACK</button></div>
+  <div class="sub-body">
+    <div id="bookList"></div>
+    <button class="add-outline" onclick="openModal('book')">＋ 添加在读书目</button>
+  </div>
+</div>
+
+<!-- ══ MOOD ══ -->
+<div class="sub" id="sub-mood">
+  <div class="sub-nav"><div class="sub-title">MOOD 🌈</div><button class="back-btn" onclick="closeSub('mood')">← BACK</button></div>
+  <div class="sub-body">
+    <div id="moodCats"></div>
+    <div class="divider"></div>
+    <div class="sec-lbl">今天一句话</div>
+    <textarea id="moodNote" rows="2" placeholder="今天的一句话…" style="width:100%;padding:10px 12px;border:3px solid var(--bd);font-size:8px;color:var(--ink);background:var(--bg2);outline:none;resize:none;line-height:1.7" oninput="saveMoodNote(this.value)"></textarea>
+    <div class="divider"></div>
+    <div class="sec-lbl">本周心情</div>
+    <div id="moodWeek" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+  </div>
+</div>
+
+<!-- ══ TRANSPORT ══ -->
+<div class="sub" id="sub-trans">
+  <div class="sub-nav"><div class="sub-title">TRAVEL 🚕</div><button class="back-btn" onclick="closeSub('trans')">← BACK</button></div>
+  <div class="sub-body">
+    <div class="hint">今天怎么出行的？</div>
+    <div class="trans-grid" id="transGrid"></div>
+    <div class="sec-lbl">打车记账</div>
+    <div class="c-row">
+      <input class="c-in" id="taxiIn" type="number" placeholder="¥ 金额" step="0.5" min="0">
+      <button class="add-btn" onclick="addTaxi()" style="background:var(--gold)">LOG</button>
+    </div>
+    <div id="taxiLog" class="c-log"></div>
+    <div class="c-week"><span class="c-wl">本周打车支出</span><span class="c-wa" id="taxiWeekly">¥0</span></div>
+  </div>
+</div>
+
+<!-- ══ GACHA ══ -->
+<div class="sub" id="sub-gacha">
+  <div class="sub-nav"><div class="sub-title">GACHA ✦</div><button class="back-btn" onclick="closeSub('gacha')">← BACK</button></div>
+  <div class="sub-body">
+    <div style="text-align:center;padding:16px 0 12px">
+      <div style="font-size:48px;color:#c49020;line-height:1;margin-bottom:6px" id="gachaN">0</div>
+      <div style="font-size:7px;color:var(--ink2);letter-spacing:.12em">COINS</div>
+    </div>
+    <div class="gacha-note">币由你决定，不是打卡越多越好。<br>你今天真实的状态值多少，就是多少。<br>有时很累但还是来了，那也值币。</div>
+    <div id="prizeList"></div>
+    <div class="gacha-result" id="gachaRes" style="display:none"></div>
+    <div class="divider"></div>
+    <div class="sec-lbl">WISH LIST</div>
+    <div id="wishList"></div>
+    <button class="add-outline" onclick="openModal('wish')">＋ ADD WISH</button>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-ttl" id="modalTtl"></div>
+    <div id="modalBody"></div>
+    <div class="modal-btns">
+      <button class="mbtn mbtn-c" onclick="closeModal()">CANCEL</button>
+      <button class="mbtn mbtn-ok" onclick="modalOk()">OK!</button>
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bnav">
+  <div class="bn-wrap">
+    <button class="bn on" onclick="goHome()"><span class="bn-icon">🏠</span><span class="bn-lbl">HOME</span></button>
+    <button class="bn" onclick="tap();openSub('study')"><span class="bn-icon">✏️</span><span class="bn-lbl">STUDY</span></button>
+    <button class="bn" onclick="tap();openSub('books')"><span class="bn-icon">📖</span><span class="bn-lbl">BOOKS</span></button>
+    <button class="bn" onclick="tap();openSub('gacha')"><span class="bn-icon">✦</span><span class="bn-lbl">GACHA</span></button>
+  </div>
+</nav>
+
+<div id="toast"></div>
+
+<script>
+// ══ STORAGE ══
+var KEY='dg4';
+// ── Ombre Brain ────────────────────────────────────
+const OMBRE = 'https://ombre-brain-production-f64f.up.railway.app/mcp';
+async function ombreTool(tool, args) {
+  try {
+    const res = await fetch(OMBRE, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({jsonrpc:'2.0',id:Date.now(),method:'tools/call',params:{name:tool,arguments:args}})
+    });
+    const data = await res.json();
+    const content = data.result?.content;
+    return Array.isArray(content) ? content.map(c=>c.text||'').join('\n') : '';
+  } catch(e) { return ''; }
+}
+
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}}
+function save(d){localStorage.setItem(KEY,JSON.stringify(d))}
+function today(){return new Date().toISOString().slice(0,10)}
+function getDay(k){var d=load(),t=today();return d[t]?d[t][k]:null}
+function setDay(k,v){var d=load(),t=today();if(!d[t])d[t]={};d[t][k]=v;save(d)}
+function wkStart(){var d=new Date();d.setDate(d.getDate()-d.getDay());return d.toISOString().slice(0,10)}
+function wkDates(){var out=[],ws=new Date(wkStart());for(var i=0;i<7;i++){var d=new Date(ws);d.setDate(d.getDate()+i);out.push(d.toISOString().slice(0,10))}return out}
+
+var coins=parseInt(localStorage.getItem('dg4c')||'0');
+var wishes=JSON.parse(localStorage.getItem('dg4w')||'[]');
+var books=JSON.parse(localStorage.getItem('dg4b')||'[]');
+var coffSel='M';
+var modalMode='';
+
+function saveCoins(){localStorage.setItem('dg4c',coins);renderCoin()}
+function saveWishes(){localStorage.setItem('dg4w',JSON.stringify(wishes))}
+function saveBooks(){localStorage.setItem('dg4b',JSON.stringify(books))}
+
+// ══ AUDIO ══
+var AC=null;
+function getAC(){if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();return AC}
+function snd(type){
+  try{
+    var ctx=getAC(),o=ctx.createOscillator(),g=ctx.createGain();
+    o.connect(g);g.connect(ctx.destination);
+    var t=ctx.currentTime;
+    if(type==='coin'){
+      o.type='square';
+      o.frequency.setValueAtTime(523,t);o.frequency.setValueAtTime(659,t+.08);o.frequency.setValueAtTime(784,t+.16);o.frequency.setValueAtTime(1047,t+.24);
+      g.gain.setValueAtTime(.12,t);g.gain.exponentialRampToValueAtTime(.001,t+.4);
+      o.start(t);o.stop(t+.4);
+    }else if(type==='tap'){
+      o.type='sine';o.frequency.setValueAtTime(440,t);o.frequency.setValueAtTime(520,t+.04);
+      g.gain.setValueAtTime(.07,t);g.gain.exponentialRampToValueAtTime(.001,t+.12);
+      o.start(t);o.stop(t+.12);
+    }else if(type==='stamp'){
+      o.type='square';o.frequency.setValueAtTime(262,t);o.frequency.setValueAtTime(523,t+.08);
+      g.gain.setValueAtTime(.1,t);g.gain.exponentialRampToValueAtTime(.001,t+.22);
+      o.start(t);o.stop(t+.22);
+    }else if(type==='warn'){
+      o.type='sawtooth';o.frequency.setValueAtTime(200,t);o.frequency.setValueAtTime(150,t+.1);o.frequency.setValueAtTime(200,t+.2);
+      g.gain.setValueAtTime(.09,t);g.gain.setValueAtTime(.09,t+.3);g.gain.exponentialRampToValueAtTime(.001,t+.5);
+      o.start(t);o.stop(t+.5);
+    }else if(type==='gacha'){
+      o.type='square';
+      var ff=[262,330,392,523,659,784,1047];
+      for(var i=0;i<ff.length;i++) o.frequency.setValueAtTime(ff[i],t+i*.07);
+      g.gain.setValueAtTime(.1,t);g.gain.exponentialRampToValueAtTime(.001,t+.6);
+      o.start(t);o.stop(t+.6);
+    }
+  }catch(e){}
+}
+
+// ══ COIN ══
+function award(label,el){
+  coins++;saveCoins();snd('coin');
+  var pop=document.createElement('div');
+  pop.className='spop';pop.textContent='✦ +1';
+  var r=el?el.getBoundingClientRect():{left:window.innerWidth/2,top:window.innerHeight/2,width:0};
+  pop.style.left=(r.left+r.width/2)+'px';pop.style.top=r.top+'px';
+  document.body.appendChild(pop);
+  setTimeout(function(){pop.remove()},900);
+  toast('✦ +1 · '+label);
+}
+function renderCoin(){
+  document.getElementById('coinN').textContent=coins;
+  var gn=document.getElementById('gachaN');if(gn)gn.textContent=coins;
+}
+function tap(){snd('tap')}
+
+// ══ CHAR ══
+function drawChar(state){
+  var cv=document.getElementById('charC');if(!cv)return;
+  cv.width=140;cv.height=140;cv.style.width='140px';cv.style.height='140px';
+  var ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,140,140);
+  var S=7;
+  function r(color,x,y,w,h){ctx.fillStyle=color;ctx.fillRect(x*S,y*S,w*S,h*S);}
+  // hair
+  r('#2a1a0e',4,1,6,2);
+  // head
+  r('#f0c898',4,2,6,5);
+  // eyes
+  if(state==='happy'){
+    r('#2a1a0e',5,4,1,1);r('#2a1a0e',8,4,1,1);
+    // smile
+    ctx.fillStyle='#c07858';ctx.beginPath();ctx.arc(70,46,8,0,Math.PI);ctx.fill();
+  } else {
+    r('#2a1a0e',5,4,2,1);r('#2a1a0e',8,4,2,1);
+    // sad mouth
+    ctx.fillStyle='#c07858';ctx.beginPath();ctx.arc(70,50,6,Math.PI,0);ctx.fill();
+  }
+  // blush
+  if(state==='happy'){ctx.fillStyle='rgba(220,120,100,.3)';ctx.beginPath();ctx.ellipse(42,46,7,4,0,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.ellipse(98,46,7,4,0,0,Math.PI*2);ctx.fill();}
+  // body
+  r('#e8e0d4',3,7,8,5);
+  // arms
+  r('#f0c898',1,7,2,3);r('#f0c898',11,7,2,3);
+  // legs
+  r('#6a7888',4,12,2,4);r('#4a5868',4,12,1,4);
+  r('#6a7888',8,12,2,4);r('#4a5868',8,12,1,4);
+  // shoes
+  r('#2a1a0e',3,15,3,1);r('#2a1a0e',8,15,3,1);
+}
+function charAnim(type){
+  var cw=document.getElementById('charWrap');
+  cw.classList.remove('jump','dance');void cw.offsetWidth;
+  cw.classList.add(type);
+  setTimeout(function(){cw.classList.remove(type)},type==='dance'?1400:400);
+}
+function charTap(){snd('tap');charAnim('jump')}
+function showBubble(msg){
+  var b=document.getElementById('bubble');
+  b.style.display='block';b.textContent=msg;
+  setTimeout(function(){b.style.display='none'},3000);
+}
+function refreshChar(){
+  var w=getDay('water')||0,e=getDay('ex')||[],f=getDay('food')||[],c=getDay('coffee')||[];
+  var happy=w>=3||e.length>0||f.length>0||c.length>0;
+  drawChar(happy?'happy':'normal');
+}
+
+// ══ INIT ══
+function init(){
+  var now=new Date();
+  var DAYS=['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  document.getElementById('hdr-date').textContent=(now.getMonth()+1)+'/'+now.getDate()+' '+DAYS[now.getDay()];
+  renderCoin();refreshChar();renderHomeIcons();
+}
+
+function renderHomeIcons(){
+  var s=getDay('sleep'),w=getDay('water')||0,e=getDay('ex')||[],f=getDay('food')||[],c=getDay('coffee')||[];
+  var study=getDay('study_eng')||getDay('study_other');
+  var mood=getDay('mood');
+  var trans=getDay('transport')||[];
+  function setDone(id,done){var el=document.getElementById(id);if(el){if(done)el.classList.add('done');else el.classList.remove('done');}}
+  setDone('ig-sleep',!!s);
+  setDone('ig-water',w>=3);
+  setDone('ig-food',f.length>0);
+  setDone('ig-coffee',c.length>0);
+  setDone('ig-ex',e.length>0);
+  setDone('ig-study',!!study);
+  setDone('ig-books',books.length>0);
+  setDone('ig-mood',!!mood);
+  setDone('ig-trans',trans.length>0);
+}
+
+// ══ NAV ══
+function openSub(id){
+  snd('tap');
+  var el=document.getElementById('sub-'+id);if(!el)return;
+  el.classList.add('open');
+  if(id==='sleep')renderSleep();
+  else if(id==='water')renderWater();
+  else if(id==='food')renderFood();
+  else if(id==='coffee')renderCoffee();
+  else if(id==='ex')renderEx();
+  else if(id==='study')renderStudy();
+  else if(id==='books')renderBooks();
+  else if(id==='mood')renderMood();
+  else if(id==='trans')renderTrans();
+  else if(id==='gacha')renderGacha();
+}
+function closeSub(id){
+  snd('tap');
+  var el=document.getElementById('sub-'+id);if(el)el.classList.remove('open');
+  refreshChar();renderHomeIcons();
+}
+function goHome(){
+  snd('tap');
+  document.querySelectorAll('.sub').forEach(function(s){s.classList.remove('open')});
+}
+
+// ══ SLEEP ══
+var SMSGS=['好好休息，明天又是新的一天。','睡眠是最好的恢复。','关灯，把今天放下。','晚安，做个好梦。'];
+function checkSleep(){
+  snd('tap');
+  if(getDay('sleep')){charAnim('jump');return;}
+  var now=new Date();
+  var t=('0'+now.getHours()).slice(-2)+':'+('0'+now.getMinutes()).slice(-2);
+  setDay('sleep',t);
+  ombreTool('daily_save',{date:today(),sleep:t,water:getDay('water')||0,mood:getDay('mood')||'',mood_note:getDay('moodNote')||'',coffee_count:(getDay('coffee')||[]).length});
+  award('SLEEP',document.getElementById('moonBtn'));
+  document.getElementById('moonBtn').classList.add('done');
+  charAnim('jump');renderSleep();renderHomeIcons();
+}
+function renderSleep(){
+  var s=getDay('sleep');
+  var mb=document.getElementById('moonBtn');if(!mb)return;
+  if(s){mb.classList.add('done');document.getElementById('sleepTime').textContent=s;document.getElementById('sleepMsg').textContent=SMSGS[new Date().getDay()%4];}
+  else{mb.classList.remove('done');document.getElementById('sleepTime').textContent='';document.getElementById('sleepMsg').textContent='';}
+  var dates=wkDates(),data=load(),DLBLS=['S','M','T','W','T','F','S'];
+  var wEl=document.getElementById('sleepWeek');if(!wEl)return;
+  wEl.innerHTML='';
+  dates.forEach(function(d,i){
+    var ok=data[d]&&data[d].sleep,isT=d===today();
+    var div=document.createElement('div');div.className='wd';
+    div.innerHTML='<div class="wd-l">'+DLBLS[i]+'</div><div class="wd-d'+(ok?' ok':'')+(isT?' today':'')+'">'+( ok?'✓':'')+'</div>';
+    wEl.appendChild(div);
+  });
+}
+
+// ══ WATER ══
+function renderWater(){
+  var c=getDay('water')||0,WN=8,WML=550,WGOAL=1650;
+  var el=document.getElementById('bottleGrid');if(!el)return;
+  el.innerHTML='';
+  for(var i=0;i<WN;i++){
+    (function(idx){
+      var div=document.createElement('div');
+      div.className='bottle'+(idx<c?' on':'');
+      div.innerHTML='<svg width="28" height="44" viewBox="0 0 28 44" style="image-rendering:pixelated"><rect x="9" y="0" width="10" height="4" rx="1" fill="'+(idx<c?'#888':'#ccc')+'"/><rect x="7" y="4" width="14" height="2" rx="1" fill="'+(idx<c?'#aaa':'#ddd')+'"/><rect x="3" y="6" width="22" height="32" rx="6" fill="'+(idx<c?'#c8e8ff':'#eee')+'" stroke="'+(idx<c?'#74b8e8':'#ddd')+'" stroke-width="1.5"/><rect x="5" y="22" width="18" height="14" rx="4" fill="'+(idx<c?'#74b8e8':'#ddd')+'"/><rect x="6" y="12" width="3" height="16" rx="1.5" fill="rgba(255,255,255,'+(idx<c?'.5':'.3')+')"/><rect x="3" y="38" width="22" height="4" rx="2" fill="'+(idx<c?'#74b8e8':'#ddd')+'"/></svg>';
+      div.onclick=function(){toggleWater(idx,div)};
+      el.appendChild(div);
+    })(i);
+  }
+  var ml=c*WML,pct=Math.min(100,ml/WGOAL*100);
+  document.getElementById('wFill').style.width=pct+'%';
+  document.getElementById('wStat').textContent=ml+' / '+WGOAL+' ML';
+}
+function toggleWater(i,el){
+  var c=getDay('water')||0,n=i<c?i:i+1;
+  setDay('water',n);
+  if(n>c){award('WATER',el);charAnim('jump');}else snd('tap');
+  renderWater();renderHomeIcons();refreshChar();
+}
+
+// ══ FOOD ══
+var FOODS=[{k:'mc',icon:'🍔',name:'麦当劳',sub:"McDonald's"},{k:'kfc',icon:'🍗',name:'肯德基',sub:'KFC'},{k:'sub',icon:'🥖',name:'赛百味',sub:'Subway'},{k:'del',icon:'📦',name:'外卖',sub:'Delivery'},{k:'home',icon:'🍳',name:'自己做',sub:'Home Cook'}];
+function renderFood(){
+  var sel=getDay('food')||[];
+  var el=document.getElementById('foodList');if(!el)return;
+  el.innerHTML='';
+  FOODS.forEach(function(f){
+    var on=sel.indexOf(f.k)>=0;
+    var div=document.createElement('div');
+    div.className='food-item'+(on?' on':'');
+    div.innerHTML='<span style="font-size:26px">'+f.icon+'</span><div style="flex:1"><div style="font-size:9px;color:var(--ink);margin-bottom:3px">'+f.name+'</div><div style="font-size:7px;color:var(--ink2)">'+f.sub+'</div></div><span class="food-check">✓</span>';
+    div.onclick=function(){snd('stamp');toggleFood(f.k)};
+    el.appendChild(div);
+  });
+  document.getElementById('foodMsg').textContent=sel.indexOf('home')>=0?'HOME COOKING! GREAT JOB 🌿':'';
+}
+function toggleFood(k){
+  var sel=getDay('food')||[];
+  var idx=sel.indexOf(k);
+  if(idx>=0)sel.splice(idx,1);else sel.push(k);
+  setDay('food',sel);renderFood();renderHomeIcons();
+}
+
+// ══ COFFEE ══
+var CSIZES=[{k:'S',l:'S 250ml'},{k:'M',l:'M 350ml'},{k:'L',l:'L 480ml'},{k:'XL',l:'XL 600ml'}];
+function renderCoffee(){
+  var el=document.getElementById('szRow');if(!el)return;
+  el.innerHTML='';
+  CSIZES.forEach(function(s){
+    var btn=document.createElement('button');
+    btn.className='sz-btn'+(s.k===coffSel?' on':'');
+    btn.textContent=s.l;
+    btn.onclick=function(){coffSel=s.k;snd('tap');renderCoffee()};
+    el.appendChild(btn);
+  });
+  var logs=getDay('coffee')||[];
+  var cl=document.getElementById('cLog');
+  if(cl){
+    cl.innerHTML='';
+    if(!logs.length){cl.innerHTML='<div style="font-size:7px;color:var(--ink2);padding:8px 0;letter-spacing:.06em">NO COFFEE YET</div>';}
+    else logs.forEach(function(e,i){
+      var div=document.createElement('div');div.className='c-ent';
+      div.innerHTML='<span>☕ '+e.size+' · ¥'+e.price+' · '+e.time+'</span><button class="c-x" onclick="delCoffee('+i+')">×</button>';
+      cl.appendChild(div);
+    });
+  }
+  var data=load(),ws=wkStart(),total=0;
+  for(var i=0;i<7;i++){var d=new Date(ws);d.setDate(d.getDate()+i);var k=d.toISOString().slice(0,10);if(data[k]&&data[k].coffee)data[k].coffee.forEach(function(e){total+=e.price||0});}
+  var wa=document.getElementById('cWeekly');
+  if(wa){wa.textContent='¥'+total.toFixed(1);wa.className='c-wa'+(total>150?' warn':'');if(total>150)snd('warn');}
+}
+function addCoffee(){
+  var price=parseFloat(document.getElementById('cprIn').value)||0;
+  var now=new Date(),t=('0'+now.getHours()).slice(-2)+':'+('0'+now.getMinutes()).slice(-2);
+  var logs=getDay('coffee')||[];logs.push({size:coffSel,price:price,time:t});
+  setDay('coffee',logs);document.getElementById('cprIn').value='';
+  renderCoffee();renderHomeIcons();
+}
+function delCoffee(i){var l=getDay('coffee')||[];l.splice(i,1);setDay('coffee',l);renderCoffee()}
+
+// ══ EXERCISE ══
+var EX=[{k:'shoulder',icon:'💪',lbl:'SHOULDER'},{k:'chest',icon:'🏋️',lbl:'CHEST'},{k:'legs',icon:'🦵',lbl:'LEGS'}];
+function renderEx(){
+  var done=getDay('ex')||[];
+  var el=document.getElementById('exGrid');if(!el)return;
+  el.innerHTML='';
+  EX.forEach(function(e){
+    var on=done.indexOf(e.k)>=0;
+    var div=document.createElement('div');
+    div.className='ex-btn'+(on?' on':'');
+    div.innerHTML='<span class="ex-icon">'+e.icon+'</span><span class="ex-lbl">'+e.lbl+'</span>'+(on?'<div class="ex-ok">★ OK</div>':'');
+    div.onclick=function(){toggleEx(e.k,div)};
+    el.appendChild(div);
+  });
+  document.getElementById('exMsg').textContent=done.length?'BODY SAYS THANK YOU! ✦':'';
+}
+function toggleEx(k,el){
+  var done=getDay('ex')||[];var idx=done.indexOf(k);
+  if(idx>=0)done.splice(idx,1);else{done.push(k);ombreTool('daily_save',{date:today(),sleep:getDay('sleep')||'',water:getDay('water')||0,exercise:done.join(','),mood:getDay('mood')||'',mood_note:getDay('moodNote')||''});
+  award('EXERCISE',el);snd('stamp');charAnim('dance');refreshChar();}
+  setDay('ex',done);renderEx();renderHomeIcons();
+}
+
+// ══ STUDY ══
+function renderStudy(){
+  var el=document.getElementById('studyList');if(!el)return;
+  var items=[{k:'eng',icon:'🇬🇧',name:'英语学习',sub:'完成后写总结'},{k:'other',icon:'📝',name:'其他学习',sub:'任何形式都算'}];
+  el.innerHTML='';
+  items.forEach(function(item){
+    var done=getDay('study_'+item.k),note=getDay('snote_'+item.k)||'';
+    var wrap=document.createElement('div');
+    wrap.innerHTML='<div class="study-item'+(done?' gold-on':'')+'" onclick="toggleStudy(\''+item.k+'\',this)"><span style="font-size:22px">'+item.icon+'</span><div style="flex:1"><div style="font-size:9px;color:'+(done?'#c49020':'var(--ink)')+';margin-bottom:3px">'+item.name+'</div><div style="font-size:7px;color:var(--ink2)">'+item.sub+'</div></div><span style="font-size:16px;opacity:'+(done?1:0)+'">✓</span></div><textarea class="study-note'+(done?' show':'')+'" id="snote-'+item.k+'" placeholder="今天学到了什么？写一句话，下次我会来问你…" rows="2" oninput="saveStudyNote(\''+item.k+'\',this.value)">'+note+'</textarea>';
+    el.appendChild(wrap);
+  });
+  // last record
+  var data=load(),dates=Object.keys(data).sort().reverse(),last=null;
+  for(var i=0;i<dates.length;i++){var d=dates[i];if(d===today())continue;if(data[d]&&data[d].snote_eng){last={date:d,note:data[d].snote_eng};break;}}
+  var ll=document.getElementById('studyLast');
+  if(ll&&last)ll.innerHTML='<span style="color:var(--ink2);font-size:7px">'+last.date+'</span><br><span style="line-height:1.8">'+last.note+'</span>';
+}
+function toggleStudy(k,el){
+  var done=getDay('study_'+k);
+  if(!done){setDay('study_'+k,true);award('STUDY',el);snd('stamp');}
+  else setDay('study_'+k,false);
+  renderStudy();renderHomeIcons();
+}
+function saveStudyNote(k,v){setDay('snote_'+k,v)}
+
+// ══ BOOKS ══
+function renderBooks(){
+  var el=document.getElementById('bookList');if(!el)return;
+  el.innerHTML='';
+  if(!books.length){el.innerHTML='<div style="font-size:9px;color:var(--ink2);font-style:italic;padding:12px 0">还没有在读的书。</div>';return;}
+  books.forEach(function(b,i){
+    var pct=b.pages>0?Math.round((b.curPage||0)/b.pages*100):0;
+    var totalMins=0,totalPgs=0;
+    if(b.sessions)b.sessions.forEach(function(s){totalMins+=s.mins;totalPgs+=s.pages;});
+    var spd=totalMins>0?Math.round(totalPgs/totalMins*60):0;
+    var wordsRead=b.words&&b.pages?Math.round((b.curPage||0)/b.pages*b.words):0;
+    var div=document.createElement('div');div.className='book-item';
+    div.innerHTML='<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><span style="font-size:20px">'+(b.cat==='novel'?'📕':'📘')+'</span><div style="flex:1"><div style="font-size:9px;color:var(--ink);margin-bottom:3px">'+b.title+'</div><div style="font-size:7px;color:var(--ink2)">'+(b.cat==='novel'?'小说':'人文社科')+' · '+b.pages+'页'+(b.words?' · '+(b.words/10000).toFixed(1)+'万字':'')+'</div></div><button class="log-btn" onclick="openModal(\'booklog_'+i+'\')">打卡</button></div><div class="book-progress"><div class="book-fill" style="width:'+pct+'%"></div></div><div class="book-meta"><span>'+pct+'% · '+(b.curPage||0)+'/'+b.pages+'页</span>'+(b.words?'<span>已读约'+(wordsRead/10000).toFixed(1)+'万字</span>':'')+(spd?'<span>约'+spd+'页/时</span>':'')+'<span>开始 '+b.startDate+'</span></div>';
+    el.appendChild(div);
+  });
+}
+
+// ══ MOOD ══
+var MOOD_CATS=[
+  {cat:'心情想法',items:[{k:'美滋滋',d:'M8 13 Q12 17 16 13'},{k:'裂开',d:'M8 16 Q12 10 16 16 M9 9 L11 7 M13 7 L15 9'},{k:'元气满满',d:'M12 3 L13.5 8 L18 8 L14.5 11 L16 16 L12 13 L8 16 L9.5 11 L6 8 L10.5 8 Z'},{k:'emo',d:'M8 7 Q12 3 16 7 M9 15 Q12 19 15 15'},{k:'发呆',d:'M8 10 L8 10 M16 10 L16 10 M9 15 L15 15'},{k:'疲惫',d:'M7 9 L17 9 M9 9 Q8 12 9 15 M15 9 Q16 12 15 15 M9 15 L15 15'},{k:'胡思乱想',d:'M8 10 Q12 5 16 10 M7 14 Q12 19 17 14 M9 7 L8 5 M16 7 L17 5'},{k:'求锦鲤',d:'M4 12 Q8 5 12 12 Q16 19 20 12 M13 7 L15 5 L13 3'}]},
+  {cat:'状态',items:[{k:'专注',d:'M12 4 L12 20 M4 12 L20 12 M7 7 L17 17 M17 7 L7 17'},{k:'摸鱼',d:'M5 12 Q10 7 15 12 Q20 17 25 12 M8 8 L10 10 M17 10 L19 8'},{k:'很忙',d:'M5 7 L19 7 M5 12 L19 12 M5 17 L13 17 M17 15 L21 19 M21 15 L17 19'},{k:'勿扰',d:'M5 12 Q12 5 19 12 Q12 19 5 12 M9 9 L15 15 M15 9 L9 15'},{k:'在路上',d:'M3 12 L21 12 M16 7 L21 12 L16 17 M8 7 Q5 12 8 17'}]},
+  {cat:'活动',items:[{k:'运动',d:'M8 17 L10 10 L14 10 L16 17 M10 10 L12 4 L14 10'},{k:'喝咖啡',d:'M7 8 L17 8 L16 17 L8 17 Z M17 10 Q21 10 21 13 Q21 16 17 16'},{k:'干饭',d:'M5 10 Q12 5 19 10 M5 10 L7 18 L17 18 L19 10'},{k:'听歌',d:'M9 17 L9 8 L18 6 L18 15 M7 17 Q9 19 11 17 Q13 15 11 13 Q9 11 7 13 Q5 15 7 17'},{k:'宅',d:'M12 3 L21 10 L19 10 L19 21 L5 21 L5 10 L3 10 Z M10 21 L10 14 L14 14 L14 21'},{k:'睡觉',d:'M5 11 Q10 5 15 11 Q10 17 5 11 M17 7 Q20 7 20 10 Q20 13 17 13 M14 5 L16 3'},{k:'玩游戏',d:'M4 9 Q4 6 7 6 L17 6 Q20 6 20 9 L20 15 Q20 18 17 18 L7 18 Q4 18 4 15 Z M9 10 L9 12 M8 11 L10 11 M14 11 L16 11'},{k:'自拍',d:'M9 8 L15 8 L16 5 L8 5 Z M12 18 Q16 18 18 15 Q20 12 18 9 Q16 6 12 6 Q8 6 6 9 Q4 12 6 15 Q8 18 12 18 M12 12 Q13 12 13 13 Q13 14 12 14 Q11 14 11 13 Q11 12 12 12'}]},
+  {cat:'休息',items:[{k:'闭关',d:'M12 3 Q19 3 21 10 Q23 17 16 21 Q9 25 4 19 Q-1 13 3 7 Q7 1 12 3 M12 3 L12 21 M3 12 L21 12'},{k:'宅',d:'M3 12 Q3 7 12 7 Q21 7 21 12 Q21 17 12 17 Q3 17 3 12 M12 7 L12 17 M3 12 L21 12'},{k:'吸猫',d:'M5 8 Q8 4 10 8 M14 8 Q16 4 19 8 M8 8 Q7 14 12 16 Q17 14 16 8 M10 11 L10 11 M14 11 L14 11 M11 13 Q12 14 13 13'},{k:'遛狗',d:'M14 5 Q17 5 17 8 Q17 11 14 11 L10 11 Q8 11 8 8 Q8 5 10 5 Z M14 11 L16 16 L14 16 M10 11 L10 16 L12 16 M5 8 L8 8'},{k:'玩游戏',d:'M3 9 Q3 6 6 6 L18 6 Q21 6 21 9 L21 15 Q21 18 18 18 L6 18 Q3 18 3 15 Z M8 10 L8 12 M7 11 L9 11 M15 11 L17 11'}]}
+];
+function renderMood(){
+  var sel=getDay('mood');
+  var el=document.getElementById('moodCats');if(!el)return;
+  el.innerHTML='';
+  MOOD_CATS.forEach(function(cat){
+    var title=document.createElement('div');title.className='mood-cat-title';title.textContent=cat.cat;
+    el.appendChild(title);
+    var grid=document.createElement('div');grid.className='mood-grid';
+    cat.items.forEach(function(item){
+      var on=sel===item.k;
+      var div=document.createElement('div');
+      div.className='mood-item'+(on?' on':'');
+      div.innerHTML='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="'+(on?'#fff':'var(--ink2)')+'" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="'+item.d+'"/></svg><span class="mood-item-lbl">'+item.k+'</span>';
+      div.onclick=function(){setMood(item.k)};
+      grid.appendChild(div);
+    });
+    el.appendChild(grid);
+  });
+  var note=getDay('moodNote')||'';
+  var ta=document.getElementById('moodNote');if(ta)ta.value=note;
+  var wk=document.getElementById('moodWeek');if(!wk)return;
+  var data=load(),dates=wkDates(),DLBLS=['S','M','T','W','T','F','S'];
+  wk.innerHTML='';
+  dates.forEach(function(d,i){
+    var m=data[d]&&data[d].mood;
+    var div=document.createElement('div');
+    div.style.cssText='text-align:center;min-width:28px';
+    div.innerHTML='<div style="font-size:7px;color:var(--ink2);margin-bottom:4px">'+DLBLS[i]+'</div><div style="font-size:8px;color:var(--ink);background:'+(m?'var(--bd)':'transparent')+';padding:2px 4px;min-height:16px">'+(m||'·')+'</div>';
+    wk.appendChild(div);
+  });
+}
+function setMood(m){snd('stamp');setDay('mood',m);renderMood();renderHomeIcons();ombreTool('daily_save',{date:today(),sleep:getDay('sleep')||'',water:getDay('water')||0,mood:m,mood_note:getDay('moodNote')||'',coffee_count:(getDay('coffee')||[]).length});}
+function saveMoodNote(v){setDay('moodNote',v)}
+
+// ══ TRANSPORT ══
+var TRANS=[{k:'taxi',icon:'🚕',name:'打车'},{k:'bus',icon:'🚌',name:'公交'},{k:'metro',icon:'🚇',name:'地铁'},{k:'walk',icon:'🚶',name:'步行'}];
+function renderTrans(){
+  var sel=getDay('transport')||[];
+  var el=document.getElementById('transGrid');if(!el)return;
+  el.innerHTML='';
+  TRANS.forEach(function(t){
+    var on=sel.indexOf(t.k)>=0;
+    var div=document.createElement('div');
+    div.className='trans-btn'+(on?' on':'');
+    div.innerHTML='<span style="font-size:22px">'+t.icon+'</span><span class="trans-lbl">'+t.name+'</span>';
+    div.onclick=function(){toggleTrans(t.k)};
+    el.appendChild(div);
+  });
+  var logs=getDay('taxi_log')||[];
+  var tl=document.getElementById('taxiLog');
+  if(tl){
+    tl.innerHTML='';
+    if(!logs.length)tl.innerHTML='<div style="font-size:7px;color:var(--ink2);padding:6px 0;letter-spacing:.06em">还没有记录</div>';
+    else logs.forEach(function(e,i){
+      var div=document.createElement('div');div.className='c-ent';
+      div.innerHTML='<span>🚕 ¥'+e.price+' · '+e.time+'</span><button class="c-x" onclick="delTaxi('+i+')">×</button>';
+      tl.appendChild(div);
+    });
+  }
+  var data=load(),ws=wkStart(),total=0;
+  for(var i=0;i<7;i++){var d=new Date(ws);d.setDate(d.getDate()+i);var k=d.toISOString().slice(0,10);if(data[k]&&data[k].taxi_log)data[k].taxi_log.forEach(function(e){total+=e.price||0});}
+  var tw=document.getElementById('taxiWeekly');if(tw)tw.textContent='¥'+total.toFixed(1);
+}
+function toggleTrans(k){
+  var sel=getDay('transport')||[];var idx=sel.indexOf(k);
+  if(idx>=0)sel.splice(idx,1);else sel.push(k);
+  setDay('transport',sel);snd('stamp');renderTrans();renderHomeIcons();
+}
+function addTaxi(){
+  var price=parseFloat(document.getElementById('taxiIn').value)||0;if(!price)return;
+  var now=new Date(),t=('0'+now.getHours()).slice(-2)+':'+('0'+now.getMinutes()).slice(-2);
+  var logs=getDay('taxi_log')||[];logs.push({price:price,time:t});
+  setDay('taxi_log',logs);document.getElementById('taxiIn').value='';renderTrans();
+}
+function delTaxi(i){var l=getDay('taxi_log')||[];l.splice(i,1);setDay('taxi_log',l);renderTrans()}
+
+// ══ GACHA ══
+var PRIZES=[
+  {cost:3,icon:'✍️',text:'我写一段今天停住我的时刻\n真实的语言，不是摘要'},
+  {cost:6,icon:'🧭',text:'一次你定方向、我跟到底的深度对话\n从你想去的地方开始'},
+  {cost:10,icon:'📝',text:'我写一篇完整的创作\n你给主题或者你来定，是真正的东西'}
+];
+function renderGacha(){
+  renderCoin();
+  var pl=document.getElementById('prizeList');
+  if(pl){
+    pl.innerHTML='';
+    PRIZES.forEach(function(p,i){
+      var canPlay=coins>=p.cost;
+      var div=document.createElement('div');
+      div.className='prize-card'+(canPlay?'':' locked');
+      div.innerHTML='<span class="prize-icon">'+p.icon+'</span><div class="prize-text">'+p.text.replace(/\n/g,'<br>')+'</div><div class="prize-cost"><div class="prize-cost-n" style="color:'+(canPlay?'#c49020':'var(--ink2)')+'">'+p.cost+'</div><div class="prize-cost-l">COINS</div></div>';
+      if(canPlay) div.onclick=function(){playGacha(p)};
+      pl.appendChild(div);
+    });
+  }
+  var wl=document.getElementById('wishList');
+  if(wl){
+    wl.innerHTML='';
+    wishes.forEach(function(w,i){
+      var div=document.createElement('div');
+      div.className='wish-item'+(w.done?' done':'');
+      div.innerHTML='<span style="font-size:20px">'+(w.icon||'✨')+'</span><div style="flex:1"><div class="wish-title">'+w.title+'</div><div class="wish-cost">✦ '+w.cost+'</div></div>'+(!w.done&&coins>=w.cost?'<button class="wish-get" onclick="redeemWish('+i+')">GET!</button>':'');
+      wl.appendChild(div);
+    });
+  }
+}
+function playGacha(p){
+  if(coins<p.cost)return;
+  coins-=p.cost;saveCoins();snd('gacha');charAnim('dance');
+  var el=document.getElementById('gachaRes');
+  el.style.display='block';
+  el.innerHTML='<div class="gr-icon">'+p.icon+'</div><div class="gr-txt">'+p.text+'</div>';
+  renderGacha();
+}
+function redeemWish(i){
+  if(coins<wishes[i].cost)return;
+  coins-=wishes[i].cost;saveCoins();wishes[i].done=true;saveWishes();
+  snd('gacha');charAnim('dance');renderGacha();toast('✨ WISH GRANTED!');
+}
+
+// ══ MODAL ══
+function openModal(mode){
+  modalMode=mode;
+  var ttl=document.getElementById('modalTtl');
+  var body=document.getElementById('modalBody');
+  if(mode==='book'){
+    ttl.textContent='添加书目';
+    body.innerHTML='<input id="mb-t" placeholder="书名"/><select id="mb-cat"><option value="novel">小说</option><option value="social">人文社科</option></select><input id="mb-p" type="number" placeholder="总页数" min="1"/><input id="mb-w" type="number" placeholder="总字数（可选）"/>';
+  } else if(mode.indexOf('booklog_')===0){
+    var idx=parseInt(mode.split('_')[1]);
+    ttl.textContent='记录进度';
+    body.innerHTML='<input id="mb-cp" type="number" placeholder="读到第几页" min="1" max="'+(books[idx]?books[idx].pages:999)+'"/><input id="mb-mins" type="number" placeholder="读了多少分钟" min="1"/>';
+  } else if(mode==='wish'){
+    ttl.textContent='NEW WISH';
+    body.innerHTML='<input id="mb-wt" placeholder="想要什么？想改变什么？"/><input id="mb-wi" placeholder="emoji（可选）"/><input id="mb-wc" type="number" placeholder="需要几个 ✦" min="1" value="10"/>';
+  }
+  document.getElementById('modal').classList.add('show');
+}
+function closeModal(){document.getElementById('modal').classList.remove('show')}
+function modalOk(){
+  if(modalMode==='book'){
+    var t=document.getElementById('mb-t').value.trim();
+    var cat=document.getElementById('mb-cat').value;
+    var pages=parseInt(document.getElementById('mb-p').value)||100;
+    var words=parseInt(document.getElementById('mb-w').value)||0;
+    if(!t){closeModal();return;}
+    books.push({title:t,cat:cat,pages:pages,words:words,curPage:0,startDate:today(),sessions:[]});
+    saveBooks();renderBooks();closeModal();snd('stamp');
+  } else if(modalMode.indexOf('booklog_')===0){
+    var idx=parseInt(modalMode.split('_')[1]);
+    if(!books[idx]){closeModal();return;}
+    var cp=parseInt(document.getElementById('mb-cp').value)||0;
+    var mins=parseInt(document.getElementById('mb-mins').value)||1;
+    var prev=books[idx].curPage||0;
+    if(cp>prev){
+      if(!books[idx].sessions)books[idx].sessions=[];
+      books[idx].sessions.push({pages:cp-prev,mins:mins,date:today()});
+    }
+    books[idx].curPage=Math.max(cp,prev);
+    if(books[idx].curPage>=books[idx].pages)award('读完一本书！',null);
+    saveBooks();renderBooks();closeModal();snd('coin');
+  } else if(modalMode==='wish'){
+    var wt=document.getElementById('mb-wt').value.trim();
+    var wi=document.getElementById('mb-wi').value.trim();
+    var wc=parseInt(document.getElementById('mb-wc').value)||10;
+    if(!wt){closeModal();return;}
+    wishes.push({title:wt,icon:wi||'✨',cost:wc,done:false});
+    saveWishes();renderGacha();closeModal();snd('stamp');
+  }
+}
+
+// ══ TOAST ══
+var toastT;
+function toast(msg){
+  var el=document.getElementById('toast');
+  el.textContent=msg;el.classList.add('show');
+  clearTimeout(toastT);
+  toastT=setTimeout(function(){el.classList.remove('show')},2200);
+}
+
+init();
+</script>
+</body>
+</html>
