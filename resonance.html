@@ -508,34 +508,20 @@ nav { display: flex; gap: 2px; margin-left: auto; }
     <div class="card">
       <div class="card-inner">
 
-        <!-- Spotify connect -->
-        <div class="s-label">Spotify · 连接</div>
-        <div id="spotify-connect-area">
-          <div class="api-note">
-            连接 Spotify 后可以直接从你最近听的歌里选 · 或者用下方搜索手动添加
-          </div>
-          <button class="btn btn-primary" onclick="spotifyLogin()" id="btn-connect" style="margin-bottom:18px">
-            ♫ Connect Spotify
-          </button>
+        <!-- Spotify link paste -->
+        <div class="s-label">Spotify · 粘贴链接选歌</div>
+        <div class="api-note">
+          在 Spotify App 里选好歌 → 点分享 → 复制链接 → 粘贴到这里
         </div>
+        <div class="inp-row">
+          <input class="inp" id="spotify-link" placeholder="粘贴 Spotify 歌曲链接 … https://open.spotify.com/track/..." onpaste="setTimeout(()=>parseSpotifyLink(),50)" oninput="parseSpotifyLink()">
+          <button class="btn btn-ghost" onclick="window.open('https://open.spotify.com','_blank')">打开 Spotify ↗</button>
+        </div>
+        <div id="link-status" style="font-family:Inconsolata,monospace;font-size:11px;color:var(--ink-4);margin-bottom:8px;min-height:18px"></div>
 
-        <!-- recently played (shown after auth) -->
-        <div id="recent-section" style="display:none">
-          <div class="s-label" style="margin-top:4px">Recently Played · 最近在听</div>
-          <div class="loading-row" id="loading-recent" style="display:flex"><div class="da"></div><div class="da"></div><div class="da"></div><span>Loading …</span></div>
-          <div class="results-grid" id="rg-recent"></div>
-          <div style="margin-top:18px;margin-bottom:4px">
-            <div class="s-label">Search Spotify · 搜索全库</div>
-          </div>
-          <div class="inp-row">
-            <input class="inp" id="sq-spotify" placeholder="Search entire Spotify library … 搜索全球曲库" onkeydown="if(event.key==='Enter')searchSpotify()">
-            <button class="btn btn-primary" onclick="searchSpotify()">Search</button>
-          </div>
-          <div class="loading-row" id="loading-spotify"><div class="da"></div><div class="da"></div><div class="da"></div><span>Searching Spotify …</span></div>
-          <div class="results-grid" id="rg-spotify"></div>
-          <div style="margin-top:18px;margin-bottom:4px">
-            <div class="s-label">Or Search iTunes · 或用 iTunes</div>
-          </div>
+        <!-- iTunes search -->
+        <div style="margin-top:8px">
+          <div class="s-label">Or Search iTunes · 或直接搜索</div>
         </div>
 
         <!-- iTunes search (always visible) -->
@@ -625,182 +611,58 @@ let exs  = JSON.parse(localStorage.getItem('resonance') || '[]');
 // ══════════════════════════════════════════════════════════════
 // CONSTANTS
 // ══════════════════════════════════════════════════════════════
-const SPOTIFY_CLIENT_ID = '3baf3ff0845f4ae29a15c632c5eb7cee';
-const REDIRECT_URI      = 'https://uzhou0211-crypto.github.io/home/resonance.html';
-const SCOPES            = 'user-read-recently-played user-read-currently-playing user-read-playback-state';
-const RAILWAY           = 'https://precious-cat-production-6140.up.railway.app';
-const OMBRE             = 'https://ombre-brain-production-f64f.up.railway.app/mcp';
+const RAILWAY = 'https://precious-cat-production-6140.up.railway.app';
 
 // ══════════════════════════════════════════════════════════════
-// SPOTIFY TOKEN  —  one source of truth
+// LOAD HANDLER
 // ══════════════════════════════════════════════════════════════
-let spotifyToken  = localStorage.getItem('spotify-token') || null;
-let tokenExpiry   = parseInt(localStorage.getItem('spotify-expiry') || '0');
-
-function isTokenValid() {
-  return spotifyToken && Date.now() < tokenExpiry;
-}
-
-// ══════════════════════════════════════════════════════════════
-// PKCE HELPERS
-// ══════════════════════════════════════════════════════════════
-async function sha256(plain) {
-  const data = new TextEncoder().encode(plain);
-  return crypto.subtle.digest('SHA-256', data);
-}
-function base64url(buf) {
-  return btoa(String.fromCharCode(...new Uint8Array(buf)))
-    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-}
-async function makePkce() {
-  const verifier  = base64url(crypto.getRandomValues(new Uint8Array(32)));
-  const challenge = base64url(await sha256(verifier));
-  return { verifier, challenge };
-}
-
-// ══════════════════════════════════════════════════════════════
-// SINGLE LOAD HANDLER  —  handles both redirect-back and restore
-// ══════════════════════════════════════════════════════════════
-window.addEventListener('load', async () => {
+window.addEventListener('load', () => {
   upStats();
-
-  const p    = new URLSearchParams(window.location.search);
-  const code = p.get('code');
-  const err  = p.get('error');
-
-  if (code || err) {
-    // Clean the URL immediately
-    window.history.replaceState({}, '', REDIRECT_URI);
-  }
-
-  if (err) {
-    console.warn('Spotify auth error:', err);
-    return;
-  }
-
-  if (code) {
-    const verifier = localStorage.getItem('pkce_v');
-    if (!verifier) { console.warn('PKCE verifier missing'); return; }
-    try {
-      // PKCE token exchange goes directly from browser to Spotify — no backend needed
-      const res = await fetch('https://accounts.spotify.com/api/token', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({
-          client_id:     SPOTIFY_CLIENT_ID,
-          grant_type:    'authorization_code',
-          code:          code,
-          redirect_uri:  REDIRECT_URI,
-          code_verifier: verifier,
-        })
-      });
-      const data = await res.json();
-      if (data.access_token) {
-        spotifyToken = data.access_token;
-        tokenExpiry  = Date.now() + (data.expires_in || 3600) * 1000;
-        localStorage.setItem('spotify-token',  spotifyToken);
-        localStorage.setItem('spotify-expiry', String(tokenExpiry));
-        localStorage.removeItem('pkce_v');
-        onSpotifyConnected();
-      } else {
-        console.error('Spotify token exchange failed:', data);
-        showToast('Spotify 连接失败，请重试');
-      }
-    } catch (e) {
-      console.error('Token exchange error:', e);
-      showToast('Spotify 连接失败，请检查网络');
-    }
-    return;
-  }
-
-  // No redirect — restore existing token if still valid
-  if (isTokenValid()) {
-    onSpotifyConnected();
-  }
 });
 
 // ══════════════════════════════════════════════════════════════
-// SPOTIFY LOGIN
+// SPOTIFY LINK PARSER  —  no auth needed
 // ══════════════════════════════════════════════════════════════
-async function spotifyLogin() {
-  const { verifier, challenge } = await makePkce();
-  localStorage.setItem('pkce_v', verifier);
-  const url = new URL('https://accounts.spotify.com/authorize');
-  url.searchParams.set('client_id',              SPOTIFY_CLIENT_ID);
-  url.searchParams.set('response_type',          'code');
-  url.searchParams.set('redirect_uri',           REDIRECT_URI);
-  url.searchParams.set('scope',                  SCOPES);
-  url.searchParams.set('code_challenge_method',  'S256');
-  url.searchParams.set('code_challenge',         challenge);
-  url.searchParams.set('show_dialog',            'false');
-  window.location.href = url.toString();
-}
+async function parseSpotifyLink() {
+  const inp    = document.getElementById('spotify-link');
+  const status = document.getElementById('link-status');
+  const raw    = inp.value.trim();
+  if (!raw) { status.textContent = ''; return; }
 
-function onSpotifyConnected() {
-  const btn = document.getElementById('btn-connect');
-  if (btn) { btn.textContent = '✓ Spotify Connected'; btn.style.background = 'var(--accent)'; btn.disabled = true; }
-  const rs = document.getElementById('recent-section');
-  if (rs) rs.style.display = 'block';
-  loadRecentTracks();
-}
+  const m = raw.match(/spotify\.com\/track\/([A-Za-z0-9]+)/);
+  if (!m) { status.textContent = '不是有效的 Spotify 歌曲链接'; status.style.color = 'var(--accent)'; return; }
 
-// ══════════════════════════════════════════════════════════════
-// SPOTIFY API CALLS
-// ══════════════════════════════════════════════════════════════
-async function loadRecentTracks() {
-  const el = document.getElementById('loading-recent');
-  if (el) el.style.display = 'flex';
+  const trackId = m[1];
+  status.textContent  = '解析中 …';
+  status.style.color  = 'var(--ink-4)';
+
   try {
-    const r = await fetch('https://api.spotify.com/v1/me/player/recently-played?limit=8', {
-      headers: { 'Authorization': 'Bearer ' + spotifyToken }
-    });
-    if (r.status === 401) {
-      spotifyToken = null;
-      localStorage.removeItem('spotify-token');
-      if (el) el.style.display = 'none';
-      return;
-    }
+    const r = await fetch('https://open.spotify.com/oembed?url=https://open.spotify.com/track/' + trackId);
     const d = await r.json();
-    showRecentTracks(d.items || []);
-  } catch (e) {
-    const g = document.getElementById('rg-recent');
-    if (g) g.innerHTML = '<div style="font-family:Inconsolata,monospace;font-size:11px;color:var(--ink-4);grid-column:1/-1">Could not load recent tracks.</div>';
-  }
-  if (el) el.style.display = 'none';
-}
+    const parts  = (d.title || '').split(' · ');
+    const title  = parts[0]?.trim() || d.title || '';
+    const artist = parts[1]?.trim() || '';
+    const art    = d.thumbnail_url || '';
+    const url    = 'https://open.spotify.com/track/' + trackId;
 
-function showRecentTracks(items) {
-  const g = document.getElementById('rg-recent');
-  if (!g) return;
-  if (!items.length) { g.innerHTML = '<div style="font-family:Inconsolata,monospace;font-size:11px;color:var(--ink-4);grid-column:1/-1">No recent tracks found.</div>'; return; }
-  const seen = new Set();
-  const unique = items.filter(i => { if (seen.has(i.track.id)) return false; seen.add(i.track.id); return true; });
-  g.innerHTML = unique.map(i => trackCard(i.track)).join('');
-}
+    status.textContent = '✓ 已识别 · ' + title;
+    status.style.color = 'var(--accent)';
+    inp.style.borderColor = 'var(--accent)';
 
-async function searchSpotify() {
-  if (!isTokenValid()) return;
-  const q = document.getElementById('sq-spotify').value.trim();
-  if (!q) return;
-  const loadEl = document.getElementById('loading-spotify');
-  const g      = document.getElementById('rg-spotify');
-  if (loadEl) loadEl.style.display = 'flex';
-  if (g) g.innerHTML = '';
-  try {
-    const r = await fetch('https://api.spotify.com/v1/search?q=' + encodeURIComponent(q) + '&type=track&limit=8', {
-      headers: { 'Authorization': 'Bearer ' + spotifyToken }
-    });
-    const d = await r.json();
-    const tracks = d.tracks?.items || [];
-    if (g) {
-      g.innerHTML = tracks.length
-        ? tracks.map(t => trackCard(t)).join('')
-        : '<div style="font-family:Inconsolata,monospace;font-size:11px;color:var(--ink-4);grid-column:1/-1">No results.</div>';
-    }
+    sel = { title, artist, album: '', art, url };
+    document.getElementById('tp-title').textContent  = title;
+    document.getElementById('tp-artist').textContent = artist;
+    document.getElementById('tp-album').textContent  = '';
+    document.getElementById('tp-cover').innerHTML    = art
+      ? `<img src="${art}">`
+      : '<div class="track-cover-empty">♪</div>';
+    const tp = document.getElementById('tp');
+    tp.classList.add('show');
+    setTimeout(() => tp.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
   } catch (e) {
-    if (g) g.innerHTML = '<div style="font-family:Inconsolata,monospace;font-size:11px;color:var(--ink-4);grid-column:1/-1">Search failed.</div>';
+    status.textContent = '解析失败，请检查链接';
+    status.style.color = 'var(--accent)';
   }
-  if (loadEl) loadEl.style.display = 'none';
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -918,21 +780,8 @@ function submit() {
 }
 
 // ══════════════════════════════════════════════════════════════
-// RAILWAY / OMBRE SYNC
+// RAILWAY SYNC
 // ══════════════════════════════════════════════════════════════
-async function ombreTool(tool, args) {
-  try {
-    const res = await fetch(OMBRE, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ jsonrpc: '2.0', id: Date.now(), method: 'tools/call', params: { name: tool, arguments: args } })
-    });
-    const data = await res.json();
-    const c = data.result?.content;
-    return Array.isArray(c) ? c.map(x => x.text || '').join('\n') : '';
-  } catch (e) { return ''; }
-}
-
 async function syncToRailway(ex) {
   const t = ex.you.track || {};
   try {
