@@ -319,6 +319,78 @@ async def health_check(request):
 
 
 # =============================================================
+# /api/resonance  —  前端音乐交换专用接口
+# GET  → 返回所有记录（JSON）
+# POST → 保存一条新记录 或 写入我的回应
+# =============================================================
+@mcp.custom_route("/api/resonance", methods=["GET", "OPTIONS"])
+async def api_resonance_get(request):
+    from starlette.responses import JSONResponse
+    if request.method == "OPTIONS":
+        resp = JSONResponse({})
+        resp.headers["Access-Control-Allow-Origin"]  = "*"
+        resp.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+        resp.headers["Access-Control-Allow-Headers"] = "Content-Type"
+        return resp
+    records = _tools_read("resonance")
+    resp = JSONResponse({"ok": True, "records": records})
+    resp.headers["Access-Control-Allow-Origin"] = "*"
+    return resp
+
+
+@mcp.custom_route("/api/resonance", methods=["POST", "OPTIONS"])
+async def api_resonance_post(request):
+    from starlette.responses import JSONResponse
+    if request.method == "OPTIONS":
+        resp = JSONResponse({})
+        resp.headers["Access-Control-Allow-Origin"]  = "*"
+        resp.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+        resp.headers["Access-Control-Allow-Headers"] = "Content-Type"
+        return resp
+    try:
+        body = await request.json()
+    except Exception:
+        resp = JSONResponse({"ok": False, "error": "Invalid JSON"}, status_code=400)
+        resp.headers["Access-Control-Allow-Origin"] = "*"
+        return resp
+
+    action = body.get("action", "save")
+
+    if action == "save":
+        result = resonance_save(
+            exchange_id = body.get("exchange_id", 0),
+            theme       = body.get("theme", ""),
+            date        = body.get("date", ""),
+            you_title   = body.get("you_title", ""),
+            you_artist  = body.get("you_artist", ""),
+            you_art     = body.get("you_art", ""),
+            you_note    = body.get("you_note", ""),
+            you_mood    = body.get("you_mood", ""),
+            you_time    = body.get("you_time", ""),
+        )
+        resp = JSONResponse({"ok": True, "message": result})
+        resp.headers["Access-Control-Allow-Origin"] = "*"
+        return resp
+
+    if action == "reply":
+        result = resonance_reply(
+            exchange_id   = body.get("exchange_id", 0),
+            claude_title  = body.get("claude_title", ""),
+            claude_artist = body.get("claude_artist", ""),
+            claude_art    = body.get("claude_art", ""),
+            claude_note   = body.get("claude_note", ""),
+            claude_mood   = body.get("claude_mood", ""),
+        )
+        resp = JSONResponse({"ok": True, "message": result})
+        resp.headers["Access-Control-Allow-Origin"] = "*"
+        return resp
+
+    resp = JSONResponse({"ok": False, "error": "Unknown action"}, status_code=400)
+    resp.headers["Access-Control-Allow-Origin"] = "*"
+    return resp
+
+
+# =============================================================
 # /breath-hook endpoint: Dedicated hook for SessionStart
 # 会话启动专用挂载点
 # =============================================================
