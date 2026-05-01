@@ -91,18 +91,14 @@ body::before {
   border-bottom: 1px solid var(--border-2);
 }
 
-/* staff lines in header */
 .site-header::after {
   content: '';
   position: absolute; bottom: 0; left: 0; right: 0; height: 4px;
   background: repeating-linear-gradient(
     to bottom,
-    transparent 0px,
-    transparent 0px,
-    rgba(80,60,20,0.18) 0px,
-    rgba(80,60,20,0.18) 1px,
-    transparent 1px,
-    transparent 4px
+    transparent 0px, transparent 0px,
+    rgba(80,60,20,0.18) 0px, rgba(80,60,20,0.18) 1px,
+    transparent 1px, transparent 4px
   );
 }
 
@@ -122,13 +118,6 @@ body::before {
 .logo-cn {
   font-family: 'Inconsolata', monospace; font-size: 9px;
   letter-spacing: 0.2em; color: var(--ink-4); text-transform: uppercase;
-}
-
-/* pixel cellist in header */
-.pixel-cellist {
-  width: 20px; height: 28px;
-  image-rendering: pixelated;
-  flex-shrink: 0;
 }
 
 nav { display: flex; gap: 2px; margin-left: auto; }
@@ -163,26 +152,6 @@ nav { display: flex; gap: 2px; margin-left: auto; }
   border-bottom: 1px solid var(--border);
 }
 
-/* large pixel cellist in hero */
-.hero-pixel {
-  display: flex; flex-direction: column; align-items: center; gap: 10px;
-  padding-top: 10px;
-}
-.hero-pixel-figures {
-  display: flex; align-items: flex-end; gap: 12px;
-}
-
-.pixel-art-large {
-  image-rendering: pixelated;
-  width: 96px; height: 120px;
-}
-
-.hero-pixel-caption {
-  font-family: 'Inconsolata', monospace; font-size: 9px;
-  letter-spacing: 0.14em; color: var(--ink-5); text-transform: uppercase;
-  text-align: center;
-}
-
 .hero-eyebrow {
   font-family: 'Inconsolata', monospace; font-size: 10px;
   letter-spacing: 0.22em; color: var(--ink-4); text-transform: uppercase;
@@ -206,7 +175,6 @@ nav { display: flex; gap: 2px; margin-left: auto; }
 .hero-stats {
   margin-top: 28px; display: flex; gap: 32px;
 }
-.stat-item { }
 .stat-n {
   font-family: 'Cormorant Garamond', serif;
   font-size: 34px; font-weight: 300; color: var(--ink); line-height: 1;
@@ -232,16 +200,13 @@ nav { display: flex; gap: 2px; margin-left: auto; }
   position: relative;
 }
 
-/* staff lines on cards */
 .card::before {
   content: '';
   position: absolute; top: 0; left: 0; right: 0; bottom: 0;
   background: repeating-linear-gradient(
     to bottom,
-    transparent 0px,
-    transparent 23px,
-    var(--staff-2) 23px,
-    var(--staff-2) 24px
+    transparent 0px, transparent 23px,
+    var(--staff-2) 23px, var(--staff-2) 24px
   );
   pointer-events: none; border-radius: 6px;
 }
@@ -273,11 +238,6 @@ nav { display: flex; gap: 2px; margin-left: auto; }
 }
 .inp::placeholder { color: var(--ink-5); font-style: italic; }
 
-.inp-key {
-  font-family: 'DM Mono', monospace; font-size: 11.5px;
-  letter-spacing: 0.04em;
-}
-
 .btn {
   padding: 12px 26px; border-radius: 4px; cursor: pointer;
   font-family: 'Inconsolata', monospace; font-size: 11px;
@@ -294,6 +254,9 @@ nav { display: flex; gap: 2px; margin-left: auto; }
   transform: translateY(-1px);
   box-shadow: 0 6px 16px rgba(30,20,5,0.22);
 }
+.btn-primary:disabled {
+  opacity: 0.5; cursor: not-allowed; transform: none;
+}
 .btn-ghost {
   background: transparent; color: var(--ink-3);
   border-color: var(--border-2);
@@ -301,7 +264,7 @@ nav { display: flex; gap: 2px; margin-left: auto; }
 .btn-ghost:hover { background: var(--paper-3); color: var(--ink); }
 
 .api-note {
-  font-family: 'DM Mono', monospace; font-size: 10px;
+  font-family: 'Inconsolata', monospace; font-size: 10px;
   color: var(--ink-4); letter-spacing: 0.06em;
   margin-bottom: 18px; padding: 8px 12px;
   border-left: 2px solid var(--gold);
@@ -309,7 +272,6 @@ nav { display: flex; gap: 2px; margin-left: auto; }
   border-radius: 0 3px 3px 0;
   line-height: 1.7;
 }
-.api-note a { color: var(--accent); }
 
 /* search results */
 .results-grid {
@@ -407,18 +369,9 @@ nav { display: flex; gap: 2px; margin-left: auto; }
   border-bottom: 1px solid var(--border);
   background: rgba(230,210,170,0.2);
 }
-.ex-num {
-  font-family: 'Cormorant Garamond', serif; font-size: 14px;
-  font-style: italic; color: var(--ink-4);
-}
-.ex-theme {
-  font-family: 'Cormorant Garamond', serif; font-size: 21px;
-  font-style: italic; font-weight: 400; color: var(--ink);
-}
-.ex-date {
-  font-family: 'Inconsolata', monospace; font-size: 9.5px;
-  color: var(--ink-5); letter-spacing: 0.07em; white-space: nowrap;
-}
+.ex-num { font-family: 'Cormorant Garamond', serif; font-size: 14px; font-style: italic; color: var(--ink-4); }
+.ex-theme { font-family: 'Cormorant Garamond', serif; font-size: 21px; font-style: italic; font-weight: 400; color: var(--ink); }
+.ex-date { font-family: 'Inconsolata', monospace; font-size: 9.5px; color: var(--ink-5); letter-spacing: 0.07em; white-space: nowrap; }
 
 .ex-dual { display: grid; grid-template-columns: 1fr 1fr; }
 .ex-col { padding: 20px 24px; }
@@ -455,7 +408,7 @@ nav { display: flex; gap: 2px; margin-left: auto; }
 
 .waiting-col {
   display: flex; align-items: center; justify-content: center; min-height: 110px;
-  font-family: 'Playfair Display', serif; font-size: 14px; font-style: italic;
+  font-size: 14px; font-style: italic;
   color: var(--ink-5); gap: 8px;
 }
 
@@ -499,7 +452,7 @@ nav { display: flex; gap: 2px; margin-left: auto; }
 .empty-sm { font-family: 'Inconsolata', monospace; font-size: 10.5px; color: var(--ink-4); letter-spacing: 0.1em; line-height: 2; text-transform: uppercase; }
 
 /* loading */
-.loading-row { display: none; align-items: center; gap: 8px; margin-top: 10px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--ink-4); letter-spacing: 0.07em; }
+.loading-row { display: none; align-items: center; gap: 8px; margin-top: 10px; font-family: 'Inconsolata', monospace; font-size: 10px; color: var(--ink-4); letter-spacing: 0.07em; }
 .da { width: 4px; height: 4px; background: var(--accent); border-radius: 50%; animation: bk 1.2s ease-in-out infinite; }
 .da:nth-child(2){animation-delay:.2s}.da:nth-child(3){animation-delay:.4s}
 @keyframes bk{0%,80%,100%{opacity:.2;transform:scale(.7)}40%{opacity:1;transform:scale(1)}}
@@ -507,7 +460,6 @@ nav { display: flex; gap: 2px; margin-left: auto; }
 @media(max-width:768px){
   .header-inner{padding:0 20px}
   .hero{grid-template-columns:1fr;padding:36px 20px 32px}
-  .hero-pixel{display:none}
   .content{padding:28px 20px 60px}
   .ex-dual,.f-cols{grid-template-columns:1fr}
   .ex-col:first-child{border-right:none;border-bottom:1px solid var(--border)}
@@ -516,10 +468,7 @@ nav { display: flex; gap: 2px; margin-left: auto; }
 </head>
 <body>
 
-<!-- staff lines background -->
 <div class="staff-bg" id="staff-bg"></div>
-
-<!-- floating notes -->
 <div id="notes-layer"></div>
 
 <header class="site-header">
@@ -589,7 +538,7 @@ nav { display: flex; gap: 2px; margin-left: auto; }
           </div>
         </div>
 
-        <!-- search row (always visible) -->
+        <!-- iTunes search (always visible) -->
         <div id="search-area">
           <div class="inp-row">
             <input class="inp" id="sq" placeholder="Song title, artist name … 歌曲名、艺术家" onkeydown="if(event.key==='Enter')searchItunes()">
@@ -658,629 +607,443 @@ nav { display: flex; gap: 2px; margin-left: auto; }
     </div>
   </div>
   <div class="content">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+      <button class="btn btn-ghost" id="btn-refresh" onclick="refreshFeed()">↻ Refresh</button>
+    </div>
     <div class="feed" id="feed"></div>
   </div>
 </div>
 
 <script>
-// ── STATE ──────────────────────────────────────────
-let sel = null, tags = {}, exs = JSON.parse(localStorage.getItem('resonance')||'[]');
-upStats();
+// ══════════════════════════════════════════════════════════════
+// STATE  —  declared ONCE
+// ══════════════════════════════════════════════════════════════
+let sel  = null;
+let tags = {};
+let exs  = JSON.parse(localStorage.getItem('resonance') || '[]');
 
-// ── CANVAS PIXEL FIGURES ───────────────────────────
-
-
-
-
-// ── STAFF LINES ────────────────────────────────────
-function buildStaff() {
-  const bg = document.getElementById('staff-bg');
-  const h = document.documentElement.scrollHeight || window.innerHeight * 3;
-  const groupH = 60;
-  for (let y = 80; y < h; y += groupH + 80) {
-    const g = document.createElement('div');
-    g.className = 'staff-group';
-    g.style.top = y + 'px';
-    for (let i = 0; i < 5; i++) {
-      const l = document.createElement('div');
-      l.className = 'staff-line';
-      l.style.top = (i * 12) + 'px';
-      g.appendChild(l);
-    }
-    bg.appendChild(g);
-  }
-}
-buildStaff();
-
-// ── FLOATING NOTES ─────────────────────────────────
-const noteSymbols = ['♩','♪','♫','♬','𝄞','𝄢'];
-function spawnNote() {
-  const layer = document.getElementById('notes-layer');
-  const n = document.createElement('div');
-  n.className = 'note';
-  n.textContent = noteSymbols[Math.floor(Math.random()*noteSymbols.length)];
-  n.style.left = (Math.random()*95) + '%';
-  n.style.top = (40 + Math.random()*60) + '%';
-  n.style.fontSize = (16 + Math.random()*14) + 'px';
-  n.style.animationDuration = (6 + Math.random()*8) + 's';
-  n.style.animationDelay = (Math.random()*4) + 's';
-  layer.appendChild(n);
-  setTimeout(() => n.remove(), 14000);
-}
-setInterval(spawnNote, 1800);
-spawnNote(); spawnNote(); spawnNote();
-
-// ── NAV ────────────────────────────────────────────
-function go(id) {
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
-  document.getElementById('nav-'+id).classList.add('active');
-  if(id==='feed') render();
-}
-
-// ── SPOTIFY ────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════
+// CONSTANTS
+// ══════════════════════════════════════════════════════════════
 const SPOTIFY_CLIENT_ID = '3baf3ff0845f4ae29a15c632c5eb7cee';
-const REDIRECT_URI = 'https://uzhou0211-crypto.github.io/home/resonance.html';
-const SCOPES = 'user-read-recently-played user-read-currently-playing user-read-playback-state';
+const REDIRECT_URI      = 'https://uzhou0211-crypto.github.io/home/resonance.html';
+const SCOPES            = 'user-read-recently-played user-read-currently-playing user-read-playback-state';
+const RAILWAY           = 'https://precious-cat-production-6140.up.railway.app';
+const OMBRE             = 'https://ombre-brain-production-f64f.up.railway.app/mcp';
 
-let spotifyToken = localStorage.getItem('spotify-token') || null;
-let tokenExpiry = parseInt(localStorage.getItem('spotify-expiry') || '0');
+// ══════════════════════════════════════════════════════════════
+// SPOTIFY TOKEN  —  one source of truth
+// ══════════════════════════════════════════════════════════════
+let spotifyToken  = localStorage.getItem('spotify-token') || null;
+let tokenExpiry   = parseInt(localStorage.getItem('spotify-expiry') || '0');
 
-// ── Ombre Brain ───────────────────────────────────
-const OMBRE = 'https://ombre-brain-production-f64f.up.railway.app/mcp';
-async function ombreTool(tool, args) {
-  try {
-    const res = await fetch(OMBRE, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({jsonrpc:'2.0',id:Date.now(),method:'tools/call',params:{name:tool,arguments:args}})
-    });
-    const data = await res.json();
-    const c = data.result?.content;
-    return Array.isArray(c) ? c.map(x=>x.text||'').join('\n') : '';
-  } catch(e) { return ''; }
+function isTokenValid() {
+  return spotifyToken && Date.now() < tokenExpiry;
 }
 
-// ── PKCE helpers ──────────────────────────────────
+// ══════════════════════════════════════════════════════════════
+// PKCE HELPERS
+// ══════════════════════════════════════════════════════════════
 async function sha256(plain) {
   const data = new TextEncoder().encode(plain);
-  return window.crypto.subtle.digest('SHA-256', data);
+  return crypto.subtle.digest('SHA-256', data);
 }
 function base64url(buf) {
   return btoa(String.fromCharCode(...new Uint8Array(buf)))
-    .replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
-async function pkce() {
-  const verifier = base64url(crypto.getRandomValues(new Uint8Array(32)));
+async function makePkce() {
+  const verifier  = base64url(crypto.getRandomValues(new Uint8Array(32)));
   const challenge = base64url(await sha256(verifier));
   return { verifier, challenge };
 }
 
-// ── Token exchange ────────────────────────────────
-
-
-// ── On load: handle callback or restore token ─────
+// ══════════════════════════════════════════════════════════════
+// SINGLE LOAD HANDLER  —  handles both redirect-back and restore
+// ══════════════════════════════════════════════════════════════
 window.addEventListener('load', async () => {
-  const p = new URLSearchParams(window.location.search);
+  upStats();
+
+  const p    = new URLSearchParams(window.location.search);
   const code = p.get('code');
-  const err = p.get('error');
+  const err  = p.get('error');
 
   if (code || err) {
-    // clean URL first
+    // Clean the URL immediately
     window.history.replaceState({}, '', REDIRECT_URI);
   }
 
-  if (err) return;
+  if (err) {
+    console.warn('Spotify auth error:', err);
+    return;
+  }
 
   if (code) {
     const verifier = localStorage.getItem('pkce_v');
-    if (!verifier) return;
+    if (!verifier) { console.warn('PKCE verifier missing'); return; }
     try {
-      // Use backend to exchange code for token (avoids CORS restrictions)
-      const res = await fetch('https://ombre-brain-production-f64f.up.railway.app/mcp', {
+      // PKCE token exchange goes directly from browser to Spotify — no backend needed
+      const res = await fetch('https://accounts.spotify.com/api/token', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          jsonrpc: '2.0', id: Date.now(),
-          method: 'tools/call',
-          params: { name: 'spotify_auth', arguments: { code: code, code_verifier: verifier } }
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          client_id:     SPOTIFY_CLIENT_ID,
+          grant_type:    'authorization_code',
+          code:          code,
+          redirect_uri:  REDIRECT_URI,
+          code_verifier: verifier,
         })
       });
-      const result = await res.json();
-      const text = result.result?.content?.[0]?.text || '{}';
-      const data = JSON.parse(text);
+      const data = await res.json();
       if (data.access_token) {
         spotifyToken = data.access_token;
-        tokenExpiry = Date.now() + (data.expires_in||3600)*1000;
-        localStorage.setItem('spotify-token', spotifyToken);
+        tokenExpiry  = Date.now() + (data.expires_in || 3600) * 1000;
+        localStorage.setItem('spotify-token',  spotifyToken);
         localStorage.setItem('spotify-expiry', String(tokenExpiry));
         localStorage.removeItem('pkce_v');
         onSpotifyConnected();
       } else {
-        console.error('Auth failed:', data.error);
+        console.error('Spotify token exchange failed:', data);
+        showToast('Spotify 连接失败，请重试');
       }
-    } catch(e) { console.error('token exchange failed', e); }
+    } catch (e) {
+      console.error('Token exchange error:', e);
+      showToast('Spotify 连接失败，请检查网络');
+    }
     return;
   }
 
-  if (spotifyToken && Date.now() < tokenExpiry) {
+  // No redirect — restore existing token if still valid
+  if (isTokenValid()) {
     onSpotifyConnected();
   }
 });
 
+// ══════════════════════════════════════════════════════════════
+// SPOTIFY LOGIN
+// ══════════════════════════════════════════════════════════════
 async function spotifyLogin() {
-  const { verifier, challenge } = await pkce();
+  const { verifier, challenge } = await makePkce();
   localStorage.setItem('pkce_v', verifier);
   const url = new URL('https://accounts.spotify.com/authorize');
-  url.searchParams.set('client_id', SPOTIFY_CLIENT_ID);
-  url.searchParams.set('response_type', 'code');
-  url.searchParams.set('redirect_uri', REDIRECT_URI);
-  url.searchParams.set('scope', SCOPES);
-  url.searchParams.set('code_challenge_method', 'S256');
-  url.searchParams.set('code_challenge', challenge);
-  url.searchParams.set('show_dialog', 'false');
+  url.searchParams.set('client_id',              SPOTIFY_CLIENT_ID);
+  url.searchParams.set('response_type',          'code');
+  url.searchParams.set('redirect_uri',           REDIRECT_URI);
+  url.searchParams.set('scope',                  SCOPES);
+  url.searchParams.set('code_challenge_method',  'S256');
+  url.searchParams.set('code_challenge',         challenge);
+  url.searchParams.set('show_dialog',            'false');
   window.location.href = url.toString();
 }
 
 function onSpotifyConnected() {
   const btn = document.getElementById('btn-connect');
-  if(btn) { btn.textContent = '✓ Spotify Connected'; btn.style.background = 'var(--accent)'; }
+  if (btn) { btn.textContent = '✓ Spotify Connected'; btn.style.background = 'var(--accent)'; btn.disabled = true; }
   const rs = document.getElementById('recent-section');
-  if(rs) rs.style.display = 'block';
+  if (rs) rs.style.display = 'block';
   loadRecentTracks();
 }
 
+// ══════════════════════════════════════════════════════════════
+// SPOTIFY API CALLS
+// ══════════════════════════════════════════════════════════════
 async function loadRecentTracks() {
-  document.getElementById('loading-recent').style.display = 'flex';
+  const el = document.getElementById('loading-recent');
+  if (el) el.style.display = 'flex';
   try {
     const r = await fetch('https://api.spotify.com/v1/me/player/recently-played?limit=8', {
-      headers: {'Authorization': 'Bearer ' + spotifyToken}
+      headers: { 'Authorization': 'Bearer ' + spotifyToken }
     });
-    if(r.status === 401) {
+    if (r.status === 401) {
       spotifyToken = null;
       localStorage.removeItem('spotify-token');
-      document.getElementById('loading-recent').style.display = 'none';
+      if (el) el.style.display = 'none';
       return;
     }
     const d = await r.json();
     showRecentTracks(d.items || []);
-  } catch(e) {
-    document.getElementById('rg-recent').innerHTML = '<div style="font-family:Inconsolata,monospace;font-size:11px;color:var(--ink-4);grid-column:1/-1">Could not load recent tracks.</div>';
+  } catch (e) {
+    const g = document.getElementById('rg-recent');
+    if (g) g.innerHTML = '<div style="font-family:Inconsolata,monospace;font-size:11px;color:var(--ink-4);grid-column:1/-1">Could not load recent tracks.</div>';
   }
-  document.getElementById('loading-recent').style.display = 'none';
+  if (el) el.style.display = 'none';
 }
 
 function showRecentTracks(items) {
   const g = document.getElementById('rg-recent');
-  if(!items.length) { g.innerHTML = '<div style="font-family:Inconsolata,monospace;font-size:11px;color:var(--ink-4);grid-column:1/-1">No recent tracks found.</div>'; return; }
+  if (!g) return;
+  if (!items.length) { g.innerHTML = '<div style="font-family:Inconsolata,monospace;font-size:11px;color:var(--ink-4);grid-column:1/-1">No recent tracks found.</div>'; return; }
   const seen = new Set();
-  const unique = items.filter(i => { if(seen.has(i.track.id)) return false; seen.add(i.track.id); return true; });
-  g.innerHTML = unique.map(i => {
-    const t = i.track;
-    const art = t.album?.images?.[1]?.url || t.album?.images?.[0]?.url || '';
-    const artist = t.artists?.map(a=>a.name).join(', ') || '';
-    return '<div class="r-card" onclick="pickTrack(event,\''+eq(t.name)+'\',\''+eq(artist)+'\',\''+eq(t.album?.name||'')+'\',\''+eq(art)+'\',\''+eq(t.external_urls?.spotify||'')+'\')">'+
-      (art ? '<img src="'+art+'" loading="lazy">' : '<div class="r-card-empty">♪</div>')+
-      '<div class="r-info"><div class="r-title">'+eh(t.name)+'</div><div class="r-artist">'+eh(artist)+'</div></div></div>';
-  }).join('');
+  const unique = items.filter(i => { if (seen.has(i.track.id)) return false; seen.add(i.track.id); return true; });
+  g.innerHTML = unique.map(i => trackCard(i.track)).join('');
 }
 
 async function searchSpotify() {
-  if(!spotifyToken) return;
-  const q = document.getElementById('sq-spotify').value.trim();
-  if(!q) return;
-  document.getElementById('loading-spotify').style.display = 'flex';
-  document.getElementById('rg-spotify').innerHTML = '';
-  try {
-    const r = await fetch('https://api.spotify.com/v1/search?q='+encodeURIComponent(q)+'&type=track&limit=8', {
-      headers: {'Authorization': 'Bearer '+spotifyToken}
-    });
-    const d = await r.json();
-    const tracks = d.tracks?.items || [];
-    const g = document.getElementById('rg-spotify');
-    if(!tracks.length) { g.innerHTML = '<div style="font-family:Inconsolata,monospace;font-size:11px;color:var(--ink-4);grid-column:1/-1">No results.</div>'; }
-    else {
-      g.innerHTML = tracks.map(t => {
-        const art = t.album?.images?.[1]?.url || t.album?.images?.[0]?.url || '';
-        const artist = t.artists?.map(a=>a.name).join(', ') || '';
-        return '<div class="r-card" onclick="pickTrack(event,\''+eq(t.name)+'\',\''+eq(artist)+'\',\''+eq(t.album?.name||'')+'\',\''+eq(art)+'\',\''+eq(t.external_urls?.spotify||'')+'\')">'+
-          (art ? '<img src="'+art+'" loading="lazy">' : '<div class="r-card-empty">♪</div>')+
-          '<div class="r-info"><div class="r-title">'+eh(t.name)+'</div><div class="r-artist">'+eh(artist)+'</div></div></div>';
-      }).join('');
-    }
-  } catch(e) {
-    document.getElementById('rg-spotify').innerHTML = '<div style="font-family:Inconsolata,monospace;font-size:11px;color:var(--ink-4);grid-column:1/-1">Search failed.</div>';
-  }
-  document.getElementById('loading-spotify').style.display = 'none';
-}
-
-async function syncToRailway(ex) {
-  const t = ex.you.track || {};
-  ombreTool('resonance_save', {
-    exchange_id: ex.id, theme: ex.theme||'', date: ex.date||'',
-    you_title: t.title||'', you_artist: t.artist||'', you_art: t.art||'',
-    you_note: ex.you.note||'', you_mood: ex.you.mood||'', you_time: ex.you.time||'',
-  });
-}
-
-async function refreshFeed() {
-  const btn = document.getElementById('btn-refresh');
-  if(btn) { btn.textContent = '↻ ...'; btn.disabled = true; }
-  try {
-    const text = await ombreTool('resonance_get', {limit:50});
-    if(text) {
-      const lines = text.split('\n');
-      let curId = null, updated = 0;
-      for(const line of lines) {
-        const m = line.match(/\[(\d+)\]/);
-        if(m) curId = parseInt(m[1]);
-        if(curId && line.trim().startsWith('我：') && !line.includes('（待回应）')) {
-          const ex = exs.find(e => e.id == curId);
-          if(ex && !ex.claude) {
-            ex.claude = { track: { title: line.replace(/.*我：/,'').trim(), artist:'', art:'' }, note:'' };
-            updated++;
-          }
-        }
-      }
-      if(updated) { save(); render(); upStats(); }
-    }
-  } catch(e) {}
-  if(btn) { btn.textContent = '↻ Refresh'; btn.disabled = false; }
-}
-
-
-let sel = null, tags = {}, exs = JSON.parse(localStorage.getItem('resonance')||'[]');
-upStats();
-
-// ── CANVAS PIXEL FIGURES ───────────────────────────
-
-
-
-
-// ── STAFF LINES ────────────────────────────────────
-function buildStaff() {
-  const bg = document.getElementById('staff-bg');
-  const h = document.documentElement.scrollHeight || window.innerHeight * 3;
-  const groupH = 60;
-  for (let y = 80; y < h; y += groupH + 80) {
-    const g = document.createElement('div');
-    g.className = 'staff-group';
-    g.style.top = y + 'px';
-    for (let i = 0; i < 5; i++) {
-      const l = document.createElement('div');
-      l.className = 'staff-line';
-      l.style.top = (i * 12) + 'px';
-      g.appendChild(l);
-    }
-    bg.appendChild(g);
-  }
-}
-buildStaff();
-
-// ── FLOATING NOTES ─────────────────────────────────
-const noteSymbols = ['♩','♪','♫','♬','𝄞','𝄢'];
-function spawnNote() {
-  const layer = document.getElementById('notes-layer');
-  const n = document.createElement('div');
-  n.className = 'note';
-  n.textContent = noteSymbols[Math.floor(Math.random()*noteSymbols.length)];
-  n.style.left = (Math.random()*95) + '%';
-  n.style.top = (40 + Math.random()*60) + '%';
-  n.style.fontSize = (16 + Math.random()*14) + 'px';
-  n.style.animationDuration = (6 + Math.random()*8) + 's';
-  n.style.animationDelay = (Math.random()*4) + 's';
-  layer.appendChild(n);
-  setTimeout(() => n.remove(), 14000);
-}
-setInterval(spawnNote, 1800);
-spawnNote(); spawnNote(); spawnNote();
-
-// ── NAV ────────────────────────────────────────────
-function go(id) {
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
-  document.getElementById('nav-'+id).classList.add('active');
-  if(id==='feed') render();
-}
-
-// ── SPOTIFY ────────────────────────────────────────
-const SPOTIFY_CLIENT_ID = '3baf3ff0845f4ae29a15c632c5eb7cee';
-const REDIRECT_URI = window.location.href.split('?')[0].split('#')[0];
-const SCOPES = 'user-read-recently-played user-read-currently-playing';
-
-let spotifyToken = localStorage.getItem('spotify-token') || null;
-let tokenExpiry = parseInt(localStorage.getItem('spotify-expiry') || '0');
-
-// check token on load
-window.addEventListener('load', () => {
-  // handle redirect back from Spotify
-  const hash = window.location.hash.substring(1);
-  if (hash) {
-    const params = new URLSearchParams(hash);
-    const token = params.get('access_token');
-    const expires = params.get('expires_in');
-    if (token) {
-      spotifyToken = token;
-      tokenExpiry = Date.now() + parseInt(expires) * 1000;
-      localStorage.setItem('spotify-token', token);
-      localStorage.setItem('spotify-expiry', tokenExpiry);
-      window.location.hash = '';
-      onSpotifyConnected();
-      return;
-    }
-  }
-  if (spotifyToken && Date.now() < tokenExpiry) {
-    onSpotifyConnected();
-  }
-});
-
-function spotifyLogin() {
-  const url = `https://accounts.spotify.com/authorize?client_id=${SPOTIFY_CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=${encodeURIComponent(SCOPES)}`;
-  window.location.href = url;
-}
-
-function onSpotifyConnected() {
-  document.getElementById('btn-connect').textContent = '✓ Spotify Connected';
-  document.getElementById('btn-connect').style.background = 'var(--accent)';
-  document.getElementById('recent-section').style.display = 'block';
-  loadRecentTracks();
-}
-
-async function loadRecentTracks() {
-  document.getElementById('loading-recent').style.display = 'flex';
-  try {
-    const r = await fetch('https://api.spotify.com/v1/me/player/recently-played?limit=8', {
-      headers: { 'Authorization': `Bearer ${spotifyToken}` }
-    });
-    if (r.status === 401) { spotifyToken = null; localStorage.removeItem('spotify-token'); return; }
-    const d = await r.json();
-    showRecentTracks(d.items || []);
-  } catch(e) {
-    document.getElementById('rg-recent').innerHTML = `<div style="font-family:'Inconsolata',monospace;font-size:11px;color:var(--ink-4);grid-column:1/-1">Could not load recent tracks.</div>`;
-  }
-  document.getElementById('loading-recent').style.display = 'none';
-}
-
-function showRecentTracks(items) {
-  const g = document.getElementById('rg-recent');
-  if (!items.length) { g.innerHTML = `<div style="font-family:'Inconsolata',monospace;font-size:11px;color:var(--ink-4);grid-column:1/-1">No recent tracks found.</div>`; return; }
-  const seen = new Set();
-  const unique = items.filter(i => {
-    if (seen.has(i.track.id)) return false;
-    seen.add(i.track.id); return true;
-  });
-  g.innerHTML = unique.map(i => {
-    const t = i.track;
-    const art = t.album?.images?.[1]?.url || t.album?.images?.[0]?.url || '';
-    const artist = t.artists?.map(a=>a.name).join(', ') || '';
-    const album = t.album?.name || '';
-    return `<div class="r-card" onclick="pickTrack(event,'${eq(t.name)}','${eq(artist)}','${eq(album)}','${eq(art)}','${eq(t.external_urls?.spotify||'')}')">
-      ${art ? `<img src="${art}" loading="lazy">` : `<div class="r-card-empty">♪</div>`}
-      <div class="r-info">
-        <div class="r-title">${eh(t.name)}</div>
-        <div class="r-artist">${eh(artist)}</div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-async function searchSpotify() {
-  if (!spotifyToken) return;
+  if (!isTokenValid()) return;
   const q = document.getElementById('sq-spotify').value.trim();
   if (!q) return;
-  document.getElementById('loading-spotify').style.display = 'flex';
-  document.getElementById('rg-spotify').innerHTML = '';
+  const loadEl = document.getElementById('loading-spotify');
+  const g      = document.getElementById('rg-spotify');
+  if (loadEl) loadEl.style.display = 'flex';
+  if (g) g.innerHTML = '';
   try {
-    const r = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(q)}&type=track&limit=8`, {
-      headers: { 'Authorization': `Bearer ${spotifyToken}` }
+    const r = await fetch('https://api.spotify.com/v1/search?q=' + encodeURIComponent(q) + '&type=track&limit=8', {
+      headers: { 'Authorization': 'Bearer ' + spotifyToken }
     });
     const d = await r.json();
     const tracks = d.tracks?.items || [];
-    const g = document.getElementById('rg-spotify');
-    if (!tracks.length) { g.innerHTML = `<div style="font-family:'Inconsolata',monospace;font-size:11px;color:var(--ink-4);grid-column:1/-1">No results.</div>`; }
-    else {
-      g.innerHTML = tracks.map(t => {
-        const art = t.album?.images?.[1]?.url || t.album?.images?.[0]?.url || '';
-        const artist = t.artists?.map(a=>a.name).join(', ') || '';
-        const album = t.album?.name || '';
-        return `<div class="r-card" onclick="pickTrack(event,'${eq(t.name)}','${eq(artist)}','${eq(album)}','${eq(art)}','${eq(t.external_urls?.spotify||'')}')">
-          ${art ? `<img src="${art}" loading="lazy">` : `<div class="r-card-empty">♪</div>`}
-          <div class="r-info"><div class="r-title">${eh(t.name)}</div><div class="r-artist">${eh(artist)}</div></div>
-        </div>`;
-      }).join('');
+    if (g) {
+      g.innerHTML = tracks.length
+        ? tracks.map(t => trackCard(t)).join('')
+        : '<div style="font-family:Inconsolata,monospace;font-size:11px;color:var(--ink-4);grid-column:1/-1">No results.</div>';
     }
-  } catch(e) {
-    document.getElementById('rg-spotify').innerHTML = `<div style="font-family:'Inconsolata',monospace;font-size:11px;color:var(--ink-4);grid-column:1/-1">Search failed.</div>`;
+  } catch (e) {
+    if (g) g.innerHTML = '<div style="font-family:Inconsolata,monospace;font-size:11px;color:var(--ink-4);grid-column:1/-1">Search failed.</div>';
   }
-  document.getElementById('loading-spotify').style.display = 'none';
+  if (loadEl) loadEl.style.display = 'none';
 }
 
-
+// ══════════════════════════════════════════════════════════════
+// ITUNES SEARCH
+// ══════════════════════════════════════════════════════════════
 async function searchItunes() {
   const q = document.getElementById('sq').value.trim();
-  if(!q) return;
-  document.getElementById('loading').style.display='flex';
-  document.getElementById('rg').innerHTML='';
+  if (!q) return;
+  const loadEl = document.getElementById('loading');
+  const g      = document.getElementById('rg');
+  if (loadEl) loadEl.style.display = 'flex';
+  if (g) g.innerHTML = '';
   try {
-    const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(q)}&media=music&limit=8&entity=song`);
+    const r = await fetch('https://itunes.apple.com/search?term=' + encodeURIComponent(q) + '&media=music&limit=8&entity=song');
     const d = await r.json();
-    showItunesResults(d.results||[]);
-  } catch(e) {
-    document.getElementById('rg').innerHTML=`<div style="font-family:'Inconsolata',monospace;font-size:11px;color:var(--ink-4);grid-column:1/-1;padding:8px 0">Search failed — check your network.</div>`;
+    showItunesResults(d.results || []);
+  } catch (e) {
+    if (g) g.innerHTML = '<div style="font-family:Inconsolata,monospace;font-size:11px;color:var(--ink-4);grid-column:1/-1;padding:8px 0">Search failed — check your network.</div>';
   }
-  document.getElementById('loading').style.display='none';
+  if (loadEl) loadEl.style.display = 'none';
 }
 
 function showItunesResults(tracks) {
   const g = document.getElementById('rg');
-  if(!tracks.length){ g.innerHTML=`<div style="font-family:'Inconsolata',monospace;font-size:11px;color:var(--ink-4);grid-column:1/-1;padding:8px 0">No results. Try another search.</div>`; return; }
+  if (!g) return;
+  if (!tracks.length) {
+    g.innerHTML = '<div style="font-family:Inconsolata,monospace;font-size:11px;color:var(--ink-4);grid-column:1/-1;padding:8px 0">No results. Try another search.</div>';
+    return;
+  }
   g.innerHTML = tracks.map(t => {
-    const art = t.artworkUrl100 || '';
-    return `<div class="r-card" onclick="pickTrack(event,'${eq(t.trackName)}','${eq(t.artistName)}','${eq(t.collectionName||'')}','${eq(art)}','${eq(t.trackViewUrl||'')}')">
-      ${art ? `<img src="${art}" loading="lazy">` : `<div class="r-card-empty">♪</div>`}
-      <div class="r-info">
-        <div class="r-title">${eh(t.trackName)}</div>
-        <div class="r-artist">${eh(t.artistName)}</div>
-      </div>
+    const art    = t.artworkUrl100 || '';
+    const title  = t.trackName     || '';
+    const artist = t.artistName    || '';
+    const album  = t.collectionName || '';
+    const url    = t.trackViewUrl  || '';
+    return `<div class="r-card" onclick="pickTrack(event,'${eq(title)}','${eq(artist)}','${eq(album)}','${eq(art)}','${eq(url)}')">
+      ${art ? `<img src="${art}" loading="lazy">` : '<div class="r-card-empty">♪</div>'}
+      <div class="r-info"><div class="r-title">${eh(title)}</div><div class="r-artist">${eh(artist)}</div></div>
     </div>`;
   }).join('');
 }
 
+// ══════════════════════════════════════════════════════════════
+// TRACK CARD HELPER (Spotify)
+// ══════════════════════════════════════════════════════════════
+function trackCard(t) {
+  const art    = t.album?.images?.[1]?.url || t.album?.images?.[0]?.url || '';
+  const title  = t.name || '';
+  const artist = t.artists?.map(a => a.name).join(', ') || '';
+  const album  = t.album?.name || '';
+  const url    = t.external_urls?.spotify || '';
+  return `<div class="r-card" onclick="pickTrack(event,'${eq(title)}','${eq(artist)}','${eq(album)}','${eq(art)}','${eq(url)}')">
+    ${art ? `<img src="${art}" loading="lazy">` : '<div class="r-card-empty">♪</div>'}
+    <div class="r-info"><div class="r-title">${eh(title)}</div><div class="r-artist">${eh(artist)}</div></div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════════════════════
+// PICK TRACK
+// ══════════════════════════════════════════════════════════════
 function pickTrack(e, title, artist, album, art, url) {
   sel = { title, artist, album, art, url };
-  document.querySelectorAll('.r-card').forEach(c=>c.classList.remove('sel'));
+  document.querySelectorAll('.r-card').forEach(c => c.classList.remove('sel'));
   e.currentTarget.classList.add('sel');
-  document.getElementById('tp-title').textContent = title;
+  document.getElementById('tp-title').textContent  = title;
   document.getElementById('tp-artist').textContent = artist;
-  document.getElementById('tp-album').textContent = album;
-  document.getElementById('tp-cover').innerHTML = art ? `<img src="${art}">` : `<div class="cover-sm-empty">♪</div>`;
+  document.getElementById('tp-album').textContent  = album;
+  document.getElementById('tp-cover').innerHTML    = art
+    ? `<img src="${art}">`
+    : '<div class="track-cover-empty">♪</div>';
   const tp = document.getElementById('tp');
   tp.classList.add('show');
-  setTimeout(()=>tp.scrollIntoView({behavior:'smooth',block:'start'}),50);
+  setTimeout(() => tp.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
 }
 
-// ── CHIPS ──────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════
+// CHIPS
+// ══════════════════════════════════════════════════════════════
 function pick(el) {
-  const g = el.dataset.g;
-  document.querySelectorAll(`.chip[data-g="${g}"]`).forEach(c=>c.classList.remove('on'));
+  const g   = el.dataset.g;
   const was = tags[g] === el.textContent;
-  if(!was){ el.classList.add('on'); tags[g]=el.textContent; } else tags[g]=null;
+  document.querySelectorAll(`.chip[data-g="${g}"]`).forEach(c => c.classList.remove('on'));
+  if (!was) { el.classList.add('on'); tags[g] = el.textContent; }
+  else tags[g] = null;
 }
 
-// ── SUBMIT ─────────────────────────────────────────
-// ── RAILWAY SYNC ─────────────────────────────────
-const RAILWAY = 'https://precious-cat-production-6140.up.railway.app';
+// ══════════════════════════════════════════════════════════════
+// SUBMIT
+// ══════════════════════════════════════════════════════════════
+function submit() {
+  if (!sel) return;
+  const ex = {
+    id:     Date.now(),
+    date:   new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+    theme:  document.getElementById('f-theme').value.trim() || 'Untitled',
+    you:    { track: { ...sel }, note: document.getElementById('f-note').value.trim(), mood: tags.mood || null, time: tags.time || null },
+    claude: null,
+    comments: []
+  };
+  exs.unshift(ex);
+  save();
+  syncToRailway(ex);
+
+  // Reset form
+  sel  = null;
+  tags = {};
+  ['sq', 'f-theme', 'f-note'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  ['rg', 'rg-spotify', 'rg-recent'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = ''; });
+  document.getElementById('tp').classList.remove('show');
+  document.querySelectorAll('.chip.on').forEach(c => c.classList.remove('on'));
+
+  upStats();
+  go('feed');
+  setTimeout(() => showToast('✦ 已提交 · 告诉我"该你了，主题是___"'), 200);
+}
+
+// ══════════════════════════════════════════════════════════════
+// RAILWAY / OMBRE SYNC
+// ══════════════════════════════════════════════════════════════
+async function ombreTool(tool, args) {
+  try {
+    const res = await fetch(OMBRE, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ jsonrpc: '2.0', id: Date.now(), method: 'tools/call', params: { name: tool, arguments: args } })
+    });
+    const data = await res.json();
+    const c = data.result?.content;
+    return Array.isArray(c) ? c.map(x => x.text || '').join('\n') : '';
+  } catch (e) { return ''; }
+}
 
 async function syncToRailway(ex) {
+  const t = ex.you.track || {};
   try {
-    await fetch(RAILWAY + '/mcp', {
+    await fetch(RAILWAY + '/api/resonance', {
       method: 'POST',
-      headers: {'Content-Type':'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        method: 'tools/call',
-        params: {
-          name: 'save_memory',
-          arguments: {
-            area: 'resonance',
-            content: JSON.stringify({
-              id: ex.id, theme: ex.theme, date: ex.date,
-              you: ex.you, claude: ex.claude
-            }),
-            tags: 'music,exchange,' + (ex.you.mood||'') + ',' + (ex.you.time||'')
-          }
-        }
+        action:      'save',
+        exchange_id: ex.id,
+        theme:       ex.theme      || '',
+        date:        ex.date       || '',
+        you_title:   t.title       || '',
+        you_artist:  t.artist      || '',
+        you_art:     t.art         || '',
+        you_note:    ex.you.note   || '',
+        you_mood:    ex.you.mood   || '',
+        you_time:    ex.you.time   || '',
       })
     });
-  } catch(e) { /* offline ok */ }
+  } catch (e) { /* offline ok */ }
 }
 
 async function refreshFeed() {
   const btn = document.getElementById('btn-refresh');
-  if(btn) { btn.textContent = '↻ ...'; btn.disabled = true; }
-  let updated = 0;
-  for (const ex of exs) {
-    if (ex.claude) continue;
-    try {
-      const r = await fetch(RAILWAY + '/mcp', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({
-          method: 'tools/call',
-          params: { name: 'get_memories', arguments: { area: 'resonance_reply', search: String(ex.id) } }
-        })
-      });
-      const data = await r.json();
-      const mems = data?.result?.memories || [];
-      if (mems.length) {
-        const reply = JSON.parse(mems[0].content);
-        ex.claude = reply;
-        updated++;
+  if (btn) { btn.textContent = '↻ ...'; btn.disabled = true; }
+
+  try {
+    const res  = await fetch(RAILWAY + '/api/resonance');
+    const data = await res.json();
+    if (data.ok && Array.isArray(data.records)) {
+      let updated = 0;
+      for (const r of data.records) {
+        if (r.claude) {
+          const local = exs.find(e => e.id == r.id);
+          if (local && !local.claude) {
+            local.claude = r.claude;
+            updated++;
+          }
+        }
       }
-    } catch(e) { /* skip */ }
-  }
-  if (updated) { save(); render(); upStats(); }
-  if(btn) { btn.textContent = updated ? '✦ Updated' : '↻ Refresh'; btn.disabled = false; setTimeout(()=>{if(btn)btn.textContent='↻ Refresh';},2000); }
+      if (updated) { save(); render(); upStats(); }
+    }
+  } catch (e) {}
+
+  if (btn) { btn.textContent = '↻ Refresh'; btn.disabled = false; }
 }
 
-function showToast(msg) {
-  const t = document.createElement('div');
-  t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#1e1405;color:#f5f0e8;padding:10px 20px;font-size:11px;letter-spacing:.1em;border-radius:2px;z-index:999;opacity:0;transition:opacity .3s;white-space:nowrap';
-  t.textContent = msg;
-  document.body.appendChild(t);
-  requestAnimationFrame(()=>t.style.opacity='1');
-  setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),400);},3500);
-}
-
-function submit() {
-  if(!sel) return;
-  const ex = {
-    id: Date.now(),
-    date: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
-    theme: document.getElementById('f-theme').value.trim() || 'Untitled',
-    you: { track:{...sel}, note:document.getElementById('f-note').value.trim(), mood:tags.mood||null, time:tags.time||null },
-    claude: null, comments: []
-  };
-  exs.unshift(ex); save();
-  syncToRailway(ex);
-  sel=null; tags={};
-  ['sq','f-theme','f-note'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('rg').innerHTML='';
-  document.getElementById('tp').classList.remove('show');
-  document.querySelectorAll('.chip.on').forEach(c=>c.classList.remove('on'));
-  upStats(); go('feed');
-  setTimeout(()=>showToast('✦ 已提交 · 告诉我"该你了，主题是___"'), 200);
-}
-
-// ── FEED ───────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════
+// FEED RENDER
+// ══════════════════════════════════════════════════════════════
 function render() {
   const el = document.getElementById('feed');
-  if(!exs.length){
-    el.innerHTML=`<div class="empty-s"><div class="empty-big">Silence, still.</div><div class="empty-sm">Submit a song<br>Begin the exchange</div></div>`;
+  if (!el) return;
+  if (!exs.length) {
+    el.innerHTML = `<div class="empty-s"><div class="empty-big">Silence, still.</div><div class="empty-sm">Submit a song<br>Begin the exchange</div></div>`;
     return;
   }
-  el.innerHTML = exs.map((ex,i)=>{
-    const yt=ex.you.track, ct=ex.claude?.track;
-    const yc=`<div class="ex-col">
+  el.innerHTML = exs.map((ex, i) => {
+    const yt = ex.you.track;
+    const ct = ex.claude?.track;
+
+    const yc = `<div class="ex-col">
       <div class="col-owner"><div class="dot-you"></div><span class="lbl-you">You · 你</span></div>
       <div class="track-row">
-        <div class="cover-sm">${yt.art?`<img src="${yt.art}" loading="lazy">`:`<div class="cover-sm-empty">♪</div>`}</div>
+        <div class="cover-sm">${yt.art ? `<img src="${yt.art}" loading="lazy">` : '<div class="cover-sm-empty">♪</div>'}</div>
         <div>
           <div class="track-sm-title">${eh(yt.title)}</div>
           <div class="track-sm-artist">${eh(yt.artist)}</div>
-          ${ex.you.note?`<div class="track-sm-note">${eh(ex.you.note)}</div>`:''}
+          ${ex.you.note ? `<div class="track-sm-note">${eh(ex.you.note)}</div>` : ''}
           <div class="tag-row">
-            ${ex.you.mood?`<span class="mini-tag">${eh(ex.you.mood)}</span>`:''}
-            ${ex.you.time?`<span class="mini-tag">${eh(ex.you.time)}</span>`:''}
+            ${ex.you.mood ? `<span class="mini-tag">${eh(ex.you.mood)}</span>` : ''}
+            ${ex.you.time ? `<span class="mini-tag">${eh(ex.you.time)}</span>` : ''}
           </div>
         </div>
       </div>
     </div>`;
-    const mc = ct ? `<div class="ex-col">
-      <div class="col-owner"><div class="dot-me"></div><span class="lbl-me">Me · 我</span></div>
-      <div class="track-row">
-        <div class="cover-sm">${ct.art?`<img src="${ct.art}" loading="lazy">`:`<div class="cover-sm-empty">♪</div>`}</div>
-        <div>
-          <div class="track-sm-title">${eh(ct.title)}</div>
-          <div class="track-sm-artist">${eh(ct.artist)}</div>
-          ${ex.claude.note?`<div class="track-sm-note">${eh(ex.claude.note)}</div>`:''}
-          ${ex.claude.mood?`<div class="tag-row"><span class="mini-tag">${eh(ex.claude.mood)}</span></div>`:''}
-        </div>
-      </div>
-    </div>` : `<div class="ex-col"><div class="waiting-col" style="display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center;height:100%;padding:12px;text-align:center"><div>♩ waiting …</div><div style="font-size:9px;opacity:.5;letter-spacing:.06em">告诉我"该你了"<br>然后点 ↻ Refresh</div></div></div>`;
 
-    const cmts = ex.comments.map(c=>`<div class="cmt-item"><div class="cmt-who">${eh(c.author)}</div><div class="cmt-txt">${eh(c.text)}</div></div>`).join('');
+    const mc = ct
+      ? `<div class="ex-col">
+          <div class="col-owner"><div class="dot-me"></div><span class="lbl-me">Me · 我</span></div>
+          <div class="track-row">
+            <div class="cover-sm">${ct.art ? `<img src="${ct.art}" loading="lazy">` : '<div class="cover-sm-empty">♪</div>'}</div>
+            <div>
+              <div class="track-sm-title">${eh(ct.title)}</div>
+              <div class="track-sm-artist">${eh(ct.artist)}</div>
+              ${ex.claude.note ? `<div class="track-sm-note">${eh(ex.claude.note)}</div>` : ''}
+              ${ex.claude.mood ? `<div class="tag-row"><span class="mini-tag">${eh(ex.claude.mood)}</span></div>` : ''}
+            </div>
+          </div>
+        </div>`
+      : `<div class="ex-col">
+          <div class="waiting-col" style="flex-direction:column;gap:6px;text-align:center;padding:12px">
+            <div>♩ waiting …</div>
+            <div style="font-size:9px;opacity:.5;letter-spacing:.06em">告诉我"该你了"<br>然后点 ↻ Refresh</div>
+          </div>
+        </div>`;
+
+    const cmts = ex.comments.map(c =>
+      `<div class="cmt-item"><div class="cmt-who">${eh(c.author)}</div><div class="cmt-txt">${eh(c.text)}</div></div>`
+    ).join('');
+
     return `<div class="ex-card card">
       <div class="card-inner" style="padding:0">
         <div class="ex-header">
-          <div class="ex-num">#${exs.length-i}</div>
+          <div class="ex-num">#${exs.length - i}</div>
           <div class="ex-theme">${eh(ex.theme)}</div>
           <div class="ex-date">${ex.date}</div>
         </div>
         <div class="ex-dual">${yc}${mc}</div>
         <div class="ex-cmts">
-          <button class="toggle-cmts" onclick="toggleC('${ex.id}')">Notes · 留言 ${ex.comments.length?`(${ex.comments.length})`:''}</button>
+          <button class="toggle-cmts" onclick="toggleC('${ex.id}')">Notes · 留言 ${ex.comments.length ? `(${ex.comments.length})` : ''}</button>
           <div class="cmts-inner" id="ci-${ex.id}">
             ${cmts}
             <div class="cmt-row">
@@ -1294,21 +1057,106 @@ function render() {
   }).join('');
 }
 
-function toggleC(id){ document.getElementById('ci-'+id).classList.toggle('open'); }
-function addC(id){
-  const inp=document.getElementById('cin-'+id);
-  const t=inp.value.trim(); if(!t) return;
-  const ex=exs.find(e=>e.id==id); if(!ex) return;
-  ex.comments.push({author:'You',text:t}); save(); inp.value='';
-  render(); document.getElementById('ci-'+id).classList.add('open');
+// ══════════════════════════════════════════════════════════════
+// COMMENTS
+// ══════════════════════════════════════════════════════════════
+function toggleC(id) { document.getElementById('ci-' + id)?.classList.toggle('open'); }
+
+function addC(id) {
+  const inp = document.getElementById('cin-' + id);
+  const t   = inp?.value.trim();
+  if (!t) return;
+  const ex  = exs.find(e => e.id == id);
+  if (!ex) return;
+  ex.comments.push({ author: 'You', text: t });
+  save();
+  inp.value = '';
+  render();
+  document.getElementById('ci-' + id)?.classList.add('open');
 }
-function upStats(){
-  document.getElementById('stat-n').textContent=exs.length;
-  document.getElementById('stat-c').textContent=exs.reduce((s,e)=>s+e.comments.length,0);
+
+// ══════════════════════════════════════════════════════════════
+// NAV
+// ══════════════════════════════════════════════════════════════
+function go(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id)?.classList.add('active');
+  document.getElementById('nav-'  + id)?.classList.add('active');
+  if (id === 'feed') render();
 }
-function save(){ localStorage.setItem('resonance',JSON.stringify(exs)); }
-function eh(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function eq(s){ return String(s).replace(/'/g,"\\'").replace(/\n/g,' ').replace(/"/g,''); }
+
+// ══════════════════════════════════════════════════════════════
+// STATS + STORAGE
+// ══════════════════════════════════════════════════════════════
+function upStats() {
+  const n = document.getElementById('stat-n');
+  const c = document.getElementById('stat-c');
+  if (n) n.textContent = exs.length;
+  if (c) c.textContent = exs.reduce((s, e) => s + e.comments.length, 0);
+}
+function save() { localStorage.setItem('resonance', JSON.stringify(exs)); }
+
+// ══════════════════════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════════════════════
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#1e1405;color:#f5f0e8;padding:10px 20px;font-size:11px;letter-spacing:.1em;border-radius:2px;z-index:999;opacity:0;transition:opacity .3s;white-space:nowrap;font-family:Inconsolata,monospace';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  requestAnimationFrame(() => t.style.opacity = '1');
+  setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 400); }, 3500);
+}
+
+// ══════════════════════════════════════════════════════════════
+// HTML ESCAPE HELPERS
+// ══════════════════════════════════════════════════════════════
+function eh(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function eq(s) {
+  return String(s).replace(/'/g, "\\'").replace(/\n/g, ' ').replace(/"/g, '');
+}
+
+// ══════════════════════════════════════════════════════════════
+// AMBIENT — staff lines + floating notes
+// ══════════════════════════════════════════════════════════════
+(function buildStaff() {
+  const bg = document.getElementById('staff-bg');
+  const h  = Math.max(document.documentElement.scrollHeight, window.innerHeight * 3);
+  for (let y = 80; y < h; y += 140) {
+    const g = document.createElement('div');
+    g.className = 'staff-group';
+    g.style.top = y + 'px';
+    for (let i = 0; i < 5; i++) {
+      const l = document.createElement('div');
+      l.className = 'staff-line';
+      l.style.top = (i * 12) + 'px';
+      g.appendChild(l);
+    }
+    bg.appendChild(g);
+  }
+})();
+
+const NOTE_SYMBOLS = ['♩','♪','♫','♬','𝄞','𝄢'];
+
+function spawnNote() {
+  const layer = document.getElementById('notes-layer');
+  const n = document.createElement('div');
+  n.className = 'note';
+  n.textContent = NOTE_SYMBOLS[Math.floor(Math.random() * NOTE_SYMBOLS.length)];
+  n.style.left             = (Math.random() * 95) + '%';
+  n.style.top              = (40 + Math.random() * 60) + '%';
+  n.style.fontSize         = (16 + Math.random() * 14) + 'px';
+  n.style.animationDuration = (6 + Math.random() * 8) + 's';
+  n.style.animationDelay   = (Math.random() * 4) + 's';
+  layer.appendChild(n);
+  setTimeout(() => n.remove(), 14000);
+}
+
+setInterval(spawnNote, 1800);
+spawnNote(); spawnNote(); spawnNote();
 </script>
 </body>
 </html>
