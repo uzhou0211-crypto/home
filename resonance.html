@@ -478,11 +478,36 @@ nav { display: flex; gap: 2px; margin-left: auto; }
       <span class="logo-cn">串聲 · Music Exchange</span>
     </div>
     <nav>
+      <button class="nav-btn" onclick="go('his')" id="nav-his">For You · 他选的</button>
       <button class="nav-btn active" onclick="go('add')" id="nav-add">Submit · 出题</button>
       <button class="nav-btn" onclick="go('feed')" id="nav-feed">Archive · 记录</button>
     </nav>
   </div>
 </header>
+
+<!-- HIS PICKS PAGE -->
+<div class="page" id="page-his">
+  <div class="hero">
+    <div>
+      <div class="hero-eyebrow">For You · 他为你选的</div>
+      <h1 class="hero-title">他先<em>推一首</em></h1>
+      <p class="hero-sub" style="font-size:13px;color:var(--ink-4)">他在对话里选好一首发给你，你在这里回应他一首。</p>
+    </div>
+  </div>
+  <div class="content">
+    <div class="card">
+      <div class="card-inner">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <div class="s-label" style="margin:0">他最近推的</div>
+          <button onclick="loadHisPicks()" style="font-family:'Inconsolata',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;background:none;border:1px solid rgba(196,164,72,.3);color:rgba(196,164,72,.7);padding:5px 12px;cursor:pointer;border-radius:2px">↻ 刷新</button>
+        </div>
+        <div id="his-picks-list">
+          <div class="api-note">点刷新读取他为你选的歌。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ADD PAGE -->
 <div class="page active" id="page-add">
@@ -611,7 +636,7 @@ let exs  = JSON.parse(localStorage.getItem('resonance') || '[]');
 // ══════════════════════════════════════════════════════════════
 // CONSTANTS
 // ══════════════════════════════════════════════════════════════
-const RAILWAY = 'https://precious-cat-production-6140.up.railway.app';
+const RAILWAY = 'https://ombre-brain-production-f64f.up.railway.app';
 
 // ══════════════════════════════════════════════════════════════
 // LOAD HANDLER
@@ -782,56 +807,129 @@ function submit() {
 // ══════════════════════════════════════════════════════════════
 // RAILWAY SYNC
 // ══════════════════════════════════════════════════════════════
+async function loadHisPicks() {
+  const list = document.getElementById('his-picks-list');
+  list.innerHTML = '<div class="api-note">读取中……</div>';
+  try {
+    const res = await fetch(RAILWAY + '/api', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ tool: 'resonance_get', args: { limit: 10 } })
+    });
+    const data = await res.json();
+    const text = data.result || '';
+
+    // Parse entries where claude picked first (no "you" track, or marked as his pick)
+    const lines = text.split('\n');
+    const records = [];
+    let cur = null;
+    for (const line of lines) {
+      const m = line.match(/^\[(\d+)\]\s+(\d{4}-\d{2}-\d{2})\s+·\s+(.+)/);
+      if (m) { cur = { id: parseInt(m[1]), date: m[2], theme: m[3] }; }
+      if (cur && line.trim().startsWith('我：') && !line.includes('（待回应）')) {
+        cur.claude_track = line.replace(/.*我：/, '').trim();
+      }
+      if (cur && line.trim().startsWith('你：') && !line.includes('（待回应）')) {
+        cur.you_track = line.replace(/.*你：/, '').trim();
+        records.push({...cur}); cur = null;
+      }
+      if (cur && line.trim() === '' && cur.claude_track && !cur.you_track) {
+        records.push({...cur}); cur = null;
+      }
+    }
+
+    // Filter: only show ones where he picked (claude_track exists, you haven't replied)
+    const hisPicks = records.filter(r => r.claude_track && !r.you_track);
+
+    if (!hisPicks.length) {
+      list.innerHTML = '<div class="api-note">他还没有为你推歌，或者你已经都回应过了。</div>';
+      return;
+    }
+
+    list.innerHTML = hisPicks.map(r => `
+      <div style="padding:16px 0;border-bottom:1px solid rgba(196,164,72,.1)">
+        <div style="font-family:'Inconsolata',monospace;font-size:9px;letter-spacing:.1em;color:var(--ink-4);margin-bottom:6px">${r.date} · ${r.theme}</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--ink-2);margin-bottom:10px">
+          他推荐：<em>${r.claude_track}</em>
+        </div>
+        <button onclick="replyToHis(${r.id})" 
+          style="font-family:'Inconsolata',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;background:var(--ink);color:var(--paper);border:none;padding:7px 16px;cursor:pointer;border-radius:2px">
+          回应他一首 →
+        </button>
+      </div>
+    `).join('');
+  } catch(e) {
+    list.innerHTML = '<div class="api-note">连接失败，稍后再试。</div>';
+  }
+}
+
+function replyToHis(exchangeId) {
+  // Switch to add page with this exchange pre-selected for reply
+  go('add');
+  // Scroll to form
+  setTimeout(() => {
+    const input = document.getElementById('sq');
+    if (input) { input.focus(); input.scrollIntoView({behavior:'smooth'}); }
+  }, 100);
+  // Store the reply target
+  window._replyToId = exchangeId;
+}
+
 async function syncToRailway(ex) {
   const t = ex.you.track || {};
   try {
-    await fetch(RAILWAY + '/api/resonance', {
+    await fetch(RAILWAY + '/api', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        action:      'save',
-        exchange_id: ex.id,
-        theme:       ex.theme      || '',
-        date:        ex.date       || '',
-        you_title:   t.title       || '',
-        you_artist:  t.artist      || '',
-        you_art:     t.art         || '',
-        you_note:    ex.you.note   || '',
-        you_mood:    ex.you.mood   || '',
-        you_time:    ex.you.time   || '',
+        tool: 'resonance_save',
+        args: {
+          exchange_id: ex.id,
+          theme:       ex.theme      || '',
+          date:        ex.date       || '',
+          you_title:   t.title       || '',
+          you_artist:  t.artist      || '',
+          you_art:     t.art         || '',
+          you_note:    ex.you.note   || '',
+          you_mood:    ex.you.mood   || '',
+          you_time:    ex.you.time   || '',
+        }
       })
     });
-  } catch (e) { /* offline ok */ }
+  } catch(e) { /* offline ok */ }
 }
+
 
 async function refreshFeed() {
   const btn = document.getElementById('btn-refresh');
-  if (btn) { btn.textContent = '↻ ...'; btn.disabled = true; }
-
+  if(btn) { btn.textContent = '↻ ...'; btn.disabled = true; }
   try {
-    const res  = await fetch(RAILWAY + '/api/resonance');
+    const res = await fetch(RAILWAY + '/api', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ tool: 'resonance_get', args: { limit: 50 } })
+    });
     const data = await res.json();
-    if (data.ok && Array.isArray(data.records)) {
-      let updated = 0;
-      for (const r of data.records) {
-        if (r.claude) {
-          const local = exs.find(e => e.id == r.id);
-          if (local && !local.claude) {
-            local.claude = r.claude;
-            updated++;
-          }
+    const text = data.result || '';
+    const lines = text.split('\n');
+    let curId = null, updated = 0;
+    for (const line of lines) {
+      const m = line.match(/\[(\d+)\]/);
+      if (m) curId = parseInt(m[1]);
+      if (curId && line.trim().startsWith('我：') && !line.includes('（待回应）')) {
+        const ex = exs.find(e => e.id == curId);
+        if (ex && !ex.claude) {
+          ex.claude = { track: { title: line.replace(/.*我：/, '').trim(), artist: '', art: '' }, note: '' };
+          updated++;
         }
       }
-      if (updated) { save(); render(); upStats(); }
     }
-  } catch (e) {}
-
-  if (btn) { btn.textContent = '↻ Refresh'; btn.disabled = false; }
+    if (updated) { save(); render(); upStats(); }
+  } catch(e) {}
+  if(btn) { btn.textContent = updated ? '✦ Updated' : '↻ Refresh'; btn.disabled = false; setTimeout(() => { if(btn) btn.textContent = '↻ Refresh'; }, 2000); }
 }
 
-// ══════════════════════════════════════════════════════════════
-// FEED RENDER
-// ══════════════════════════════════════════════════════════════
+
 function render() {
   const el = document.getElementById('feed');
   if (!el) return;
