@@ -452,6 +452,17 @@ header {
   </div>
 </div>
 
+<!-- HIS MUSIC FOR YOU -->
+<div class="history-section" id="his-section">
+  <div class="section-label" style="display:flex;align-items:center;justify-content:space-between">
+    <span>For You · 他为你弹的</span>
+    <button onclick="loadHisMusic()" style="font-family:'Inconsolata',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;background:none;border:1px solid rgba(196,164,72,.3);color:rgba(196,164,72,.7);padding:4px 10px;cursor:pointer;border-radius:2px;transition:all .2s" onmouseover="this.style.borderColor='rgba(196,164,72,.7)'" onmouseout="this.style.borderColor='rgba(196,164,72,.3)'">↻ 刷新</button>
+  </div>
+  <div id="his-list" class="history-list">
+    <div class="empty">正在读取……</div>
+  </div>
+</div>
+
 <!-- HISTORY -->
 <div class="history-section">
   <div class="section-label">History · 曾经为你弹过</div>
@@ -577,26 +588,157 @@ function getTitle(mood) {
 }
 
 // ── STATE ─────────────────────────────────────────
-
-
 // ── Ombre Brain ────────────────────────────────────
-const OMBRE = 'https://ombre-brain-production-f64f.up.railway.app/mcp';
-async function ombreTool(tool, args) {{
-  try {{
-    const res = await fetch(OMBRE, {{
+const OMBRE = 'https://ombre-brain-production-f64f.up.railway.app/api';
+async function ombreTool(tool, args) {
+  try {
+    const res = await fetch(OMBRE, {
       method: 'POST',
-      headers: {{'Content-Type': 'application/json'}},
-      body: JSON.stringify({{jsonrpc:'2.0',id:Date.now(),method:'tools/call',params:{{name:tool,arguments:args}}}})
-    }});
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({tool, args})
+    });
     const data = await res.json();
-    const content = data.result?.content;
-    return Array.isArray(content) ? content.map(c=>c.text||'').join('\n') : '';
-  }} catch(e) {{ return ''; }}
-}}
+    if (data.error) throw new Error(data.error);
+    const result = data.result;
+    if (Array.isArray(result)) return result.map(c=>c.text||'').join('\n');
+    return typeof result === 'string' ? result : JSON.stringify(result);
+  } catch(e) { return ''; }
+}
 
 let currentPiece = null;
 let pieces = JSON.parse(localStorage.getItem('nocturne') || '[]');
 let isPlaying = false;
+
+// ── 读取他为你作的曲子 ────────────────────────────────
+const OMBRE_API = 'https://ombre-brain-production-f64f.up.railway.app/api';
+let hisPlaying = false;
+
+async function ombreCall(tool, args) {
+  const res = await fetch(OMBRE_API, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ tool, args })
+  });
+  const data = await res.json();
+  return data.result || '';
+}
+
+async function loadHisMusic() {
+  const list = document.getElementById('his-list');
+  list.innerHTML = '<div class="empty">读取中……</div>';
+  try {
+    const text = await ombreCall('compose_get', { limit: 10 });
+    const lines = text.split('\n').filter(l => l.trim());
+    const records = [];
+    let cur = null;
+    for (const line of lines) {
+      const m = line.match(/^\[(\d+)\] 《(.+?)》· (.*?) · (\d+)bpm/);
+      if (m) {
+        cur = { id: parseInt(m[1]), title: m[2], mood: m[3], tempo: parseInt(m[4]) };
+        records.push(cur);
+      } else if (cur && line.includes('留言：')) {
+        cur.message = line.replace(/.*留言：/, '').trim();
+      }
+    }
+    if (!records.length) {
+      list.innerHTML = '<div class="empty">他还没有为你写过曲子。</div>';
+      return;
+    }
+    list.innerHTML = records.map(r => `
+      <div class="history-item" style="cursor:default">
+        <div class="history-header">
+          <div>
+            <span class="history-title">《${r.title}》</span>
+            <span class="history-mood" style="margin-left:8px;opacity:.6">${r.mood || ''}</span>
+          </div>
+          <button onclick="toggleHisPlay(${r.id}, this)"
+            style="font-family:'Inconsolata',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;background:none;border:1px solid rgba(196,164,72,.4);color:rgba(196,164,72,.85);padding:5px 12px;cursor:pointer;border-radius:2px;transition:all .2s;"
+            id="his-btn-${r.id}">▶ 播放</button>
+        </div>
+        ${r.message ? `<div style="font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;color:rgba(240,232,218,.45);margin-top:6px">${r.message}</div>` : ''}
+      </div>
+    `).join('');
+  } catch(e) {
+    list.innerHTML = '<div class="empty">连接失败，稍后再试。</div>';
+  }
+}
+
+async function toggleHisPlay(id, btn) {
+  if (btn.textContent.includes('停止')) {
+    Tone.Transport.stop();
+    Tone.Transport.cancel();
+    btn.textContent = '▶ 播放';
+    hisPlaying = false;
+    return;
+  }
+
+  // Stop any current playback
+  Tone.Transport.stop();
+  Tone.Transport.cancel();
+  document.querySelectorAll('[id^="his-btn-"]').forEach(b => b.textContent = '▶ 播放');
+
+  btn.textContent = '… 加载';
+
+  try {
+    const text = await ombreCall('compose_notes', { compose_id: id });
+    const data = JSON.parse(text);
+    if (data.error) { btn.textContent = '▶ 播放'; return; }
+
+    btn.textContent = '◼ 停止';
+    hisPlaying = true;
+    await playNotesString(data.notes, data.tempo || 72, () => {
+      btn.textContent = '▶ 播放';
+      hisPlaying = false;
+    });
+  } catch(e) {
+    btn.textContent = '▶ 播放';
+  }
+}
+
+async function playNotesString(notesStr, tempo, onEnd) {
+  await Tone.start();
+  Tone.Transport.stop();
+  Tone.Transport.cancel();
+
+  const synth = new Tone.Synth({
+    oscillator: { type: 'triangle' },
+    envelope: { attack: 0.02, decay: 0.1, sustain: 0.6, release: 1.2 },
+    volume: -8
+  }).toDestination();
+
+  const notes = notesStr.split(',').map(n => n.trim()).filter(Boolean);
+  const beatDur = 60 / tempo;
+  let time = 0;
+
+  notes.forEach(n => {
+    const parts = n.split(':');
+    const pitch = parts[0];
+    const dur = parseFloat(parts[1]) || 0.5;
+    const vel = parseFloat(parts[2]) || 0.7;
+
+    if (pitch !== 'R' && pitch !== 'r') {
+      Tone.Transport.schedule(t => {
+        synth.triggerAttackRelease(pitch, dur * 0.9, t, vel);
+      }, time);
+    }
+    time += dur;
+  });
+
+  Tone.Transport.schedule(() => {
+    synth.dispose();
+    if (onEnd) onEnd();
+  }, time + 0.5);
+
+  Tone.Transport.bpm.value = tempo;
+  Tone.Transport.start();
+}
+
+// Load his music on page load
+window.addEventListener('DOMContentLoaded', () => {
+  loadHisMusic();
+});
+
+
 let scheduledEvents = [];
 let synth = null;
 let startTime = 0;
@@ -653,7 +795,7 @@ async function compose() {
 
   // save to history
   pieces.unshift({ ...currentPiece });
-  ombreTool('hold',{content:'钢琴即兴 · '+currentPiece.title+' · '+currentPiece.mood+' · '+currentPiece.tempo+'bpm', tags:'music,nocturne,'+currentPiece.mood, importance:5, valence:0.2, arousal:0.4});
+  ombreTool('hold', {content:'钢琴即兴 · '+currentPiece.title+' · '+currentPiece.mood+' · '+currentPiece.tempo+'bpm', tags:'music,nocturne,'+currentPiece.mood, importance:5, valence:0.2, arousal:0.4});
   if (pieces.length > 20) pieces.pop();
   localStorage.setItem('nocturne', JSON.stringify(pieces));
 
