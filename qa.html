@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Q & A</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --white: #ffffff;
+  --off: #f9f8f6;
+  --line: #e8e5e0;
+  --line2: #f0ede8;
+  --ink: #1a1815;
+  --ink2: #6b6560;
+  --ink3: #b0aba5;
+  --accent: #2a2520;
+  --gold: #8a6f4e;
+  --red: #c0392b;
+  --tag-bg: #f2ede7;
+  --tag: #7a6a58;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --white: #131210;
+    --off: #1a1815;
+    --line: #2a2720;
+    --line2: #222018;
+    --ink: #e8e2d8;
+    --ink2: #9a9188;
+    --ink3: #5a5550;
+    --accent: #e8e2d8;
+    --gold: #c4a882;
+    --tag-bg: #232018;
+    --tag: #a89070;
+  }
+}
+
+html, body { height: 100%; }
+
+body {
+  font-family: 'Noto Serif SC', serif;
+  background: var(--white);
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* ── Nav ── */
+nav {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  padding: 0 3rem;
+  height: 54px;
+  flex-shrink: 0;
+  gap: 0;
+}
+
+.nav-logo {
+  font-family: 'EB Garamond', serif;
+  font-size: 1rem;
+  letter-spacing: 0.2em;
+  color: var(--ink3);
+  font-style: italic;
+  margin-right: 2.5rem;
+  flex-shrink: 0;
+}
+
+.nav-tab {
+  height: 54px;
+  display: flex;
+  align-items: center;
+  padding: 0 1.25rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  cursor: pointer;
+  border-bottom: 1.5px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+  user-select: none;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.nav-tab:hover { color: var(--ink2); }
+.nav-tab.active { color: var(--ink); border-bottom-color: var(--ink); }
+
+.pending-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--red);
+  flex-shrink: 0;
+}
+
+.nav-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.search-wrap { position: relative; }
+
+.search-wrap svg {
+  position: absolute;
+  left: 9px; top: 50%;
+  transform: translateY(-50%);
+  width: 13px; height: 13px;
+  stroke: var(--ink3);
+}
+
+#search {
+  width: 190px;
+  padding: 6px 10px 6px 28px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: var(--off);
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.78rem;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.2s, width 0.3s;
+}
+#search:focus { border-color: var(--ink3); width: 240px; background: var(--white); }
+#search::placeholder { color: var(--ink3); }
+
+.btn-new {
+  padding: 5px 15px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: var(--white);
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.75rem;
+  color: var(--ink2);
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+.btn-new:hover { background: var(--ink); color: var(--white); border-color: var(--ink); }
+
+/* ── Category bar ── */
+.cat-bar {
+  border-bottom: 1px solid var(--line2);
+  padding: 0 3rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex-shrink: 0;
+  height: 38px;
+  display: flex;
+  align-items: center;
+}
+.cat-bar::-webkit-scrollbar { display: none; }
+
+.cat-btn {
+  padding: 0 13px;
+  height: 38px;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--ink3);
+  cursor: pointer;
+  white-space: nowrap;
+  border-bottom: 1.5px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+  user-select: none;
+  display: flex;
+  align-items: center;
+}
+.cat-btn:hover { color: var(--ink2); }
+.cat-btn.active { color: var(--ink); border-bottom-color: var(--gold); }
+
+/* ── Views ── */
+.views { flex: 1; overflow: hidden; position: relative; }
+
+.view {
+  position: absolute; inset: 0;
+  overflow-y: auto;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.view.active { opacity: 1; pointer-events: all; }
+
+/* ── Q View ── */
+.q-list {
+  max-width: 740px;
+  margin: 0 auto;
+  padding: 2rem 3rem 4rem;
+}
+
+.q-section { margin-bottom: 2.5rem; }
+
+.q-section-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.63rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid var(--line2);
+  margin-bottom: 0.25rem;
+}
+
+.q-item {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.85rem 0.6rem;
+  border-bottom: 1px solid var(--line2);
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background 0.15s;
+  margin: 0 -0.6rem;
+}
+.q-item:hover { background: var(--off); }
+
+.q-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  color: var(--ink3);
+  flex-shrink: 0;
+  width: 26px;
+  text-align: right;
+}
+
+.q-text {
+  flex: 1;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.q-cat {
+  font-size: 0.67rem;
+  color: var(--tag);
+  background: var(--tag-bg);
+  padding: 2px 7px;
+  border-radius: 1px;
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+
+.q-go {
+  flex-shrink: 0;
+  stroke: var(--line);
+  width: 13px; height: 13px;
+  transition: stroke 0.2s, transform 0.2s;
+}
+.q-item:hover .q-go { stroke: var(--ink3); transform: translateX(2px); }
+
+/* ── A View ── */
+.a-inner {
+  max-width: 660px;
+  margin: 0 auto;
+  padding: 3rem 3rem 5rem;
+}
+
+.a-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  cursor: pointer;
+  margin-bottom: 2.5rem;
+  background: none;
+  border: none;
+  padding: 0;
+  transition: color 0.2s;
+}
+.a-back:hover { color: var(--ink); }
+
+.a-cat {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.63rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.85rem;
+}
+
+.a-q {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.65rem;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--ink);
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.a-body {
+  font-size: 0.91rem;
+  line-height: 1.95;
+  color: var(--ink2);
+}
+
+.a-body h1,.a-body h2,.a-body h3 {
+  font-family: 'EB Garamond', serif;
+  font-weight: 500;
+  color: var(--ink);
+  margin: 1.5em 0 0.4em;
+  line-height: 1.3;
+}
+.a-body h1 { font-size: 1.2rem; }
+.a-body h2 { font-size: 1.05rem; }
+.a-body h3 { font-size: 0.95rem; }
+.a-body p { margin-bottom: 0.9em; }
+.a-body strong { color: var(--ink); font-weight: 500; }
+.a-body em { font-style: italic; }
+.a-body ul,.a-body ol { padding-left: 1.4em; margin-bottom: 0.9em; }
+.a-body li { margin-bottom: 0.3em; }
+.a-body blockquote {
+  margin: 1em 0;
+  padding: 0.4em 1.2em;
+  border-left: 2px solid var(--line);
+  color: var(--ink3);
+  font-style: italic;
+}
+.a-body code {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8em;
+  background: var(--off);
+  padding: 1px 5px;
+  border-radius: 2px;
+}
+.a-body pre {
+  background: var(--off);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 0.9rem 1rem;
+  overflow-x: auto;
+  margin-bottom: 0.9em;
+}
+.a-body pre code { background: none; padding: 0; }
+
+.a-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 3.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line2);
+}
+
+.a-nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  letter-spacing: 0.07em;
+  color: var(--ink3);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  transition: color 0.2s;
+}
+.a-nav-btn:hover { color: var(--ink); }
+.a-nav-btn:disabled { opacity: 0.25; pointer-events: none; }
+
+.a-edit-btn {
+  padding: 5px 13px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: none;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.7rem;
+  color: var(--ink3);
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.04em;
+}
+.a-edit-btn:hover { border-color: var(--ink3); color: var(--ink); }
+.a-edit-btn.del:hover { border-color: var(--red); color: var(--red); }
+
+/* ── Pending View ── */
+.p-inner {
+  max-width: 740px;
+  margin: 0 auto;
+  padding: 2.5rem 3rem 4rem;
+}
+
+.p-head {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.p-title {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--ink);
+}
+
+.p-count {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--ink3);
+}
+
+.p-item {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--line2);
+}
+
+.p-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--red);
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.p-q {
+  flex: 1;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--ink2);
+}
+
+.p-resolve {
+  flex-shrink: 0;
+  padding: 4px 11px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: none;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.68rem;
+  color: var(--ink3);
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.04em;
+}
+.p-resolve:hover { background: var(--ink); color: var(--white); border-color: var(--ink); }
+
+.p-del {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: var(--ink3);
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 2px 4px;
+  line-height: 1;
+  transition: color 0.2s;
+}
+.p-del:hover { color: var(--red); }
+
+/* ── Empty ── */
+.empty {
+  text-align: center;
+  padding: 5rem 2rem;
+  color: var(--ink3);
+}
+.empty-g {
+  font-family: 'EB Garamond', serif;
+  font-size: 2.5rem;
+  font-style: italic;
+  opacity: 0.12;
+  display: block;
+  margin-bottom: 1rem;
+}
+.empty p {
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+}
+
+/* ── Modal ── */
+.overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+@media (prefers-color-scheme: dark) {
+  .overlay { background: rgba(19,18,16,0.88); }
+}
+.overlay.open { display: flex; }
+
+.modal {
+  background: var(--white);
+  border: 1px solid var(--line);
+  width: 100%;
+  max-width: 580px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 40px rgba(0,0,0,0.07);
+}
+
+.modal-h {
+  padding: 1.5rem 1.75rem 1.1rem;
+  border-bottom: 1px solid var(--line2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-h h2 {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--ink);
+}
+
+.modal-x {
+  width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; border: none; background: none;
+  color: var(--ink3); font-size: 1.1rem;
+  border-radius: 2px; transition: background 0.15s;
+}
+.modal-x:hover { background: var(--off); }
+
+.modal-b { padding: 1.5rem 1.75rem; }
+.field { margin-bottom: 1.1rem; }
+
+.field label {
+  display: block;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  margin-bottom: 0.45rem;
+}
+
+.field input,
+.field textarea,
+.field select {
+  width: 100%;
+  padding: 8px 11px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: var(--off);
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.875rem;
+  color: var(--ink);
+  outline: none;
+  resize: vertical;
+  transition: border-color 0.2s, background 0.2s;
+  appearance: none;
+}
+.field input:focus,
+.field textarea:focus,
+.field select:focus { border-color: var(--ink3); background: var(--white); }
+.field textarea { min-height: 170px; line-height: 1.7; }
+
+.modal-f {
+  padding: 0.9rem 1.75rem 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  border-top: 1px solid var(--line2);
+}
+
+.btn-g {
+  padding: 6px 16px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: none;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.78rem;
+  color: var(--ink2);
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.btn-g:hover { border-color: var(--ink3); }
+
+.btn-p {
+  padding: 6px 18px;
+  border: 1px solid var(--ink);
+  border-radius: 2px;
+  background: var(--ink);
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.78rem;
+  color: var(--white);
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.btn-p:hover { opacity: 0.8; }
+
+/* ── Toast ── */
+.toast {
+  position: fixed;
+  bottom: 1.75rem; left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  background: var(--ink);
+  color: var(--white);
+  padding: 8px 18px;
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.2s;
+  z-index: 300;
+  pointer-events: none;
+  border-radius: 1px;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.loading {
+  text-align: center;
+  padding: 5rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  color: var(--ink3);
+}
+
+@media (max-width: 640px) {
+  nav { padding: 0 1rem; }
+  .nav-logo { display: none; }
+  .nav-tab { padding: 0 0.9rem; font-size: 0.7rem; }
+  .cat-bar { padding: 0 1rem; }
+  .q-list,.p-inner,.a-inner { padding: 1.5rem 1rem 3rem; }
+  #search { width: 130px; }
+  #search:focus { width: 160px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">Q & A</span>
+  <div class="nav-tab active" data-view="q" onclick="switchView('q')">Questions</div>
+  <div class="nav-tab" data-view="a" onclick="switchView('a')">Answers</div>
+  <div class="nav-tab" data-view="pending" onclick="switchView('pending')">
+    Pending
+    <span class="pending-dot" id="pdot" style="display:none"></span>
+  </div>
+  <div class="nav-right">
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input id="search" type="text" placeholder="搜索…">
+    </div>
+    <button class="btn-new" onclick="openModal()">+ 新增</button>
+  </div>
+</nav>
+
+<div class="cat-bar" id="cat-bar"></div>
+
+<div class="views">
+  <div class="view active" id="view-q">
+    <div class="q-list" id="q-list"><div class="loading">loading…</div></div>
+  </div>
+  <div class="view" id="view-a">
+    <div class="a-inner" id="a-inner">
+      <div class="empty"><span class="empty-g">A</span><p>从 Questions 选择一个问题</p></div>
+    </div>
+  </div>
+  <div class="view" id="view-pending">
+    <div class="p-inner" id="p-inner"><div class="loading">loading…</div></div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-h">
+      <h2 id="m-title">新增问答</h2>
+      <button class="modal-x" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-b">
+      <div class="field">
+        <label>问题</label>
+        <input type="text" id="f-q" placeholder="输入问题…">
+      </div>
+      <div class="field">
+        <label>答案
+          <span style="font-size:0.63rem;letter-spacing:0;text-transform:none;margin-left:0.5rem;color:var(--ink3)">
+            支持 Markdown · 留空则存入 Pending
+          </span>
+        </label>
+        <textarea id="f-a" placeholder="输入答案，或留空…"></textarea>
+      </div>
+      <div class="field">
+        <label>分类</label>
+        <select id="f-cat">
+          <option>政治学</option><option>经济学</option><option>社会学</option>
+          <option>文学</option><option>心理学</option><option>哲学</option>
+          <option>历史</option><option>人类学</option><option>法学</option>
+          <option>其他</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-f">
+      <button class="btn-g" onclick="closeModal()">取消</button>
+      <button class="btn-p" onclick="save()">保存</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API = 'https://ombre-brain-production-f64f.up.railway.app/api';
+
+let qa = [], pending = [];
+let curView = 'q', curCat = '全部', curSearch = '';
+let curId = null, editId = null, editIsPending = false;
+
+async function callApi(tool, args = {}) {
+  const r = await fetch(API, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({tool, args}),
+    credentials: 'include',
+  });
+  const d = await r.json();
+  if (d.error) throw new Error(d.error);
+  return d.result;
+}
+
+async function load() {
+  try {
+    const raw = await callApi('qa_get');
+    const all = typeof raw === 'string' ? JSON.parse(raw) : (raw || []);
+    qa = all.filter(x => x.answer && x.answer.trim());
+    pending = all.filter(x => !x.answer || !x.answer.trim());
+  } catch { qa = []; pending = []; }
+  renderCats(); renderQ(); renderPending(); syncPendingDot();
+}
+
+// ── Categories ──
+function renderCats() {
+  const cats = ['全部', ...[...new Set(qa.map(x=>x.category).filter(Boolean))]];
+  document.getElementById('cat-bar').innerHTML = cats.map(c =>
+    `<div class="cat-btn${curCat===c?' active':''}" onclick="setCat('${c}')">${c}</div>`
+  ).join('');
+}
+
+function setCat(c) { curCat = c; renderCats(); renderQ(); }
+
+// ── View switch ──
+function switchView(v) {
+  curView = v;
+  document.querySelectorAll('.nav-tab').forEach(t =>
+    t.classList.toggle('active', t.dataset.view === v));
+  document.querySelectorAll('.view').forEach(el =>
+    el.classList.toggle('active', el.id === 'view-'+v));
+  document.getElementById('cat-bar').style.display = v==='q' ? '' : 'none';
+}
+
+// ── Q list ──
+function filteredQA() {
+  const q = curSearch.toLowerCase();
+  return qa.filter(x =>
+    (curCat==='全部' || x.category===curCat) &&
+    (!q || x.question.toLowerCase().includes(q) || x.answer.toLowerCase().includes(q))
+  );
+}
+
+function renderQ() {
+  const items = filteredQA();
+  const el = document.getElementById('q-list');
+  if (!items.length) {
+    el.innerHTML = `<div class="empty"><span class="empty-g">?</span><p>暂无内容</p></div>`;
+    return;
+  }
+  if (curCat !== '全部') {
+    el.innerHTML = `
+      <div class="q-section">
+        <div class="q-section-label">${curCat} · ${items.length}</div>
+        ${items.map((x,i) => qRow(x,i+1,false)).join('')}
+      </div>`;
+  } else {
+    const groups = {};
+    items.forEach(x => { const c=x.category||'其他'; (groups[c]=groups[c]||[]).push(x); });
+    el.innerHTML = Object.entries(groups).map(([c,list]) => `
+      <div class="q-section">
+        <div class="q-section-label">${c}</div>
+        ${list.map((x,i) => qRow(x,i+1,true)).join('')}
+      </div>`).join('');
+  }
+}
+
+function qRow(x, n, showCat) {
+  return `
+    <div class="q-item" onclick="goAnswer('${x.id}')">
+      <span class="q-num">${String(n).padStart(2,'0')}</span>
+      <span class="q-text">${esc(x.question)}</span>
+      ${showCat && x.category ? `<span class="q-cat">${esc(x.category)}</span>` : ''}
+      <svg class="q-go" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"/>
+      </svg>
+    </div>`;
+}
+
+// ── Answer view ──
+function goAnswer(id) {
+  curId = id;
+  switchView('a');
+  renderAnswer();
+}
+
+function renderAnswer() {
+  const el = document.getElementById('a-inner');
+  if (!curId) {
+    el.innerHTML = `<div class="empty"><span class="empty-g">A</span><p>从 Questions 选择一个问题</p></div>`;
+    return;
+  }
+  const list = filteredQA();
+  const idx = list.findIndex(x => x.id === curId);
+  const item = list[idx];
+  if (!item) {
+    el.innerHTML = `<div class="empty"><span class="empty-g">A</span><p>未找到</p></div>`;
+    return;
+  }
+  el.innerHTML = `
+    <button class="a-back" onclick="switchView('q')">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Questions
+    </button>
+    <div class="a-cat">${esc(item.category||'')}</div>
+    <div class="a-q">${esc(item.question)}</div>
+    <div class="a-body">${marked.parse(item.answer||'')}</div>
+    <div class="a-foot">
+      <button class="a-nav-btn" onclick="adjAnswer(-1)" ${idx>0?'':'disabled'}>
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        上一条
+      </button>
+      <div style="display:flex;gap:0.5rem">
+        <button class="a-edit-btn" onclick="editItem('${item.id}',false)">编辑</button>
+        <button class="a-edit-btn del" onclick="delItem('${item.id}',false)">删除</button>
+      </div>
+      <button class="a-nav-btn" onclick="adjAnswer(1)" ${idx<list.length-1?'':'disabled'}>
+        下一条
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>`;
+}
+
+function adjAnswer(d) {
+  const list = filteredQA();
+  const idx = list.findIndex(x => x.id === curId);
+  const next = list[idx+d];
+  if (next) { curId = next.id; renderAnswer(); }
+}
+
+// ── Pending ──
+function renderPending() {
+  const q = curSearch.toLowerCase();
+  const items = pending.filter(x => !q || x.question.toLowerCase().includes(q));
+  const el = document.getElementById('p-inner');
+  el.innerHTML = `
+    <div class="p-head">
+      <span class="p-title">待解决的问题</span>
+      <span class="p-count">${items.length} 条</span>
+    </div>
+    ${!items.length
+      ? `<div class="empty" style="padding:3rem 0"><span class="empty-g" style="font-size:2rem">·</span><p>暂无待解决</p></div>`
+      : items.map(x => `
+        <div class="p-item">
+          <span class="p-dot"></span>
+          <span class="p-q">${esc(x.question)}</span>
+          <button class="p-resolve" onclick="resolvePending('${x.id}')">解答</button>
+          <button class="p-del" onclick="delItem('${x.id}',true)" title="删除">×</button>
+        </div>`).join('')
+    }`;
+}
+
+function syncPendingDot() {
+  document.getElementById('pdot').style.display = pending.length ? '' : 'none';
+}
+
+function resolvePending(id) {
+  const item = pending.find(x => x.id===id);
+  if (!item) return;
+  editId = id; editIsPending = true;
+  document.getElementById('m-title').textContent = '解答问题';
+  document.getElementById('f-q').value = item.question;
+  document.getElementById('f-a').value = '';
+  document.getElementById('f-cat').value = item.category||'其他';
+  document.getElementById('overlay').classList.add('open');
+  setTimeout(()=>document.getElementById('f-a').focus(),120);
+}
+
+// ── Modal ──
+function openModal() {
+  editId = null; editIsPending = false;
+  document.getElementById('m-title').textContent = '新增问答';
+  document.getElementById('f-q').value = '';
+  document.getElementById('f-a').value = '';
+  document.getElementById('f-cat').value = '政治学';
+  document.getElementById('overlay').classList.add('open');
+  setTimeout(()=>document.getElementById('f-q').focus(),120);
+}
+
+function closeModal() {
+  document.getElementById('overlay').classList.remove('open');
+  editId = null; editIsPending = false;
+}
+
+async function save() {
+  const question = document.getElementById('f-q').value.trim();
+  const answer   = document.getElementById('f-a').value.trim();
+  const category = document.getElementById('f-cat').value;
+  if (!question) { showToast('问题不能为空'); return; }
+
+  const id = editId || Date.now().toString();
+  const isPending = !answer;
+
+  try {
+    await callApi('qa_save', {id, question, answer, category});
+    const record = {id, question, answer, category};
+    qa = qa.filter(x=>x.id!==id);
+    pending = pending.filter(x=>x.id!==id);
+    isPending ? pending.unshift(record) : qa.unshift(record);
+    closeModal();
+    renderCats(); renderQ(); renderPending(); syncPendingDot();
+    showToast(isPending ? '已存入待解决' : '已保存');
+    if (editIsPending && !isPending) goAnswer(id);
+  } catch(e) { showToast('保存失败：'+e.message); }
+}
+
+function editItem(id, isPend) {
+  const item = isPend ? pending.find(x=>x.id===id) : qa.find(x=>x.id===id);
+  if (!item) return;
+  editId = id; editIsPending = isPend;
+  document.getElementById('m-title').textContent = '编辑';
+  document.getElementById('f-q').value = item.question;
+  document.getElementById('f-a').value = item.answer||'';
+  document.getElementById('f-cat').value = item.category||'其他';
+  document.getElementById('overlay').classList.add('open');
+}
+
+async function delItem(id, isPend) {
+  if (!confirm('确认删除？')) return;
+  try {
+    await callApi('qa_delete', {id});
+    if (isPend) { pending = pending.filter(x=>x.id!==id); renderPending(); }
+    else {
+      qa = qa.filter(x=>x.id!==id);
+      if (curId===id) { curId=null; renderAnswer(); switchView('q'); }
+      renderCats(); renderQ();
+    }
+    syncPendingDot();
+    showToast('已删除');
+  } catch { showToast('删除失败'); }
+}
+
+// ── Search ──
+document.getElementById('search').addEventListener('input', e => {
+  curSearch = e.target.value;
+  renderQ(); renderPending();
+});
+
+// ── Keyboard ──
+document.addEventListener('keydown', e => {
+  if (e.key==='Escape') closeModal();
+  if (curView==='a' && !document.getElementById('overlay').classList.contains('open')) {
+    if (e.key==='ArrowLeft') adjAnswer(-1);
+    if (e.key==='ArrowRight') adjAnswer(1);
+  }
+});
+
+document.getElementById('overlay').addEventListener('click', e => {
+  if (e.target===e.currentTarget) closeModal();
+});
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2000);
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+load();
+</script>
+</body>
+</html>
